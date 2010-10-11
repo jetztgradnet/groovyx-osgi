@@ -1,0 +1,18 @@
+apply plugin:'java-base'
+apply plugin:'eclipse'
+
+defaultTasks 'build'
+
+subprojects {
+	//name = 'groovyx-osgi'
+	group = 'groovy'
+	version = '0.1'
+	equinoxVersion = '3.6.0.v20100517' // Helios release
+
+	repositories {
+		mavenCentral()
+		mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
+		mavenRepo urls: 'http://repository.springsource.com/maven/bundles/external'
+	}                                                                                       
+}
+

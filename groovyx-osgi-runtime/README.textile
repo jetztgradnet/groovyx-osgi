@@ -1,0 +1,12 @@
+h1. Groovy OSGi module
+
+h2. About
+
+The Groovy OSGi modules simplifies accessing and handling OSGi services and helps creating an OSGi runtime with a build-in DSL.
+
+Additionally it is used by the Grails OSGi plugin.
+
+
+h2. License
+
+The OSGi plugin is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
