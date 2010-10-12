@@ -1,6 +1,4 @@
-package groovyx.osgi.runtime
-
-import org.eclipse.core.runtime.adaptor.EclipseStarter
+package org.codehaus.groovy.osgi.runtime.equinox
 
 import java.io.File;
 import java.util.List;
@@ -10,36 +8,26 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker
 
+import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
+
+import org.eclipse.core.runtime.adaptor.EclipseStarter
+
 class EquinoxRuntime extends AbstractOsgiRuntime {
+	Properties frameworkProperties = new Properties()
+	
+	EquinoxRuntime(Map runtimeProperties) {
+		if (runtimeProperties) {
+			frameworkProperties.putAll(runtimeProperties)
+		}
+	}
 	
 	BundleContext doStart() {
 		// initialize framework
-		def frameworkProperties = new Properties()
-		frameworkProperties.put("osgi.clean", "true")
-		frameworkProperties.put("osgi.console", "true")
-		frameworkProperties.put("osgi.noShutdown", "true")
-		frameworkProperties.put("osgi.install.area", osgiRuntimePath as String)
-		frameworkProperties.put("osgi.configuration.area", "$osgiRuntimePath/configuration" as String)
-		//frameworkProperties.put("org.osgi.framework.bootdelegation", "*")
-		frameworkProperties.put("osgi.compatibility.bootdelegation", "true")
-		frameworkProperties.put("eclipse.ignoreApp", "true")
-		frameworkProperties.put("eclipse.application.noDefault", "true")
-		if (systemPackages) {
-			frameworkProperties.put("org.osgi.framework.system.packages.extra", systemPackages.join(','))
-		}
-		
-		frameworkProperties.put("osgi.frameworkParentClassloader", "boot")
-		frameworkProperties.put("osgi.contextClassLoaderParent", "boot")
-		
-		//frameworkProperties.put("log4j.configuration", logConfig.absolutePath)
+		frameworkProperties.setProperty("eclipse.ignoreApp", "true")
+		frameworkProperties.setProperty("eclipse.application.noDefault", "true")
+
 		EclipseStarter.setInitialProperties(frameworkProperties)
-		
-		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath) // PAX ConfMan
-		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
-		System.setProperty("felix.fileinstall.debug", "1")
-		// TODO use grails.server.port[.http]
-		System.setProperty("org.osgi.service.http.port", "8081")
-		
+
 		// start framework
 		def args = [ "-clean", "-consoleLog", "-console" ]
 		
@@ -52,8 +40,8 @@ class EquinoxRuntime extends AbstractOsgiRuntime {
 		}
 		
 		// configure (remote) console 
-		def consoleEnabled = config?.osgi.console.enabled ?: false
-		def defaultConsolePort = config?.osgi.console.port ?: 8023
+		def consoleEnabled = config?.osgi?.console?.enabled ?: false
+		def defaultConsolePort = config?.osgi?.console?.port ?: 8023
 		def consolePort = 0
 		if (argsMap?.consolePort) {
 			if (argsMap.consolePort instanceof Boolean) {
@@ -192,7 +180,7 @@ log4j.logger.org.springframework.core.io.support=DEBUG
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntime#stop()
 	 */
-	void stop() {
+	void doStop() {
 		EclipseStarter.shutdown();
 		this.bundleContext = null
 	}

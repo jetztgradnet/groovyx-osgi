@@ -1,4 +1,6 @@
-package groovyx.osgi.runtime
+
+package org.codehaus.groovy.osgi.runtime.support
+
 
 import groovy.lang.Closure
 import org.codehaus.groovy.osgi.runtime.support.BundleSpec
@@ -30,7 +32,11 @@ class OsgiBuilder {
 	* @param specs bundle specs in format 'group:name:version'
 	*/
 	def bundle(String specs, Closure closure) {
-		def (group, name, version, rest) = specs.split(':')
+		def parts = specs.split(':')
+		if (parts?.size() < 3) {
+			throw new IllegalArgumentException("invalid bundle spec! Required format: 'group:name:version'")
+		}
+		def (group, name, version) = parts as List 
 		def args = [group: group, name: name, version: version ]
 		bundle(args, closure)
 	}

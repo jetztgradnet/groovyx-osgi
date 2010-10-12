@@ -2,6 +2,7 @@ import org.osgi.framework.BundleContext
 
 import groovyx.osgi.runtime.*
 import org.codehaus.groovy.osgi.runtime.*
+import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntime;
 import org.codehaus.groovy.osgi.runtime.resolve.*
 
 

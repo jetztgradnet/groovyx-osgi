@@ -1,13 +1,13 @@
-package groovyx.osgi.runtime
-;
+package groovyx.osgi.runtime;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-interface OsgiRuntime {
+public interface OsgiRuntime {
 	/**
 	 * Start OSGi framework.
 	 * 
@@ -48,17 +48,37 @@ interface OsgiRuntime {
 	 * @return installed bundle
 	 */
 	Bundle install(File bundleFile, boolean autoStart);
+	
+	/**
+	 * Install bundle.
+	 * 
+	 * @param uri URI/URL leading to the bundle location
+	 * @param autoStart true, to start bundle after installation, false otherwise
+	 *  
+	 * @return installed bundle
+	 */
+	Bundle install(String uri, boolean autoStart);
+	
+	/**
+	 * Install bundle.
+	 * 
+	 * @param url URL leading to the bundle location
+	 * @param autoStart true, to start bundle after installation, false otherwise
+	 *  
+	 * @return installed bundle
+	 */
+	Bundle install(URL url, boolean autoStart);
 
 	/**
 	 * Install bundled. Bundles are started after all have been installed.
 	 * 
-	 * @param bundleFiles list of files containing the bundles
+	 * @param bundleFiles list of bundle files or URIs/URLs
 	 * @param autoStart true, to start bundles after installation, false otherwise
 	 *  
 	 * @return installed bundle
 	 */
-	List<Bundle> install(List<File> bundleFiles, boolean autoStart);
-
+	List<Bundle> install(List<Object> bundleFiles, boolean autoStart);
+	
 	/**
 	 * Start bundles
 	 * 
