@@ -3,6 +3,10 @@ apply plugin:'eclipse'
 
 defaultTasks 'build'
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '0.9-preview-3'
+}
+
 subprojects {
 	//name = 'groovyx-osgi'
 	group = 'groovy'
