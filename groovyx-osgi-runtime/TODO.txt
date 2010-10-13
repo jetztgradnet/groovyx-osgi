@@ -6,3 +6,11 @@
 	bundle('file:/...')
 	bundle('mvn:group:name:version[:opt]') or bundle('mvn:group/name/version[/opt]')
   }
+
+* Configuration
+- framework dir
+- dropins dir (Felix FileInstall)
+- ConfigAdmin (Felix/Equinox)
+- WebConsole (optional)
+- local bundles
+- logging
