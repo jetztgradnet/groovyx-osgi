@@ -1,13 +1,15 @@
 
 package groovyx.osgi.runtime
 
+import java.io.File;
+
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory;
 
 import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
 import org.codehaus.groovy.osgi.runtime.felix.FelixRuntimeFactory;
 
-import groovy.lang.Closure
+import org.codehaus.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 
 class OsgiRuntimeBuilder implements GroovyObject {
@@ -17,6 +19,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	Map<String, Object> runtimeTypes = [:]
 	def framework = 'equinox'
 	List<String> bundles = []
+	Closure repositoriesConfig = null
 	Properties runtimeProperties
 	OsgiRuntime runtime
 	
@@ -25,6 +28,10 @@ class OsgiRuntimeBuilder implements GroovyObject {
 		
 		// default runtime type
 		args.framework = 'equinox'
+		// set default equinox version drop
+		args.equinoxDrop = 'R-3.6-201006080911' // Helios release
+		// set default Eclipse mirror
+		args.equinoxMirror = "http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/equinox/drops/"
 		
 		initRuntimeTypes(runtimeTypes)
 	}
@@ -129,6 +136,15 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	}
 	
 	/**
+	 * Get runtime properties.
+	 * 
+	 * @return runtime properties
+	 */
+	public Properties getRuntimeProperties() {
+		return runtimeProperties;
+	}
+	
+	/**
 	 * Set framework runtime type or name of {@link OsgiRuntimeFactory} class
 	 * 
 	 * @param framework runtime type or name of {@link OsgiRuntimeFactory} class
@@ -190,6 +206,25 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	void framework(OsgiRuntimeFactory frameworkFactory) {
 		this.framework = frameworkFactory
 	}
+	
+	/**
+	 * Set directory, into which the runtime will be installed
+	 *  
+	 * @param dir runtime directory
+	 */
+	void runtimeDir(File dir) {
+		args.runtimeDir = dir
+	}
+	
+	/**
+	* Set directory, into which the runtime will be installed
+	*
+	* @param dir runtime directory, either absolute or relative
+	* 			to the current directory
+	*/
+	void runtimeDir(String dir) {
+		args.runtimeDir = dir
+	}
    
 	/**
 	 * Perform cleanup of caches (sets property osgi.clean)
@@ -211,8 +246,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * @param port port on which to run console
 	 */
 	void console(def port) {
-		runtimeProperties.setProperty("osgi.console", "true")
-		// TODO set console port
+		runtimeProperties.setProperty("osgi.console", port)
 	}
 	
 	/**
@@ -224,11 +258,53 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * @return runtime
 	 */
 	protected def configure(OsgiRuntime runtime) {
+		installBundles(runtime, bundles)
+	}
+	
+	/**
+	 * Install bundles in runtime
+	 * 
+	 * @param runtime runtime in which to install bundles
+	 * @param bundles list of bundles. Each element is either 
+	 * 			an URL (file, http, ..., mvn:group:module:version) or
+	 * 			a Map with the elements group, name, and version
+	 * @return
+	 */
+	def installBundles(OsgiRuntime runtime, List bundles) {
 		if (bundles?.size()) {
 			// start runtime if it not yet running, so we
 			// can install additional bundles
 			if (!runtime.isRunning()) {
 				runtime.start()
+			}
+			
+			def bundlesToResolve = []
+			def artifactsToResolve = []
+			bundles?.each { bundle ->
+				if (bundle instanceof Map) {
+					bundlesToResolve << bundle
+					
+					artifactsToResolve << bundle
+				}
+				else if (bundle.toString().startsWith('mvn:')) {
+					bundlesToResolve << bundle
+					
+					def spec = bundle.toString()
+					// remove URL scheme
+					spec -= 'mvn:'
+					
+					artifactsToResolve << spec
+				}
+			}
+			if (artifactsToResolve) {
+				// remove bundles to resolve
+				bundles -= bundlesToResolve
+				def artifactURLs = []
+
+				// resolve bundles				
+				artifactURLs = resolveBundles(artifactsToResolve)
+				// add all resolved file URLs
+				bundles.addAll(artifactURLs)
 			}
 			
 			// resolve and install bundles
@@ -243,8 +319,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 				
 				if ((bundle instanceof Map)
 					|| (bundle.toString().startsWith('mvn:'))) {
-					// TODO resolve bundle
-					log.error("resolving of bundles via Ivy is not yet implemented: " + bundle);
+					log.error("unresolved bundle: " + bundle);
 				}
 				
 				try {
@@ -258,6 +333,110 @@ class OsgiRuntimeBuilder implements GroovyObject {
 		}
 		
 		runtime
+	}
+	
+	/**
+	 * Resolve bundles and return list of local URLs.
+	 * 
+	 * @param bundles list of bundle specs.
+	 * 			Each element is either 
+	 * 			an URL (file, http, ..., mvn:group:module:version) or
+	 * 			a Map with the elements group, name, and version
+	 * 
+	 * @return list of local URLs (as String)
+	 * 
+	 * @throws Exception in case of resolve errors
+	 */
+	List<String> resolveBundles(List bundles) throws Exception {
+		List<URL> artifactURLs = new ArrayList<URL>()
+		
+		// application name and version are dummy values
+		IvyDependencyManager manager = new IvyDependencyManager("groovyx.osgi", "1.0")
+		
+		def ivySettings = manager.ivySettings
+		
+		String logLevel = args.resolverLogLevel ?: "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+		
+		String equinoxRepository = null
+		if (args.equinoxDrop && args.equinoxMirror) {
+			def equinoxDrop = args.equinoxDrop
+			def equinoxMirror = args.equinoxMirror
+			equinoxRepository = "$equinoxMirror/$equinoxDrop".toString()
+			// make sure we have only single '/', if the eclipse mirror ended with '/'
+			equinoxRepository = equinoxRepository.replace("//", "/")
+		}
+		
+		def dependencies = {
+			log logLevel
+			
+			if (repositoriesConfig) {
+				repositories repositoriesConfig 
+			}
+			else {
+				// default repos
+				repositories {
+					mavenLocal()
+					ebr()
+					mavenCentral()
+					
+					mavenRepo "http://maven.springframework.org/milestone"
+					mavenRepo 'http://repository.ops4j.org/maven2/'
+					
+					mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/osgi'
+					mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
+					
+					if (equinoxRepository) {
+						// configure resolver for Eclipse Equinox OSGi framework
+						def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
+						equinoxResolver.addArtifactPattern("${equinoxRepository}/[organisation].[module]_[revision].[ext]")
+						equinoxResolver.settings = ivySettings
+						equinoxResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
+						equinoxResolver.changingPattern = ".*SNAPSHOT"
+						equinoxResolver.setCheckmodified(true)
+						resolver equinoxResolver
+					}
+				}
+			}
+			
+			dependencies {
+				bundles.each{ dep ->
+					runtime (dep) {
+						transitive = false
+					}
+				}
+			}
+		}
+		
+		// parse bundles/dependencies from above
+		manager.parseDependencies(dependencies)
+		
+		// resolve bundles
+		def report = manager.resolveDependencies()
+		if(report.hasError()) {
+			log.error """
+There was an error resolving the dependencies.
+This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories.
+Try passing a valid Maven repository with the --repository argument."""
+			report.allProblemMessages.each { problem -> log.error ": $problem" }
+			throw new RuntimeException("failed to resolve some modules")
+		}
+		else {
+			/*
+			for (def artifactDownloadReport in report.getAllArtifactsReports()) {
+				def artifact = artifactDownloadReport.getArtifact()
+				if (artifactDownloadReport.localFile) {
+					artifactURLs << artifactDownloadReport.localFile.toURL().toString()
+				}
+			}
+			*/
+			artifactURLs = report.allArtifactsReports*.localFile*.toURL()*.toString()
+			//artifactURLs.each { url ->
+			//	println url
+			//}
+		}
+		
+		
+		artifactURLs
 	}
 	
 	/**
@@ -280,11 +459,19 @@ class OsgiRuntimeBuilder implements GroovyObject {
 			return this.runtime
 		}
 		
-		// TODO make runtime path configurable
 		File cwd = new File(System.getProperty('user.dir'))
-		File osgiRuntime = new File(cwd, 'osgi')
-		File dropinsDir = new File(osgiRuntime, 'dropins')
-		def osgiRuntimePath = osgiRuntime.absolutePath
+		File runtimeDir = args?.runtimeDir ? new File(args?.runtimeDir.toString()) :  new File(cwd, 'system')
+		File dropinsDir = new File(runtimeDir, 'dropins')
+		
+		if (!runtimeDir.exists()) {
+			runtimeDir.mkdirs()
+		}
+		if (!dropinsDir.exists()) {
+			dropinsDir.mkdirs()
+		}
+		
+		
+		def osgiRuntimePath = runtimeDir.absolutePath
 		
 		// prepare runtime properties
 		//runtimeProperties.setProperty("osgi.clean", "true")
@@ -350,9 +537,30 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	def configure(Closure closure) {
 		def cl = closure.clone()
 		cl.delegate = this
+		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 		cl()
 		
 		this
+	}
+	
+	/**
+	* Set runtime args.
+	*
+	* @param closure configuration closure
+	*
+	* @return this builder instance
+	*/
+   def args(Closure closure) {
+	   def cl = closure.clone()
+	   cl.delegate = args
+	   cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+	   cl()
+	   
+	   this
+   }
+	
+	def repositories(Closure closure) {
+		repositoriesConfig = closure
 	}
 	
 	/**
@@ -363,8 +571,9 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * @return this builder instance
 	 */
 	def bundles(Closure closure) {
-		def cl = closure.clone()
+		Closure cl = closure.clone()
 		cl.delegate = this
+		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 		cl()
 		
 		this
@@ -378,7 +587,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * @return this builder instance
 	 */
 	def bundle(Map args) {
-		bundle(args, null)
+		bundle(null, args, null)
 		
 		this
 	}
@@ -390,7 +599,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * 
 	 * @return this builder instance
 	 */
-	def bundle(String specs) {
+	def bundle(CharSequence specs) {
 		bundle(specs, null)
 		
 		this
@@ -402,7 +611,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	* @param specs bundle specs in format 'group:name:version'
 	* @param closure bundle configuration closure
 	*/
-	def bundle(String specs, Closure closure) {
+	def bundle(CharSequence specs, Closure closure) {
 		def args = [:]
 		
 		bundle(specs, args, closure)
@@ -419,14 +628,20 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * 
 	 * @return this builder instance
 	 */
-	def bundle(String specs, Map args, Closure closure) {
+	def bundle(CharSequence specs, Map args, Closure closure) {
 		if (closure) {
 			def cl = closure.clone()
 			cl.delegate = this
+			cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 			cl(specs)
 		}
 		
-		bundles << specs
+		if (args) {
+			bundles << args
+		}
+		else if (specs) {
+			bundles << specs.toString()
+		}
 		
 		this
 	}
