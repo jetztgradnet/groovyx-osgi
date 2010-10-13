@@ -30,37 +30,20 @@ public class OsgiRuntimeBuilderTest {
 		assertEquals(1, bundles.size())
 		assertEquals("org.springframework:org.springframework.aop:$springVersion".toString(), bundles[0])
 	}
-	
-	@Test
-	void testStartEquinox() throws Exception {
-		OsgiRuntime runtime = builder.build {
-			// test alias
-			framework 'equinox'
-		}
-		assertNotNull(runtime)
-		assertEquals(EquinoxRuntime.class, runtime.class)
 		
-		BundleContext context = runtime.start()
-		assertNotNull(context)
-		assertTrue(runtime.isRunning())
-		
-		// TODO do something with bundle context		
-		
-		runtime.stop()
-		assertFalse(runtime.isRunning())
-		
-		context = runtime.bundleContext
-		assertNull(context)
-	}
-	
 	@Test
 	void testEquinoxFactoryAlias() throws Exception {
 		builder.configure {
 			// test alias
 			framework 'equinox'
+
+			bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+			bundle group: 'org.apache.felix', name:'org.apache.felix.configadmin', version:'1.2.4'
 		}
 		OsgiRuntimeFactory factory = builder.getOsgiRuntimeFactory(builder.framework)
 		
+		def bundles = builder.bundles
+		assertEquals(2, bundles.size())
 		assertEquals(EquinoxRuntimeFactory.class, factory.class)
 	}
 	
