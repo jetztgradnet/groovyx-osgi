@@ -85,7 +85,7 @@ public interface OsgiRuntime {
 	 * @param bundles list of bundle ids or bundle symbolic names
 	 */
 	@SuppressWarnings("rawtypes")
-	void startBundle(List bundles);
+	void startBundles(List bundles);
 
 	/**
 	 * Start bundle.
@@ -114,7 +114,7 @@ public interface OsgiRuntime {
 	 * @param bundles list of bundle ids or bundle symbolic names
 	 */
 	@SuppressWarnings("rawtypes")
-	void stopBundle(List bundles);
+	void stopBundles(List bundles);
 
 	/**
 	 * Stop bundle.

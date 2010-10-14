@@ -275,7 +275,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 			// start runtime if it not yet running, so we
 			// can install additional bundles
 			if (!runtime.isRunning()) {
-				runtime.startBundle()
+				runtime.start()
 			}
 			
 			def bundlesToResolve = []

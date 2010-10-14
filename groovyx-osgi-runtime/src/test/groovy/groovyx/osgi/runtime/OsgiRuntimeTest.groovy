@@ -28,7 +28,7 @@ public class OsgiRuntimeTest {
 			runtimeDir 'system'
 
 			args {
-				resolverLogLevel = "debug"
+				resolverLogLevel = "warn"
 			}
 
 			bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
@@ -37,7 +37,7 @@ public class OsgiRuntimeTest {
 		assertNotNull(runtime)
 		assertEquals(EquinoxRuntime.class, runtime.class)
 		
-		BundleContext context = runtime.startBundle()
+		BundleContext context = runtime.start()
 		assertNotNull(context)
 		assertTrue(runtime.isRunning())
 		

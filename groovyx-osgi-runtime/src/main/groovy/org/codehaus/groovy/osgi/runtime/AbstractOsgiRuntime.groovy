@@ -162,16 +162,16 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 		
 		if (autoStart) {
 			// start each bundle
-			start(bundles)
+			startBundles(bundles)
 		}
 		
 		return bundles
 	}
 	
 	/* (non-Javadoc)
-	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(java.util.List)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundles(java.util.List)
 	 */
-	void startBundle(List bundles) {
+	void startBundles(List bundles) {
 		// start each bundle
 		bundles.each { bundle ->
 			startBundle(bundle)	
@@ -216,7 +216,7 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntime#stopBundle(java.util.List)
 	 */
-	public void stopBundle(List bundles) {
+	public void stopBundles(List bundles) {
 		// start each bundle
 		bundles.each { bundle ->
 			stopBundle(bundle)
