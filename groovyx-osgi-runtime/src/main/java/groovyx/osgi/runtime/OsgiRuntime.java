@@ -22,7 +22,8 @@ public interface OsgiRuntime {
 	
 	/**
 	 * Determine whether the framework is running
-	 * @return
+	 * 
+	 * @return <code>true</code>, if the runtime is running, <code>false</code> otherwise
 	 */
 	boolean isRunning();
 	
