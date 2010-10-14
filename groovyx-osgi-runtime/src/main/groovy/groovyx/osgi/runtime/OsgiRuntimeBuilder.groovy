@@ -23,6 +23,11 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	Properties runtimeProperties
 	OsgiRuntime runtime
 	
+	// configurable event closure: onStart(runtime), doRun(runtime), afterStop(builder)
+	Closure onStart
+	Closure doRun
+	Closure afterStop
+	
 	public OsgiRuntimeBuilder() {
 		runtimeProperties = new Properties()
 		
@@ -261,6 +266,47 @@ class OsgiRuntimeBuilder implements GroovyObject {
 		installBundles(runtime, bundles)
 	}
 	
+	protected void doStart() {
+		if (!runtime.isRunning()) {
+			runtime.start()
+			if (onStart) {
+				onStart(runtime)
+			}
+		}
+	}
+	
+	protected void waitForFinish() {
+		if (runtime.isRunning()) {
+			if (doRun) {
+				doRun(runtime)
+			}
+			else {
+				long timeout = 0
+				
+				// wait for timeout or user to press CTRL-C
+				def locker = new Object()
+				synchronized(locker) {
+					if (timeout) {
+						// wait for timeout
+						locker.wait(timeout)
+					}
+					else {
+						locker.wait()
+					}
+				}
+			}
+		}
+	}
+	
+	protected void doStop() {
+		if (runtime.isRunning()) {
+			runtime.stop()
+			if (afterStop) {
+				afterStop(this)
+			}
+		}
+	}
+	
 	/**
 	 * Install bundles in runtime
 	 * 
@@ -275,7 +321,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 			// start runtime if it not yet running, so we
 			// can install additional bundles
 			if (!runtime.isRunning()) {
-				runtime.start()
+				doStart()
 			}
 			
 			def bundlesToResolve = []
