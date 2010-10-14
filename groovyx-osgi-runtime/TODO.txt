@@ -14,3 +14,12 @@
 - WebConsole (optional)
 - local bundles
 - logging
+
+* Configuration profiles
+- web: jetty, rfc66 (gemini web)
+- web mgmt: web console
+- logging: pax-logging/slf4j + log4j
+- ds
+- spring-dm
+- blueprint
+- ...
