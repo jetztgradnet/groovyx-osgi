@@ -12,6 +12,12 @@ import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
 
 import org.apache.felix.framework.Felix
 
+
+/**
+ * In-process Apache Felix OSGi runtime.
+ * 
+ * @author Wolfgang Schell
+ */
 class FelixRuntime extends AbstractOsgiRuntime {
 	Felix felix
 	Properties frameworkProperties = new Properties()
