@@ -85,28 +85,57 @@ public interface OsgiRuntime {
 	 * @param bundles list of bundle ids or bundle symbolic names
 	 */
 	@SuppressWarnings("rawtypes")
-	void start(List bundles);
+	void startBundle(List bundles);
 
 	/**
 	 * Start bundle.
 	 * 
 	 * @param bundle bundle to start
 	 */
-	void start(Bundle bundle);
+	void startBundle(Bundle bundle);
 	
 	/**
 	 * Start bundle.
 	 * 
 	 * @param bundleId bundle id
 	 */
-	void start(int bundleId);
+	void startBundle(int bundleId);
 	
 	/**
 	 * Start bundle.
 	 * 
 	 * @param symbolicName bundle symbolic name
 	 */
-	void start(String symbolicName);
+	void startBundle(String symbolicName);
+	
+	/**
+	 * Stop bundles
+	 * 
+	 * @param bundles list of bundle ids or bundle symbolic names
+	 */
+	@SuppressWarnings("rawtypes")
+	void stopBundle(List bundles);
+
+	/**
+	 * Stop bundle.
+	 * 
+	 * @param bundle bundle to start
+	 */
+	void stopBundle(Bundle bundle);
+	
+	/**
+	 * Stop bundle.
+	 * 
+	 * @param bundleId bundle id
+	 */
+	void stopBundle(int bundleId);
+	
+	/**
+	 * Stop bundle.
+	 * 
+	 * @param symbolicName bundle symbolic name
+	 */
+	void stopBundle(String symbolicName);
 
 	/**
 	 * Determine whether a bundle is a fragment.

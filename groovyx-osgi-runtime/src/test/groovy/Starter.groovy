@@ -49,13 +49,13 @@ try {
 											buildSettings: grailsSettings,
 											osgiRuntimePath: osgiRuntimePath, 
 											systemPackages: systemPackages)
-	BundleContext ctx = runner.start()
+	BundleContext ctx = runner.startBundle()
 
 	// install and start infrastructure bundles
 	def bundles = runner.install(bundleFiles, false)
 
 	// start bundles required for logging
-	runner.start([
+	runner.startBundle([
 		'org.eclipse.osgi.util',
 		'org.eclipse.osgi.services',
 		'org.eclipse.equinox.common',
@@ -69,7 +69,7 @@ try {
 	runner.configureLogging()
 
 	// start other bundles
-	runner.start(bundles)
+	runner.startBundle(bundles)
 
 	// install and start grails app bundle
 	if (!argsMap?.noApp) {

@@ -37,7 +37,7 @@ public class OsgiRuntimeTest {
 		assertNotNull(runtime)
 		assertEquals(EquinoxRuntime.class, runtime.class)
 		
-		BundleContext context = runtime.start()
+		BundleContext context = runtime.startBundle()
 		assertNotNull(context)
 		assertTrue(runtime.isRunning())
 		

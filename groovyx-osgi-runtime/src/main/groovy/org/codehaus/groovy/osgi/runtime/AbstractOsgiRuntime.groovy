@@ -169,19 +169,19 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see groovyx.osgi.OsgiRuntime#start(java.util.List)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(java.util.List)
 	 */
-	void start(List bundles) {
+	void startBundle(List bundles) {
 		// start each bundle
 		bundles.each { bundle ->
-			start(bundle)	
+			startBundle(bundle)	
 		}
 	}
 	
 	/* (non-Javadoc)
-	 * @see groovyx.osgi.runtime.OsgiRuntime#start(org.osgi.framework.Bundle)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(org.osgi.framework.Bundle)
 	 */
-	public void start(Bundle bundle) {
+	public void startBundle(Bundle bundle) {
 		try {
 			if (!bundle) {
 				return
@@ -197,21 +197,67 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see groovyx.osgi.runtime.OsgiRuntime#start(int)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(int)
 	 */
-	public void start(int bundleId) {
+	public void startBundle(int bundleId) {
 		// get bundle by id
 		def bundle = this.bundleContext.getBundle(bundleId)
-		start(bundle)
+		startBundle(bundle)
 	}
 	
 	/* (non-Javadoc)
-	 * @see groovyx.osgi.runtime.OsgiRuntime#start(java.lang.String)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(java.lang.String)
 	 */
-	public void start(String symbolicName) {
+	public void startBundle(String symbolicName) {
 		def bundle = this.bundleContext.bundles.find { it.symbolicName == symbolicName }
-		start(bundle)
+		startBundle(bundle)
 	}
+	
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#stopBundle(java.util.List)
+	 */
+	public void stopBundle(List bundles) {
+		// start each bundle
+		bundles.each { bundle ->
+			stopBundle(bundle)
+		}
+	}
+   
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#startBundle(org.osgi.framework.Bundle)
+	 */
+	public void stopBundle(Bundle bundle) {
+		try {
+			if (!bundle) {
+				return
+			}
+			// skip stop for fragments
+			if (!isFragment(bundle)) {
+				bundle.stop();
+			}
+		}
+		catch (e) {
+			println "failed to stop bundle ${bundle}: ${e.message}"
+		}
+	}
+   
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#stopBundle(int)
+	 */
+	public void stopBundle(int bundleId) {
+		// get bundle by id
+		def bundle = this.bundleContext.getBundle(bundleId)
+		stopBundle(bundle)
+	}
+   
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#stopBundle(java.lang.String)
+	 */
+	public void stopBundle(String symbolicName) {
+		def bundle = this.bundleContext.bundles.find { it.symbolicName == symbolicName }
+		stopBundle(bundle)
+	}
+
 	
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.OsgiRuntime#isFragment(org.osgi.framework.Bundle)
