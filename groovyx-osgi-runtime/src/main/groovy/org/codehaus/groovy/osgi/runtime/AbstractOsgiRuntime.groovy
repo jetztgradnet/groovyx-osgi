@@ -63,6 +63,14 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	abstract BundleContext doStart();
 	abstract void doStop();
 	
+	/**
+	 * Configure logging
+	 */
+	protected void configureLogging() {
+		// TODO configure logging via PAX Logging/SLF4J and log4j
+		// TODO create logging DSL (e.g. copy from Grails) 
+	}
+	
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntime#isRunning()
 	 */
@@ -81,13 +89,15 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	 * @see groovyx.osgi.OsgiRuntime#start()
 	 */
 	BundleContext start() {
-		if (this.bundleContext) {
+		if (isRunning()) {
 			return this.bundleContext
 		}
 		
 		configure()
-		
-		this.bundleContext = doStart()
+
+		if (canStart()) {
+			this.bundleContext = doStart()
+		}
 		
 		return this.bundleContext
 	}
@@ -96,13 +106,31 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	 * @see groovyx.osgi.runtime.OsgiRuntime#stop()
 	 */
 	public void stop() {
-		if (!this.bundleContext) {
+		if (!isRunning()) {
 			return
 		}
 		
-		doStop()
+		if (canStop()) {
+			doStop()
+		}
 		
 		this.bundleContext = null 
+	}
+	
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#canStart()
+	 */
+	public boolean canStart() {
+		// always return true
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#canStop()
+	 */
+	public boolean canStop() {
+		// always return true
+		return true;
 	}
 	
 	/* (non-Javadoc)

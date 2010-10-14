@@ -21,11 +21,29 @@ public interface OsgiRuntime {
 	void stop();
 	
 	/**
+	 * Determine whether this runtime can be started programmatically.
+	 * 
+	 * @return <code>true</code>, if this runtime can be started 
+	 * 			programmatically, <code>false</code> otherwise
+	 */
+	boolean canStart();
+	
+	/**
+	 * Determine whether this runtime can be stopped programmatically.
+	 * 
+	 * @return <code>true</code>, if this runtime can be stopped 
+	 * 			programmatically, <code>false</code> otherwise
+	 */
+	boolean canStop();
+	
+	/**
 	 * Determine whether the framework is running
 	 * 
 	 * @return <code>true</code>, if the runtime is running, <code>false</code> otherwise
 	 */
 	boolean isRunning();
+	
+	
 	
 	/**
 	 * Get bundle context of system bundle.
@@ -34,11 +52,6 @@ public interface OsgiRuntime {
 	 * 			the framework is not started
 	 */
 	BundleContext getBundleContext();
-	
-	/**
-	 * Configure logging
-	 */
-	void configureLogging();
 	
 	/**
 	 * Install bundle.
