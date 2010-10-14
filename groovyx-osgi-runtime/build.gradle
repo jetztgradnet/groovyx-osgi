@@ -5,6 +5,8 @@ apply plugin:'eclipse'
 
 defaultTasks 'build'
 
+build.dependsOn 'javadoc'
+
 dependencies {
 	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
 	compile group: 'org.osgi', name: 'org.osgi.compendium', version: '4.2.0'
