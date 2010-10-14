@@ -257,7 +257,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 *  
 	 * @return runtime
 	 */
-	protected def configure(OsgiRuntime runtime) {
+	protected def configureRuntime(OsgiRuntime runtime) {
 		installBundles(runtime, bundles)
 	}
 	
@@ -501,7 +501,7 @@ Try passing a valid Maven repository with the --repository argument."""
 		this.runtime.osgiRuntimePath = osgiRuntimePath
 		
 		// configure runtime
-		configure(this.runtime)
+		configureRuntime(this.runtime)
 		
 		this.runtime
 	}
