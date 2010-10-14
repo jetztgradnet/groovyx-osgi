@@ -14,8 +14,22 @@ OsgiRuntimeBuilder.run {
 
 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
 
-		onStart = {
-			println "started OSGi runtime"
+		beforeStart = {
+			println "starting OSGi runtime"
+		}
+		
+		afterInstallBundles = { runtime ->
+			def bundleContext = runtime.bundleContext
+			if (bundleContext) {
+				println "installed bundles:"
+				bundleContext?.bundles?.each { bundle ->
+					// TODO add bundle state
+					println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
+				}
+			}
+			else {
+				println "failed to list bundles"
+			}
 		}
 
 		doRun = {
