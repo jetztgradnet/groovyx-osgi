@@ -1,7 +1,12 @@
-
 package groovyx.osgi.runtime
 
+import groovy.lang.Binding;
+import groovy.lang.Closure;
+import groovy.lang.Script;
+
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +19,7 @@ import org.codehaus.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 class OsgiRuntimeBuilder implements GroovyObject {
 	final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
-
+	
 	Map args = [:]
 	Map<String, Object> runtimeTypes = [:]
 	def framework = 'equinox'
@@ -44,6 +49,13 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	protected void initRuntimeTypes(Map runtimeTypes) {
 		runtimeTypes['equinox'] = EquinoxRuntimeFactory.class
 		runtimeTypes['felix'] = FelixRuntimeFactory.class
+	}
+	
+	def setupBinding(Binding binding) {
+		binding.builder = this
+		binding.configure = { 
+			configure it
+		}
 	}
 	
 	/**
@@ -587,6 +599,81 @@ Try passing a valid Maven repository with the --repository argument."""
 		cl()
 		
 		this
+	}
+	
+	def configure(File file) {
+		// parse file as Groovy script using GroovyShell
+		Binding binding = new Binding()
+		setupBinding(binding)
+		
+		GroovyShell shell = new GroovyShell(binding)
+		shell.evaluate(file)
+	}
+	
+	def configure(Script script) {
+		// evaluate script
+		Binding binding = new Binding()
+		setupBinding(binding)
+		
+		script.setBinding(binding)
+		script.run()
+	}
+	
+	def configure(InputStream input) {
+		configure(new InputStreamReader(input))
+	}
+	
+	def configure(Reader input) {
+		// parse stream as Groovy script using GroovyShell
+		Binding binding = new Binding()
+		setupBinding(binding)
+		
+		GroovyShell shell = new GroovyShell(binding)
+		shell.evaluate(input)
+	}
+	
+	def configure(URL url) {
+		configure(url.openStream())
+	}
+	
+	def configure(CharSequence input) {
+		String text = input.toString()
+		
+		// if first 20 chars contain a ':', we try to parse text as URL
+		if (text.substring(0, 20).contains(":")) {
+			try {
+				// check whether String is an URL
+				URL url = new URL(input)
+				configure(url)
+			}
+			catch (MalformedURLException e) {
+				// interpret as script
+				configure(new StringReader(text))
+			}
+		}
+		else {
+			// interpret as script
+			configure(new StringReader(text))
+		}
+	}
+	
+	def configure(Object[] args) {
+		configure(args as List)
+	}
+	
+	def configure(List list) {
+		list.each { item ->
+			switch (item) {
+				case Reader: configure(item as Reader); break;
+				case InputStream: configure(item as InputStream); break;
+				case Script: configure(item as Script); break;
+				case File: configure(item as File); break;
+				case URL: configure(item as URL); break;
+				case Reader: configure(item as Reader); break;
+				case CharSequence: configure(item as CharSequence); break;
+				default: throw new IllegalArgumentException("invalid configuration item");
+			}
+		} 
 	}
 	
 	/**
