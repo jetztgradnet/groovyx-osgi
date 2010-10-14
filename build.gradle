@@ -11,7 +11,8 @@ subprojects {
 	//name = 'groovyx-osgi'
 	group = 'groovy'
 	version = '0.1'
-	equinoxVersion = '3.6.0.v20100517' // Helios release
+	//equinoxVersion = '3.6.0.v20100517' // Helios release
+	equinoxVersion = '3.6.1.R36x_v20100806' // Helios SR1
 	felixVersion = "3.0.2"
 
 	repositories {

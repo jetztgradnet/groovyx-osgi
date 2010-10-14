@@ -12,6 +12,16 @@ import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter
 
+
+/**
+ * Equinox OSGi runtime.
+ * 
+ * <p>
+ * Preferable use Equinox 3.6.1 or higher because of shutdown bugs
+ * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=312917">312917</a> 
+ * and <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=314343">314343</a>.
+ * </p> 
+ */
 class EquinoxRuntime extends AbstractOsgiRuntime {
 	Properties frameworkProperties = new Properties()
 	
