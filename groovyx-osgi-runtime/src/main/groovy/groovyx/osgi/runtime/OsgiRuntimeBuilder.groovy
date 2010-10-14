@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
 import org.codehaus.groovy.osgi.runtime.felix.FelixRuntimeFactory;
+import org.codehaus.groovy.osgi.runtime.external.ExternalRuntimeFactory
 
 import org.codehaus.groovy.osgi.runtime.resolve.IvyDependencyManager
 
@@ -62,6 +63,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	protected void initRuntimeTypes(Map runtimeTypes) {
 		runtimeTypes['equinox'] = EquinoxRuntimeFactory.class
 		runtimeTypes['felix'] = FelixRuntimeFactory.class
+		runtimeTypes['external'] = ExternalRuntimeFactory.class
 	}
 	
 	/**
