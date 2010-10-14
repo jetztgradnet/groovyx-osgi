@@ -5,6 +5,8 @@ import groovy.lang.Closure;
 import groovy.lang.Script;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,14 +25,19 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	Map args = [:]
 	Map<String, Object> runtimeTypes = [:]
 	def framework = 'equinox'
+	def dropinsDir = 'dropins'
 	List<String> bundles = []
 	Closure repositoriesConfig = null
 	Properties runtimeProperties
 	OsgiRuntime runtime
 	
-	// configurable event closure: onStart(runtime), doRun(runtime), afterStop(builder)
-	Closure onStart
+	// callbacks
+	Closure beforeStart
+	Closure afterStart
+	Closure beforeInstallBundles
+	Closure afterInstallBundles
 	Closure doRun
+	Closure beforeStop
 	Closure afterStop
 	
 	public OsgiRuntimeBuilder() {
@@ -46,12 +53,24 @@ class OsgiRuntimeBuilder implements GroovyObject {
 		initRuntimeTypes(runtimeTypes)
 	}
 	
+	/**
+	 * Setup aliases for OSGi runtimes. May be overridden
+	 * to add additional aliases.
+	 * 
+	 * @param runtimeTypes map to add types to
+	 */
 	protected void initRuntimeTypes(Map runtimeTypes) {
 		runtimeTypes['equinox'] = EquinoxRuntimeFactory.class
 		runtimeTypes['felix'] = FelixRuntimeFactory.class
 	}
 	
-	def setupBinding(Binding binding) {
+	/**
+	 * Setup binding for configuration scripts. May 
+	 * be overridden to add more bindings 
+	 * 
+	 * @param binding binding to set up
+	 */
+	protected void setupBinding(Binding binding) {
 		binding.builder = this
 		binding.configure = { 
 			configure it
@@ -280,9 +299,14 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	
 	protected void doStart() {
 		if (!runtime.isRunning()) {
+			if (beforeStart) {
+				beforeStart(runtime)
+			}
+			
 			runtime.start()
-			if (onStart) {
-				onStart(runtime)
+			
+			if (afterStart) {
+				afterStart(runtime)
 			}
 		}
 	}
@@ -312,9 +336,14 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	
 	protected void doStop() {
 		if (runtime.isRunning()) {
+			if (beforeStop) {
+				beforeStop(runtime)
+			}
+			
 			runtime.stop()
+			
 			if (afterStop) {
-				afterStop(this)
+				afterStop(runtime)
 			}
 		}
 	}
@@ -328,7 +357,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * 			a Map with the elements group, name, and version
 	 * @return
 	 */
-	def installBundles(OsgiRuntime runtime, List bundles) {
+	protected def installBundles(OsgiRuntime runtime, List bundles) {
 		if (bundles?.size()) {
 			// start runtime if it not yet running, so we
 			// can install additional bundles
@@ -336,6 +365,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 				doStart()
 			}
 			
+			// resolve bundles
 			def bundlesToResolve = []
 			def artifactsToResolve = []
 			bundles?.each { bundle ->
@@ -365,7 +395,11 @@ class OsgiRuntimeBuilder implements GroovyObject {
 				bundles.addAll(artifactURLs)
 			}
 			
-			// resolve and install bundles
+			if (beforeInstallBundles) {
+				beforeInstallBundles(runtime)
+			}
+			
+			// install bundles
 			bundles?.each { bundle ->
 				log.info "installing bundle $bundle"
 				boolean autoStart = true
@@ -387,6 +421,10 @@ class OsgiRuntimeBuilder implements GroovyObject {
 					log.error("failed to install bundle $bundle: " + e.getMessage())
 					log.debug("details: ", e)
 				}
+			}
+			
+			if (afterInstallBundles) {
+				afterInstallBundles(runtime)
 			}
 		}
 		
@@ -427,10 +465,17 @@ class OsgiRuntimeBuilder implements GroovyObject {
 		def dependencies = {
 			log logLevel
 			
+			// add user repositories
 			if (repositoriesConfig) {
 				repositories repositoriesConfig 
 			}
-			else {
+			
+			// check whether to add default repositories
+			def defaultRepositories = true
+			if (args.containsKey('defaultRepositories')) {
+				defaultRepositories = args.defaultRepositories
+			}
+			if (defaultRepositories) {
 				// default repos
 				repositories {
 					mavenLocal()
@@ -456,10 +501,12 @@ class OsgiRuntimeBuilder implements GroovyObject {
 				}
 			}
 			
-			dependencies {
-				bundles.each{ dep ->
-					runtime (dep) {
-						transitive = false
+			if (bundles) {
+				dependencies {
+					bundles.each{ dep ->
+						runtime (dep) {
+							transitive = false
+						}
 					}
 				}
 			}
@@ -519,7 +566,7 @@ Try passing a valid Maven repository with the --repository argument."""
 		
 		File cwd = new File(System.getProperty('user.dir'))
 		File runtimeDir = args?.runtimeDir ? new File(args?.runtimeDir.toString()) :  new File(cwd, 'system')
-		File dropinsDir = new File(runtimeDir, 'dropins')
+		File dropinsDir = (this.dropinsDir instanceof File ? this.dropinsDir : new File(runtimeDir, this.dropinsDir?.toString() ?: 'dropins'))
 		
 		if (!runtimeDir.exists()) {
 			runtimeDir.mkdirs()
@@ -548,7 +595,7 @@ Try passing a valid Maven repository with the --repository argument."""
 		
 		//frameworkProperties.setProperty("log4j.configuration", logConfig.absolutePath)
 		
-		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath) // PAX ConfMan
+		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath)	// PAX ConfMan
 		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
 		System.setProperty("felix.fileinstall.debug", "1")
 		// for OSGi HttpService
@@ -557,6 +604,7 @@ Try passing a valid Maven repository with the --repository argument."""
 		this.runtime = createRuntime(framework, runtimeProperties)
 		
 		this.runtime.osgiRuntimePath = osgiRuntimePath
+		this.runtime.dropinsDir = dropinsDir
 		
 		// configure runtime
 		configureRuntime(this.runtime)
@@ -585,8 +633,8 @@ Try passing a valid Maven repository with the --repository argument."""
 	}
 	
 	/**
-	 * Configure OSGi runtime. The runtime does not yet exist,
-	 * it can be created using {@link #build()}.
+	 * Configure OSGi runtime. The closure has access
+	 * to all methods provided by this builder.
 	 * 
 	 * @param closure configuration closure
 	 * 
@@ -601,6 +649,16 @@ Try passing a valid Maven repository with the --repository argument."""
 		this
 	}
 	
+	/**
+	 * Configure OSGi runtime. The file is loaded as
+	 * Groovy {@link Script} and can access the predefined
+	 * method {@link #configure(Closure)} and the
+	 * builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param file file with configuration script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(File file) {
 		// parse file as Groovy script using GroovyShell
 		Binding binding = new Binding()
@@ -608,8 +666,19 @@ Try passing a valid Maven repository with the --repository argument."""
 		
 		GroovyShell shell = new GroovyShell(binding)
 		shell.evaluate(file)
+		
+		this
 	}
 	
+	/**
+	 * Configure OSGi runtime. The {@link Script} can access 
+	 * the predefined method {@link #configure(Closure)} 
+	 * and the builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param script configuration script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(Script script) {
 		// evaluate script
 		Binding binding = new Binding()
@@ -617,12 +686,38 @@ Try passing a valid Maven repository with the --repository argument."""
 		
 		script.setBinding(binding)
 		script.run()
+		
+		this
 	}
 	
+	/**
+	 * Configure OSGi runtime. The stream is loaded as
+	 * Groovy {@link Script} and can access the predefined
+	 * method {@link #configure(Closure)} and the
+	 * builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param input {@link InputStream} containing the
+	 * 			configuration script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(InputStream input) {
 		configure(new InputStreamReader(input))
+		
+		this
 	}
 	
+	/**
+	 * Configure OSGi runtime. The content is loaded as
+	 * Groovy {@link Script} and can access the predefined
+	 * method {@link #configure(Closure)} and the
+	 * builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param input {@link Reader} containing the configuration 
+	 * 				script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(Reader input) {
 		// parse stream as Groovy script using GroovyShell
 		Binding binding = new Binding()
@@ -630,12 +725,38 @@ Try passing a valid Maven repository with the --repository argument."""
 		
 		GroovyShell shell = new GroovyShell(binding)
 		shell.evaluate(input)
+		
+		this
 	}
 	
+	
+	/**
+	 * Configure OSGi runtime. The resource is loaded as
+	 * Groovy {@link Script} and can access the predefined
+	 * method {@link #configure(Closure)} and the
+	 * builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param url url of the configuration script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(URL url) {
 		configure(url.openStream())
+		
+		this
 	}
 	
+	/**
+	 * Configure OSGi runtime. The content is loaded as
+	 * Groovy {@link Script} and can access the predefined
+	 * method {@link #configure(Closure)} and the
+	 * builder instance as property <pre>builder</pre>.
+	 * 
+	 * @param input either url or text containing the 
+	 * 			configuration script
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(CharSequence input) {
 		String text = input.toString()
 		
@@ -655,12 +776,43 @@ Try passing a valid Maven repository with the --repository argument."""
 			// interpret as script
 			configure(new StringReader(text))
 		}
+		
+		this
 	}
 	
+	/**
+	 * Configure using an array of configuration elements.
+	 * 
+	 * @param args array of configuration elements. See 
+	 * 			{@link #configure(List)} for supported types
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(Object[] args) {
 		configure(args as List)
+		
+		this
 	}
 	
+	/**
+	 * Configure using an array of configuration elements. 
+	 * 
+	 * <p>
+	 * Supported types:<br />
+	 * <ul>
+	 * <li>{@link Reader}, see {@link #configure(Reader)}</li>
+	 * <li>{@link InputStream}, see {@link #configure(InputStream)}</li>
+	 * <li>{@link Script}, see {@link #configure(Script)}</li>
+	 * <li>{@link File}, see {@link #configure(File)}</li>
+	 * <li>{@link URL}, see {@link #configure(URL)}</li>
+	 * <li>{@link CharSequence}, see {@link #configure(CharSequence)}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param list list of configuration elements.
+	 * 
+	 * @return this builder instance
+	 */
 	def configure(List list) {
 		list.each { item ->
 			switch (item) {
@@ -669,11 +821,12 @@ Try passing a valid Maven repository with the --repository argument."""
 				case Script: configure(item as Script); break;
 				case File: configure(item as File); break;
 				case URL: configure(item as URL); break;
-				case Reader: configure(item as Reader); break;
 				case CharSequence: configure(item as CharSequence); break;
 				default: throw new IllegalArgumentException("invalid configuration item");
 			}
-		} 
+		}
+		
+		this
 	}
 	
 	/**
@@ -803,7 +956,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 * 
 	 * 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
 	 * 
-	 * 		onStart = {
+	 * 		afterStart = {
 	 * 			println "started OSGi runtime"
 	 * 		}
 	 * 
