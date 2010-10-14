@@ -7,7 +7,7 @@
 	bundle('mvn:group:name:version[:opt]') or bundle('mvn:group/name/version[/opt]')
   }
 
-* Configuration
+* Provisioning
 - framework dir
 - dropins dir (Felix FileInstall)
 - ConfigAdmin (Felix/Equinox)
@@ -15,7 +15,7 @@
 - local bundles
 - logging
 
-* Configuration profiles
+* Provisioning profiles
 - web: jetty, rfc66 (gemini web)
 - web mgmt: web console
 - logging: pax-logging/slf4j + log4j
@@ -23,3 +23,6 @@
 - spring-dm
 - blueprint
 - ...
+
+* Configuration
+- configurations for config admin
