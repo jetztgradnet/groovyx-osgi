@@ -137,24 +137,44 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	 * @see groovyx.osgi.OsgiRuntime#install(java.io.File, boolean)
 	 */
 	Bundle install(File bundleFile, boolean autoStart) {
-		List bundles = install([bundleFile], autoStart)
-		return bundles[0]
+		def bundle = this.bundleContext.installBundle("file://${bundleFile.absolutePath}");
+		if (autoStart) {
+			startBundle(bundle)
+		}
+		return bundle
 	}
 	
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntime#install(java.lang.String, boolean)
 	 */
 	Bundle install(String bundleFile, boolean autoStart) {
-		List bundles = install([bundleFile], autoStart)
-		return bundles[0]
+		def bundle = this.bundleContext.installBundle(bundleFile);
+		if (autoStart) {
+			startBundle(bundle)
+		}
+		return bundle
 	}
 	
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntime#install(java.net.URL, boolean)
 	 */
-	Bundle install(URL bundleFile, boolean autoStart) {
-		List bundles = install([bundleFile], autoStart)
-		return bundles[0]
+	Bundle install(URL url, boolean autoStart) {
+		def bundle = this.bundleContext.installBundle(url);
+		if (autoStart) {
+			startBundle(bundle)
+		}
+		return bundle
+	}
+	
+	/* (non-Javadoc)
+	 * @see groovyx.osgi.runtime.OsgiRuntime#install(java.io.InputStream, boolean)
+	 */
+	Bundle install(InputStream stream, boolean autoStart) {
+		def bundle = this.bundleContext.installBundle(stream.toString(), stream)
+		if (autoStart) {
+			startBundle(bundle)
+		}
+		return bundle
 	}
 	
 	/* (non-Javadoc)
@@ -162,22 +182,22 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	 */
 	List<Bundle> install(List<Object> bundleFiles, boolean autoStart) {
 		def bundles = []
-		// install each file
+		// install each file (without starting it)
 		bundleFiles.each { file ->
 			//println "installing bundle ${file.name}"//" (${file.absolutePath})"
 			try {
 				def bundle = null
 				if (file instanceof File) {
-					bundle = this.bundleContext.installBundle("file://${file.absolutePath}");
+					bundle = install(file as File, false)
 				}
 				else if (file instanceof URL) {
-					bundle = this.bundleContext.installBundle((URL) file);
+					bundle = install(file as URL, false);
 				}
 				else if (file instanceof InputStream) {
-					bundle = this.bundleContext.installBundle(file.toString(), (InputStream) file);
+					bundle = install(file as InputStream, false);
 				}
 				else {
-					bundle = this.bundleContext.installBundle(file as String);
+					bundle = install(file as String, false);
 				}
 				if (bundle) {
 					bundles << bundle

@@ -1,6 +1,7 @@
 package groovyx.osgi.runtime;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -82,6 +83,16 @@ public interface OsgiRuntime {
 	 * @return installed bundle
 	 */
 	Bundle install(URL url, boolean autoStart);
+	
+	/**
+	 * Install bundle.
+	 * 
+	 * @param stream stream of bundle data
+	 * @param autoStart true, to start bundle after installation, false otherwise
+	 *  
+	 * @return installed bundle
+	 */
+	Bundle install(InputStream stream, boolean autoStart);
 
 	/**
 	 * Install bundled. Bundles are started after all have been installed.
