@@ -28,17 +28,6 @@ class FelixRuntime extends AbstractOsgiRuntime {
 	BundleContext doStart() {
 		// initialize framework
 		
-		// start framework
-		def args = [ "-clean", "-consoleLog", "-console" ]
-		
-		if (argsMap?.containsKey("debug")) {
-			args << "-debug"
-			String path = argsMap?.debug?.toString()
-			if (path) {
-				args << path
-			}
-		}
-		
 		// configure (remote) console 
 		def consoleEnabled = config?.osgi.console.enabled ?: false
 		def defaultConsolePort = config?.osgi.console.port ?: 8023
@@ -53,7 +42,7 @@ class FelixRuntime extends AbstractOsgiRuntime {
 			consoleEnabled = true
 		}
 		else if (argsMap?.remoteConsole
-		&& !consolePort) {
+			&& !consolePort) {
 			consolePort = defaultConsolePort
 			consoleEnabled = true
 		}
@@ -67,13 +56,11 @@ class FelixRuntime extends AbstractOsgiRuntime {
 		}
 		
 		// TODO handle console, and other args
-		
+		// start framework
 		felix = new Felix(frameworkProperties)
 		felix.start()
 		
 		this.bundleContext = felix.getBundleContext();
-		
-		//configureLogging()
 		
 		return this.bundleContext
 	}
