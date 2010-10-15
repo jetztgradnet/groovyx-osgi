@@ -27,6 +27,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	Map<String, Object> runtimeTypes = [:]
 	def framework = 'equinox'
 	def dropinsDir = 'dropins'
+	boolean purge = false
 	List<String> bundles = []
 	Closure repositoriesConfig = null
 	Properties runtimeProperties
@@ -279,6 +280,14 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	void clean() {
 		runtimeProperties.setProperty("osgi.clean", "true")
 	}
+	
+	/**
+	* Perform cleanup of caches (sets property osgi.clean)
+	*/
+   void clean(boolean purge) {
+	   clean()
+	   runtimeProperties.setProperty("purge", purge)
+   }
 	
 	/**
 	 * Open OSGi console.

@@ -1,6 +1,5 @@
 package org.codehaus.groovy.osgi.runtime
 
-
 import java.io.File
 import java.util.List
 import java.util.Map
@@ -36,6 +35,11 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	protected configure() {
 		// create runtime directory
 		def dir = new File(osgiRuntimePath)
+		
+		if (frameworkProperties?.purge) {
+			dir.deleteDir()
+		}
+		
 		if (!dir.exists()) {
 			dir.mkdirs()
 		}
