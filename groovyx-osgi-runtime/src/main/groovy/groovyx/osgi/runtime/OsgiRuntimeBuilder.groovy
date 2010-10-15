@@ -246,6 +246,15 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	}
 	
 	/**
+	* Set directory, into which to installed bundles
+	*
+	* @param dir dropins directory
+	*/
+	void dropinsDir(File dir) {
+		dropinsDir = dir
+	}
+	
+	/**
 	 * Set directory, into which the runtime will be installed
 	 *  
 	 * @param dir runtime directory

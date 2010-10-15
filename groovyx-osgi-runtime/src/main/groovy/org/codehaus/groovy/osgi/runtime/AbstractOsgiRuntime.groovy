@@ -40,7 +40,9 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 			dir.mkdirs()
 		}
 		
-		dropinsDir = new File(dir, 'dropins')
+		if (!dropinsDir) {
+			dropinsDir = new File(dir, 'dropins')
+		}
 		if (!dropinsDir.exists()) {
 			dropinsDir.mkdirs()
 		}
