@@ -16,7 +16,8 @@ import groovyx.osgi.runtime.OsgiRuntime
 
 abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	final static Log log = LogFactory.getLog(AbstractOsgiRuntime.class)
-	
+
+	Properties frameworkProperties = new Properties()
 	Map argsMap
 	String osgiRuntimePath
 	BundleContext bundleContext
@@ -25,6 +26,12 @@ abstract class AbstractOsgiRuntime implements OsgiRuntime {
 	def config
 	def consoleEnabled = false
 	def consolePort = 0
+	
+	AbstractOsgiRuntime(Map runtimeProperties) {
+		if (runtimeProperties) {
+			frameworkProperties.putAll(runtimeProperties)
+		}
+	}
 	
 	protected configure() {
 		// create runtime directory

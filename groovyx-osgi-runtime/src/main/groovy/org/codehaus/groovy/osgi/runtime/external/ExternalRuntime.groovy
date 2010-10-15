@@ -16,6 +16,9 @@ import org.osgi.framework.BundleContext;
  * @author Wolfgang Schell
  */
 class ExternalRuntime extends AbstractOsgiRuntime {
+	ExternalRuntime(Map runtimeProperties) {
+		super(runtimeProperties)
+	}
 
 	/* (non-Javadoc)
 	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#doStart()

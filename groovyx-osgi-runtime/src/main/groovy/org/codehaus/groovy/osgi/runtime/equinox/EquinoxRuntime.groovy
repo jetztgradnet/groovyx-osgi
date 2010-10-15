@@ -24,12 +24,8 @@ import org.eclipse.core.runtime.adaptor.EclipseStarter
  * @author Wolfgang Schell
  */
 class EquinoxRuntime extends AbstractOsgiRuntime {
-	Properties frameworkProperties = new Properties()
-	
 	EquinoxRuntime(Map runtimeProperties) {
-		if (runtimeProperties) {
-			frameworkProperties.putAll(runtimeProperties)
-		}
+		super(runtimeProperties)
 	}
 	
 	BundleContext doStart() {
@@ -78,8 +74,6 @@ class EquinoxRuntime extends AbstractOsgiRuntime {
 		}
 		
 		this.bundleContext = EclipseStarter.startup( args as String[], null );
-		
-		//configureLogging()
 		
 		return this.bundleContext
 	}

@@ -20,12 +20,9 @@ import org.apache.felix.framework.Felix
  */
 class FelixRuntime extends AbstractOsgiRuntime {
 	Felix felix
-	Properties frameworkProperties = new Properties()
 	
 	FelixRuntime(Properties runtimeProperties) {
-		if (runtimeProperties) {
-			frameworkProperties.putAll(runtimeProperties)
-		}
+		super(runtimeProperties)
 	}
 	
 	BundleContext doStart() {
