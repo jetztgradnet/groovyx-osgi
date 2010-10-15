@@ -3,6 +3,7 @@ package org.codehaus.groovy.osgi.runtime.external
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
 
@@ -80,6 +81,9 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 		// copy file into dropins folder
 		File targetFile = new File(dropinsDir, bundleFile.name)
 		targetFile << bundleFile.newInputStream()
+		
+		// we have no bundle instance
+		return null
 	}
 	
 	/* (non-Javadoc)
@@ -97,6 +101,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 				// ignore
 			}
 		}
+		
 		return null
 	}
 	
@@ -105,6 +110,10 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	 */
 	@Override
 	public Bundle install(String bundleFile, boolean autoStart) {
+		// remove file prefix
+		if (bundleFile.startsWith("file:")) {
+			bundleFile -= "file:"
+		}
 		File file = new File(bundleFile)
 		return install(file, autoStart);
 	}
