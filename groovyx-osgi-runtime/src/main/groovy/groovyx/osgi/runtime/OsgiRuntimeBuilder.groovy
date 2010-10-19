@@ -97,13 +97,41 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	}
 	
 	/**
-	 * Delegate to runtime properties.
-	 * 
-	 * @param name property name
-	 * @param value property value
-	 */
-	def propertyMissing(String name) {
+	* Set runtime property.
+	*
+	* @param name property name
+	* @param value property value
+	*/
+	def setRuntimeProperty(String name, def value) { 
+		runtimeProperties[name] = value 
+	}
+	
+	/**
+	* Get runtime property.
+	*
+	* @param name property name
+	*
+	* @return property value
+	*/
+	def getRuntimeProperty(String name) {
 		runtimeProperties[name]
+	}
+	
+	/**
+	* Get runtime property.
+	*
+	* @param name property name
+	* @param defValue default value
+	*
+	* @return property value or default value, if there 
+	* 			is no property of this name
+	*/
+	def getRuntimeProperty(String name, def defValue) {
+		if (runtimeProperties.containsKey(name)) {
+			return runtimeProperties[name]
+		}
+		
+		return defValue
 	}
 	
 	/**
@@ -113,8 +141,20 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 * 
 	 * @return property value
 	 */
+	def propertyMissing(String name) {
+		if (runtimeProperties.containsKey(name)) {
+			return runtimeProperties[name]
+		}
+	}
+	
+	/**
+	 * Delegate to runtime properties.
+	 * 
+	 * @param name property name
+	 * @param value property value
+	 */
 	def propertyMissing(String name, def value) { 
-		runtimeProperties[name] = value 
+		setRuntimeProperty(name, value)
 	}
 	
 	/**
