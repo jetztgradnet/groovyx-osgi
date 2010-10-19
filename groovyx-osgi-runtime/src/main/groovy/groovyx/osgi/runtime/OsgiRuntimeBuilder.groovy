@@ -478,7 +478,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 			// install bundles
 			bundles?.each { bundle ->
 				log.info "installing bundle $bundle"
-				boolean autoStart = true
+				boolean autoStart = getRuntimeProperty("autoStart", true)
 				
 				if ((bundle instanceof Map)
 					&& bundle?.url) {
