@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +45,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	def framework = 'equinox'
 	def dropinsDir = 'dropins'
 	boolean purge = false
-	List<String> bundles = []
+	List bundles = []
 	Closure repositoriesConfig = null
 	Properties runtimeProperties
 	OsgiRuntime runtime
@@ -717,7 +718,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 * @return this builder instance
 	 */
 	def configure(Closure closure) {
-		def cl = closure.clone()
+		Closure cl = closure.clone()
 		cl.delegate = this
 		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 		cl()
@@ -913,7 +914,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	* @return this builder instance
 	*/
    def args(Closure closure) {
-	   def cl = closure.clone()
+	   Closure cl = closure.clone()
 	   cl.delegate = args
 	   cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 	   cl()
@@ -992,7 +993,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 */
 	def bundle(CharSequence specs, Map args, Closure closure) {
 		if (closure) {
-			def cl = closure.clone()
+			Closure cl = closure.clone()
 			cl.delegate = this
 			cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 			cl(specs)
