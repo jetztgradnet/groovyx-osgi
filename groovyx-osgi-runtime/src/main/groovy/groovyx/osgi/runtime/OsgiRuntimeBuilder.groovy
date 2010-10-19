@@ -38,7 +38,9 @@ import org.codehaus.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 
 class OsgiRuntimeBuilder implements GroovyObject {
-	final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
+	public final static int DEFAULT_HTTP_PORT = 8080
+	
+	private final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
 	
 	Map args = [:]
 	Map<String, Object> runtimeTypes = [:]
@@ -58,6 +60,20 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	Closure doRun
 	Closure beforeStop
 	Closure afterStop
+	
+	
+	Closure webConsoleConfiguration = {
+		setRuntimeProperty("org.osgi.service.http.port", DEFAULT_HTTP_PORT)
+		
+		// TODO add required bundles
+		def webBundles = [
+			
+		]
+		
+		webBundles.each { bdl ->
+			bundle bdl
+		}
+	}
 	
 	public OsgiRuntimeBuilder() {
 		runtimeProperties = new Properties()
@@ -360,6 +376,28 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	 */
 	void console(def port) {
 		runtimeProperties.setProperty("osgi.console", port)
+	}
+	
+	/**
+	 * Open web console on port 8080.
+	 * Required dependencies are automatically added.
+	 */
+	def webConsole() {
+		webConsole(DEFAULT_HTTP_PORT)
+	}
+
+	/**
+	 * Open web console on specified port.
+	 * Required dependencies are automatically added.
+	 * 	
+	 * @param port port to run web console on
+	 */
+	def webConsole(def port) {
+		configure(webConsoleConfiguration)
+		
+		if (port) {
+			runtimeProperties.setProperty("org.osgi.service.http.port", port)
+		}
 	}
 	
 	/**
@@ -675,8 +713,8 @@ Try passing a valid Maven repository with the --repository argument."""
 		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath)	// PAX ConfMan
 		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
 		System.setProperty("felix.fileinstall.debug", "1")
-		// for OSGi HttpService
-		System.setProperty("org.osgi.service.http.port", "8081")
+		// TODO try to avoid setting system property for OSGi HttpService
+		System.setProperty("org.osgi.service.http.port", getRuntimeProperty("org.osgi.service.http.port", DEFAULT_HTTP_PORT)?.toString())
 		
 		this.runtime = createRuntime(framework, runtimeProperties)
 		
