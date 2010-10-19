@@ -110,4 +110,34 @@ public class OsgiRuntimeTest {
 		context = runtime.bundleContext
 		assertNull(context)
 	}
+	
+	@Test
+	void testGroovyScript() throws Exception {
+		OsgiRuntimeBuilder.run("""
+allBundles = []
+allBundles << 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+
+configure {
+	// test alias
+	framework 'equinox'
+
+	runtimeDir 'system'
+
+	args {
+		resolverLogLevel = "warn"
+	}
+	
+	println "bundles to install: " + allBundles
+        
+	allBundles.each { bdl ->
+		println "Installing bundle " + bdl
+		bundle bdl
+	}
+	
+	doRun = {
+		// return immediately, so that the runtime stops
+	}
+}
+""")
+	}
 }
