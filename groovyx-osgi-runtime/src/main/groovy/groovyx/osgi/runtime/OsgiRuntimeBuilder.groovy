@@ -363,7 +363,7 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	
 	/**
 	 * Configure runtime. This includes resolving and installing
-	 * bundles
+	 * bundles.
 	 *  
 	 * @param runtime runtime to configure
 	 *  
@@ -425,13 +425,13 @@ class OsgiRuntimeBuilder implements GroovyObject {
 	}
 	
 	/**
-	 * Install bundles in runtime
+	 * Install bundles in runtime.
 	 * 
 	 * @param runtime runtime in which to install bundles
 	 * @param bundles list of bundles. Each element is either 
 	 * 			an URL (file, http, ..., mvn:group:module:version) or
 	 * 			a Map with the elements group, name, and version
-	 * @return
+	 * @return OSGi runtime
 	 */
 	protected def installBundles(OsgiRuntime runtime, List bundles) {
 		if (bundles?.size()) {
@@ -1047,7 +1047,8 @@ Try passing a valid Maven repository with the --repository argument."""
 	 * }
 	 * </pre>
 	 * </p>
-	 * @param args
+	 * 
+	 * @param args configuration args. See {@link #configure(List)} for supported types
 	 */
 	public static void run(def args) {
 		// create builder and configure using all args
