@@ -56,6 +56,13 @@ Simply run @gradle build@. If "Gradle":http://www.gradle.org >= 0.9-rc-1 is not 
 * @groovyx-osgi/build/libs/groovyx-osgi-0.1.jar@
 * @groovyx-osgi-runtime/build/libs/groovyx-osgi-runtime-0.1.jar@
 
+h2. Dependencies
+
+* Eclipse Equinox 3.6.1 and Apache Felix 3.0.2 OSGi frameworks
+* Groovy (tested with 1.7.5)
+* Apache Ivy (part of Groovy)
+* Apache Commons Logging API
+
 h2. Installation
 
 Simply drop groovyx-osgi-version.jar and/or groovyx-osgi-runtime-version.jar into your classpath. When using "Grape":http://groovy.codehaus.org/Grape, installation can be omitted altogether. See example below.
@@ -144,6 +151,12 @@ OsgiRuntimeBuilder.run {
 	}    
 }
 </code></pre>
+
+h3. Even more examples
+
+See @groovyx-osgi-runtime/src/main/resources@ for some more examples. They can be executed with the following command:
+
+<pre><code>groovy -cp groovyx-osgi-runtime-version.jar groovyx.osgi.runtime.OsgiRuntimeBuilder path/to/script.groovy</code></pre>
 
 h2. Reference           
 
