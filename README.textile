@@ -331,8 +331,7 @@ h3. Loading configuration from different sources
 * groovy.lang.Closure
 	The closure can use the OSGi runtime DSL.
 * groovy.lang.Script
-	The script is executed with a binding containing a builder instance
-	as property @builder@ and the builder's @configure()@ method.
+	The script is executed with a binding containing a builder instance as property @builder@ and the builder's @configure()@ method.
 * java.io.Reader 
 	The reader's content is loaded as Groovy Script
 * java.io.InputStream
@@ -342,7 +341,7 @@ h3. Loading configuration from different sources
 * java.net.URL
 	The URL's content is loaded as Groovy Script
 * java.lang.CharSequence (String, GString)
-	If the string is a URL, it is handled as URL (see above)
+	If the string is a URL, it is handled as URL (see above).
 	Otherwise, the string's content is loaded as Groovy Script
 * Array or List containing any of the above
 	Each item is handled according to its type (see above)
@@ -351,9 +350,7 @@ h3. Groovy script support
 
 @OsgiRuntimeBuilder@ can be called with a script as parameter:
 
-<pre><code>
-groovy -cp groovyx-osgi-runtime-version.jar groovyx.osgi.runtime.OsgiRuntimeBuilder path/to/script.groovy
-</code></pre>
+<pre><code>groovy -cp groovyx-osgi-runtime-version.jar groovyx.osgi.runtime.OsgiRuntimeBuilder path/to/script.groovy</code></pre>
 
 The script is executed with a @Binding@ containing a builder instance as property @builder@ and 
 the builder's @configure()@ method.
@@ -378,7 +375,7 @@ h3. groovyx.osgi.runtime
 
 h2. History
 
-h3. 0.1 (2010-10-19)
+h3. 0.1 (2010-10-20)
 
 * initial version
 
