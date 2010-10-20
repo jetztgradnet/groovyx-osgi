@@ -34,7 +34,7 @@ OsgiRuntimeBuilder.run {
 	afterStop = {
 		println "stopped OSGi runtime"
 	}
-   }
+}
 </code></pre>
 
 Features:
@@ -326,7 +326,7 @@ All callbacks except @beforeStart@ and @afterStop@ are supplied with the @OsgiRu
 
 h3. Loading configuration from different sources
 
-@OsgiRuntimeBuilder@'s @configure()@ method supports several source types:
+@OsgiRuntimeBuilder@ 's @configure()@ method supports several source types:
 
 * groovy.lang.Closure
 	The closure can use the OSGi runtime DSL.
