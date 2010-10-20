@@ -14,26 +14,35 @@ h3. groovx.osgi.runtime
 
 This package provides an OSGi builder class, grooxy.osgi.runtime.OsgiRuntimeBuilder, which can be used to assemble and run an OSGi runtime:
 
-bc.	import grooxy.osgi.runtime.OsgiRuntimeBuilder
+<pre><code>
+import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
-	OsgiRuntimeBuilder.run {
-		framework 'equinox'
+OsgiRuntimeBuilder.run {
+	framework 'equinox'
 
-		bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
-		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+	bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
 
-		console(8023)
+	console(8023)
 
-		doRun = {
-			// wait one minute
-			println "stopping OSGi runtime after one minute"
-			Thread.sleep 60000
-		}
-
-		afterStop = {
-			println "stopped OSGi runtime"
-		}
+	doRun = {
+		// wait one minute
+		println "stopping OSGi runtime after one minute"
+		Thread.sleep 60000
 	}
+
+	afterStop = {
+		println "stopped OSGi runtime"
+	}
+   }
+</code></pre>
+
+Features:
+
+* provision bundles from filesystem, web, Maven repositories
+* run Eclipse Equinox or Apache Felix OSGi runtimes
+* flexible Groovy DSL, fully programmable
+* lifecycle callback closures
 
 
 h2. License
@@ -49,32 +58,32 @@ h2. Usage
 
 h3. Simple example
 
+<pre><code>
+import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
-bc.import grooxy.osgi.runtime.OsgiRuntimeBuilder
+def osgi = new OsgiRuntimeBuilder()
 
-	def osgi = new OsgiRuntimeBuilder()
-	
-	osgi.configure {
-		// test alias
-		framework 'equinox'
+osgi.configure {
+	// test alias
+	framework 'equinox'
 
-		runtimeDir 'system'
+	runtimeDir 'system'
 
-		args {
-			resolverLogLevel = "warn"
-		}
-
-		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
-		bundle group: 'org.apache.felix', name:'org.apache.felix.configadmin', version:'1.2.4'
+	args {
+		resolverLogLevel = "warn"
 	}
-	def runtime = osgi.build()
-	def bundleContext = runtime.start()
 
-	// do something
+	bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	bundle group: 'org.apache.felix', name:'org.apache.felix.configadmin', version:'1.2.4'
+}
+def runtime = osgi.build()
+def bundleContext = runtime.start()
 
-	// shutdown OSGi runtime
-	runtime.stop()
+// do something
 
+// shutdown OSGi runtime
+runtime.stop()
+</code></pre>
 
 h3. More complex example                                                    
 
@@ -96,37 +105,37 @@ This standalone script can be run as @groovy myosgi.groovy@.
 import groovyx.osgi.runtime.OsgiRuntimeBuilder
 
 OsgiRuntimeBuilder.run {
-		framework 'equinox'
+	framework 'equinox'
 
-		bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
-		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+	bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
 
-		beforeStart = {
-			println "starting OSGi runtime"
-		}
-	
-		afterInstallBundles = { runtime ->
-			def bundleContext = runtime.bundleContext
-			if (bundleContext) {
-				println "installed bundles:"
-				bundleContext?.bundles?.each { bundle ->
-					println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
-				}
-			}
-			else {
-				println "failed to list bundles"
+	beforeStart = {
+		println "starting OSGi runtime"
+	}
+
+	afterInstallBundles = { runtime ->
+		def bundleContext = runtime.bundleContext
+		if (bundleContext) {
+			println "installed bundles:"
+			bundleContext?.bundles?.each { bundle ->
+				println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
 			}
 		}
-
-		doRun = {
-			// wait one minute
-			println "stopping OSGi runtime after one minute"
-			Thread.sleep 60000
+		else {
+			println "failed to list bundles"
 		}
+	}
 
-		afterStop = {
-			println "stopped OSGi runtime"
-		}
+	doRun = {
+		// wait one minute
+		println "stopping OSGi runtime after one minute"
+		Thread.sleep 60000
+	}
+
+	afterStop = {
+		println "stopped OSGi runtime"
+	}    
 }
 </code></pre>
 
@@ -137,24 +146,27 @@ only the configuration closure is included in the following snippets.
 
 h3. Provision an OSGi runtime with Eclipse Equinox
 
-bc.osgi.configure {
-		framework 'equinox'
-	}                   
-
+<pre><code>
+osgi.configure {
+	framework 'equinox'
+}
+</code></pre>
 
 h3. Provision an OSGi runtime with Apache Felix
 
-bc.osgi.configure {
-		framework 'felix'
-	}
-
+<pre><code>
+osgi.configure {
+	framework 'felix'
+}
+</code></pre>
 
 h3. Provision an OSGi runtime with a custom runtime
 
-bc. osgi.configure {
-		framework MyRuntimeFactory.class
-	}
-
+<pre><code>
+osgi.configure {
+	framework MyRuntimeFactory.class
+}
+</code></pre>
 
 @MyRuntimeFactory@ should implement @groovyx.osgi.runtime.OsgiRuntimeFactory@ and create 
 instances of @groovyx.osgi.runtime.OsgiRuntime@, which are usually derived from abstract
@@ -167,73 +179,140 @@ directory, which is monitored by the runtime. Bundles, which are dropped into th
 are automatically installed and started. The directoy usually resides within the installation
 directory and is called @dropin@ or @load@ or @pickup@.
 
-bc.osgi.configure {
-		framework 'external'
-		dropinsDir /path/to/dropins/dir
-	}
-
+<pre><code>
+osgi.configure {
+	framework 'external'
+	dropinsDir /path/to/dropins/dir
+}
+</code></pre>
 
 *Note*: an external runtime csn neither be started nor stopped; the @BundleContext@ is not available.
 
-h3. Installing bundles from files, URLs and Maven repositories
+h3. Installing bundles from files and URLs
 
+<pre><code>
+osgi.configure {
+	bundle 'file:///path/to/bundle.jar'
+	bundle 'http://host.domain.com/path/to/bundle.jar'
+}
+</code></pre>
 
-bc.osgi.configure {
-		framework 'external'
-		dropinsDir /path/to/dropins/dir
+h3. Installing bundles from Maven repositories
+
+Bundles with @mvn:@ URL scheme are resolved via built-in Ivy support, which is derived from Grails' excellent Maven and Ivy support "Grails dependency resolution":http://grails.org/doc/latest/guide/3.%20Configuration.html#3.7%20Dependency%20Resolution.
+
+The @mvn:@ URL consists of a group id, module name, and version. Transitive dependencies are not resolved,
+as all artifacts must be valid OSGi bundles.
+
+<pre><code>
+osgi.configure {
+	bundle 'mvn:group:module:version'
+	bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+	bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	bundle group:'org.apache.felix', name:'org.apache.felix.fileinstall', version:'3.0.2'
+}
+</code></pre>
+
+*Note*: at first start the bundles are stored in the disk cache in @~/.ivy2/cache@, which may take some time, while Ivy is downloading the Internet...
+
+h3. Configure additional Maven or Ivy repositories
+
+By default, all bundles are resolved against Maven Central, SpringSource Enterprise Bundle Repository (EBR), and some other Spring repos. Additional repos can be configured like this:
+
+<pre><code>
+osgi.configure {
+	repositories {
+		mavenLocal()
+		ebr()
+		mavenCentral()
+
+		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/osgi'
+		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
 	}
+	bundle 'mvn:group:module:version'
+	bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+	bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	bundle group:'org.apache.felix', name:'org.apache.felix.fileinstall', version:'3.0.2'
+}
+</code></pre>
 
+Please consult the "Grails docs":http://grails.org/doc/latest/guide/3.%20Configuration.html#3.7.2%20Dependency%20Repositories for repository configuration.
 
-*Note*: at first start the OSGi runtime is assembled, which may take some time, while Ivy is downloading the Internet...
 
 h3. Clean cached configuration on start
 
-bc.osgi.configure {
-		clean()
-	}
+The OSGi runtime caches framework settings and user data. This can be cleaned on startup.
 
+<pre><code>
+osgi.configure {
+	clean()
+}
+</code></pre>
 
 h3. Clean cached configuration on start and recreate runtime directory
 
-	osgi.configure {
-		clean(true)
-	}
+Additional the provisioned framework can be removed altogether before startup.
+
+<pre><code>
+osgi.configure {
+	clean(true)
+}
+</code></pre>
+
+*Note*: don't do this for an external framework, as this might delete the framework's installation directory!
 
 h3. Open OSGi console
 
-	osgi.configure {
-		console()
-	}
+The OSGi console offers shell commands to inspect state and inner workings of the framework.
+
+<pre><code>
+osgi.configure {
+	console()
+}
+</code></pre>
 
 h3. Open OSGi console on network port
 
-	osgi.configure {
-		console(8023)
-	}
-
+<pre><code>
+osgi.configure {
+	console(8023)
+}
+</code></pre>
 
 h3. Configure Felix WebConsole
 
+The "Felix Web Console":http://felix.apache.org/site/apache-felix-web-console.html offers great insight into the OSGi framework.
+
+<pre><code>
+osgi.configure {
+	webConsole(8080)
+}
+</code></pre>
 
 The application can be accessed at "http://localhost:8080/system/console":http://localhost:8080/system/console/ with user "admin" and password "admin".
 
 h3. Use Callback methods
 
-	osgi.configure {
-		doRun = { runtime ->
-			// do something
-		}
+The @OsgiRuntimeBuilder@ offers some lifecycle callback methods (or rather closures), which are called for certain events.
+
+<pre><code>
+osgi.configure {
+	doRun = { runtime ->
+		def bundleContext = runtime.bundleContext
+		// do something
 	}
+}
+</code></pre>
 
 The following callback methods are provided:
 
-* beforeStart
-* afterStart
-* beforeInstallBundles
-* afterInstallBundles
-* doRun
-* beforeStop
-* afterStop
+* beforeStart: called before the framework is started.
+* afterStart: called after the framework has been started.
+* beforeInstallBundles: called before a bunch of bundles is installed.
+* afterInstallBundles: called after a bunch of bundles has been installed.
+* doRun: called after the framework has been started. When the closure returns, the framework is stopped.
+* beforeStop: called before the framework is stopped.
+* afterStop: called after the framework has been stopped.
 
 All callbacks except @beforeStart@ and @afterStop@ are supplied with the @OsgiRuntime@ as argument. The @BundleContext@ can be obtained with @runtime.bundleContext@.
 
@@ -275,7 +354,8 @@ When using @console()@, the user is dropped into the Equinox or Felix Shell (pre
 
 Typing @help@ shows the available commands:
 
-bc. osgi> help
+<pre><code>
+osgi> help
 ---Controlling the OSGi framework---
 	launch - start the OSGi Framework
 	shutdown - shutdown the OSGi Framework
@@ -318,10 +398,12 @@ bc. osgi> help
 	disabledBundles - list disabled bundles in the system
 ---Controlling the Console---
 	more - More prompt for console output
+</code></pre>
 
 The command @ss@ (for short status) shows all bundles with their respective state:
 
-bc. osgi> ss
+<pre><code>
+osgi> ss
  
 Framework is launched.
  
@@ -430,5 +512,5 @@ id	State       Bundle
 95	ACTIVE      org.apache.felix.webconsole_2.0.2
 96	ACTIVE      tripper_0.1.0
 osgi>     
-
+</code></pre>
 
