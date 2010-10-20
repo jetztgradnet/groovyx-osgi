@@ -2,13 +2,13 @@ h1. Groovy OSGi modules
 
 h2. About
 
-The groovyx.osgi provides two packages to make working with OSGi easier. Additionally they are used by the "Grails OSGi plugin":http://github.com/jetztgradnet/grails-osgi-plugin/ from version 0.3 on.
+The groovyx.osgi module provides two packages to make working with OSGi easier. Additionally they are used by the "Grails OSGi plugin":http://github.com/jetztgradnet/grails-osgi-plugin/ from version 0.3 on.
 
 h3. groovx.osgi
 
-This package contains helper classes to make OSGi programming easier. This module is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki.
+This package contains helper classes to make OSGi programming easier. This package is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki.
 
-This is currently work in progress.
+*Note*: This is currently work in progress.
 
 h3. groovx.osgi.runtime
 
@@ -49,6 +49,12 @@ h2. License
 
 The Groovy OSGi module is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
 
+h2. Building
+
+Simply run @gradle build@. If "Gradle":http://www.gradle.org >= 0.9-rc-1 is not installed, run @./gradlew build@ from the top-level directory, in order to automatically download the correct Gradle version. The resulting jars can be found at the following locations:
+
+* @groovyx-osgi/build/libs/groovyx-osgi-0.1.jar@
+* @groovyx-osgi-runtime/build/libs/groovyx-osgi-runtime-0.1.jar@
 
 h2. Installation
 
