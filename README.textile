@@ -6,7 +6,7 @@ The groovyx.osgi provides two packages to make working with OSGi easier. Additio
 
 h3. groovx.osgi
 
-This package contains helper classes to make OSGi programming easier. This module is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki
+This package contains helper classes to make OSGi programming easier. This module is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki.
 
 This is currently work in progress.
 
@@ -14,7 +14,7 @@ h3. groovx.osgi.runtime
 
 This package provides an OSGi builder class, grooxy.osgi.runtime.OsgiRuntimeBuilder, which can be used to assemble and run an OSGi runtime:
 
-	import grooxy.osgi.runtime.OsgiRuntimeBuilder
+bc.	import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
 	OsgiRuntimeBuilder.run {
 		framework 'equinox'
@@ -50,7 +50,7 @@ h2. Usage
 h3. Simple example
 
 
-	import grooxy.osgi.runtime.OsgiRuntimeBuilder
+bc.import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
 	def osgi = new OsgiRuntimeBuilder()
 	
@@ -83,52 +83,52 @@ This standalone script can be run as @groovy myosgi.groovy@.
 *Note*: groovyx.osgi.runtime is not yet available in a maven repository, so it must be included
 		in the classpath: @groovy -cp path/to/groovyx.osgi.runtime-version.jar myosgi.groovy@. 
 
+<pre><code>
+// these are necessary for current version (3.6.1) of Equinox
+@GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+@GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+@Grapes([
+	@GrabConfig(systemClassLoader=true),
+	//@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+])
+import groovyx.osgi.runtime.OsgiRuntimeBuilder
 
-	// these are necessary for current version (3.6.1) of Equinox
-	@GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
-	@GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	@Grapes([
-		@GrabConfig(systemClassLoader=true),
-		//@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
-		@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
-		@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
-	])
-	import groovyx.osgi.runtime.OsgiRuntimeBuilder
+OsgiRuntimeBuilder.run {
+		framework 'equinox'
 
-	OsgiRuntimeBuilder.run {
-			framework 'equinox'
+		bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
 
-			bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
-			bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
-
-			beforeStart = {
-				println "starting OSGi runtime"
-			}
-		
-			afterInstallBundles = { runtime ->
-				def bundleContext = runtime.bundleContext
-				if (bundleContext) {
-					println "installed bundles:"
-					bundleContext?.bundles?.each { bundle ->
-						println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
-					}
-				}
-				else {
-					println "failed to list bundles"
+		beforeStart = {
+			println "starting OSGi runtime"
+		}
+	
+		afterInstallBundles = { runtime ->
+			def bundleContext = runtime.bundleContext
+			if (bundleContext) {
+				println "installed bundles:"
+				bundleContext?.bundles?.each { bundle ->
+					println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
 				}
 			}
-
-			doRun = {
-				// wait one minute
-				println "stopping OSGi runtime after one minute"
-				Thread.sleep 60000
+			else {
+				println "failed to list bundles"
 			}
+		}
 
-			afterStop = {
-				println "stopped OSGi runtime"
-			}
-	}
+		doRun = {
+			// wait one minute
+			println "stopping OSGi runtime after one minute"
+			Thread.sleep 60000
+		}
 
+		afterStop = {
+			println "stopped OSGi runtime"
+		}
+}
+</code></pre>
 
 h2. Reference           
 
@@ -137,21 +137,24 @@ only the configuration closure is included in the following snippets.
 
 h3. Provision an OSGi runtime with Eclipse Equinox
 
-	osgi.configure {
+bc.osgi.configure {
 		framework 'equinox'
 	}                   
 
+
 h3. Provision an OSGi runtime with Apache Felix
 
-	osgi.configure {
+bc.osgi.configure {
 		framework 'felix'
 	}
 
+
 h3. Provision an OSGi runtime with a custom runtime
 
-	osgi.configure {
+bc. osgi.configure {
 		framework MyRuntimeFactory.class
 	}
+
 
 @MyRuntimeFactory@ should implement @groovyx.osgi.runtime.OsgiRuntimeFactory@ and create 
 instances of @groovyx.osgi.runtime.OsgiRuntime@, which are usually derived from abstract
@@ -164,28 +167,31 @@ directory, which is monitored by the runtime. Bundles, which are dropped into th
 are automatically installed and started. The directoy usually resides within the installation
 directory and is called @dropin@ or @load@ or @pickup@.
 
-	osgi.configure {
+bc.osgi.configure {
 		framework 'external'
 		dropinsDir /path/to/dropins/dir
 	}
+
 
 *Note*: an external runtime csn neither be started nor stopped; the @BundleContext@ is not available.
 
 h3. Installing bundles from files, URLs and Maven repositories
 
 
-	osgi.configure {
+bc.osgi.configure {
 		framework 'external'
 		dropinsDir /path/to/dropins/dir
 	}
+
 
 *Note*: at first start the OSGi runtime is assembled, which may take some time, while Ivy is downloading the Internet...
 
 h3. Clean cached configuration on start
 
-	osgi.configure {
+bc.osgi.configure {
 		clean()
 	}
+
 
 h3. Clean cached configuration on start and recreate runtime directory
 
@@ -242,7 +248,7 @@ h3. groovyx.osgi.runtime
 
 * add support for pre-defined provisioning profiles
 * add support for OSGi ConfigurationAdmin
-' improve handling of external OSGi runtimes
+* improve handling of external OSGi runtimes
 * improve docs
 
 h2. History
