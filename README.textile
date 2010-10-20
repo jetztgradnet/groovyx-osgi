@@ -1,12 +1,428 @@
-h1. Groovy OSGi module
+h1. Groovy OSGi modules
 
 h2. About
 
-The Groovy OSGi modules simplifies accessing and handling OSGi services and helps creating an OSGi runtime with a build-in DSL.
+The groovyx.osgi provides two packages to make working with OSGi easier. Additionally they are used by the "Grails OSGi plugin":http://github.com/jetztgradnet/grails-osgi-plugin/ from version 0.3 on.
 
-Additionally it is used by the Grails OSGi plugin.
+h3. groovx.osgi
+
+This package contains helper classes to make OSGi programming easier. This module is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki
+
+This is currently work in progress.
+
+h3. groovx.osgi.runtime
+
+This package provides an OSGi builder class, grooxy.osgi.runtime.OsgiRuntimeBuilder, which can be used to assemble and run an OSGi runtime:
+
+	import grooxy.osgi.runtime.OsgiRuntimeBuilder
+
+	OsgiRuntimeBuilder.run {
+		framework 'equinox'
+
+		bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+
+		console(8023)
+
+		doRun = {
+			// wait one minute
+			println "stopping OSGi runtime after one minute"
+			Thread.sleep 60000
+		}
+
+		afterStop = {
+			println "stopped OSGi runtime"
+		}
+	}
 
 
 h2. License
 
-The OSGi plugin is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
+The Groovy OSGi module is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
+
+
+h2. Installation
+
+Simply drop groovyx-osgi-version.jar and/or groovyx-osgi-runtime-version.jar into your classpath. When using "Grape":http://groovy.codehaus.org/Grape, installation can be omitted altogether. See example below.
+
+h2. Usage
+
+h3. Simple example
+
+
+	import grooxy.osgi.runtime.OsgiRuntimeBuilder
+
+	def osgi = new OsgiRuntimeBuilder()
+	
+	osgi.configure {
+		// test alias
+		framework 'equinox'
+
+		runtimeDir 'system'
+
+		args {
+			resolverLogLevel = "warn"
+		}
+
+		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+		bundle group: 'org.apache.felix', name:'org.apache.felix.configadmin', version:'1.2.4'
+	}
+	def runtime = osgi.build()
+	def bundleContext = runtime.start()
+
+	// do something
+
+	// shutdown OSGi runtime
+	runtime.stop()
+
+
+h3. More complex example                                                    
+
+This standalone script can be run as @groovy myosgi.groovy@.
+
+*Note*: groovyx.osgi.runtime is not yet available in a maven repository, so it must be included
+		in the classpath: @groovy -cp path/to/groovyx.osgi.runtime-version.jar myosgi.groovy@. 
+
+
+	// these are necessary for current version (3.6.1) of Equinox
+	@GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+	@GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	@Grapes([
+		@GrabConfig(systemClassLoader=true),
+		//@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+		@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+		@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+	])
+	import groovyx.osgi.runtime.OsgiRuntimeBuilder
+
+	OsgiRuntimeBuilder.run {
+			framework 'equinox'
+
+			bundle 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
+			bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+
+			beforeStart = {
+				println "starting OSGi runtime"
+			}
+		
+			afterInstallBundles = { runtime ->
+				def bundleContext = runtime.bundleContext
+				if (bundleContext) {
+					println "installed bundles:"
+					bundleContext?.bundles?.each { bundle ->
+						println "[${bundle.bundleId}] ${bundle.symbolicName} ${bundle.version}"
+					}
+				}
+				else {
+					println "failed to list bundles"
+				}
+			}
+
+			doRun = {
+				// wait one minute
+				println "stopping OSGi runtime after one minute"
+				Thread.sleep 60000
+			}
+
+			afterStop = {
+				println "stopped OSGi runtime"
+			}
+	}
+
+
+h2. Reference           
+
+All examples can be run in a fashion similar to the simple example above. For brevity, 
+only the configuration closure is included in the following snippets.
+
+h3. Provision an OSGi runtime with Eclipse Equinox
+
+	osgi.configure {
+		framework 'equinox'
+	}                   
+
+h3. Provision an OSGi runtime with Apache Felix
+
+	osgi.configure {
+		framework 'felix'
+	}
+
+h3. Provision an OSGi runtime with a custom runtime
+
+	osgi.configure {
+		framework MyRuntimeFactory.class
+	}
+
+@MyRuntimeFactory@ should implement @groovyx.osgi.runtime.OsgiRuntimeFactory@ and create 
+instances of @groovyx.osgi.runtime.OsgiRuntime@, which are usually derived from abstract
+base class @org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime@.
+
+h3. Provision an extisting OSGi runtime, like "Eclipse Virgo":http://eclipse.org/virgo/, "Apache Karaf":http://karaf.apache.org/, or "SpringSource dmServer":http://www.springsource.org/dmserver:
+
+Configuration of an external OSGi runtime is performed by provisioning bundles into a drop-in 
+directory, which is monitored by the runtime. Bundles, which are dropped into the directory
+are automatically installed and started. The directoy usually resides within the installation
+directory and is called @dropin@ or @load@ or @pickup@.
+
+	osgi.configure {
+		framework 'external'
+		dropinsDir /path/to/dropins/dir
+	}
+
+*Note*: an external runtime csn neither be started nor stopped; the @BundleContext@ is not available.
+
+h3. Installing bundles from files, URLs and Maven repositories
+
+
+	osgi.configure {
+		framework 'external'
+		dropinsDir /path/to/dropins/dir
+	}
+
+*Note*: at first start the OSGi runtime is assembled, which may take some time, while Ivy is downloading the Internet...
+
+h3. Clean cached configuration on start
+
+	osgi.configure {
+		clean()
+	}
+
+h3. Clean cached configuration on start and recreate runtime directory
+
+	osgi.configure {
+		clean(true)
+	}
+
+h3. Open OSGi console
+
+	osgi.configure {
+		console()
+	}
+
+h3. Open OSGi console on network port
+
+	osgi.configure {
+		console(8023)
+	}
+
+
+h3. Configure Felix WebConsole
+
+
+The application can be accessed at "http://localhost:8080/system/console":http://localhost:8080/system/console/ with user "admin" and password "admin".
+
+h3. Use Callback methods
+
+	osgi.configure {
+		doRun = { runtime ->
+			// do something
+		}
+	}
+
+The following callback methods are provided:
+
+* beforeStart
+* afterStart
+* beforeInstallBundles
+* afterInstallBundles
+* doRun
+* beforeStop
+* afterStop
+
+All callbacks except @beforeStart@ and @afterStop@ are supplied with the @OsgiRuntime@ as argument. The @BundleContext@ can be obtained with @runtime.bundleContext@.
+
+h2. Roadmap                                             
+
+h3. groovyx.osgi
+
+* implement OsgiCategory and extend @BundleContext@ with some convenience methods and filter DSL
+* improve docs
+
+h3. groovyx.osgi.runtime
+
+* add support for pre-defined provisioning profiles
+* add support for OSGi ConfigurationAdmin
+' improve handling of external OSGi runtimes
+* improve docs
+
+h2. History
+
+h3. 0.1 (2010-10-19)
+
+* initial version
+
+
+h2. How it works
+
+The @OsgiRuntimeBuilder@ collects bundles to be installed, runtime properties, and other information and delegates creation of the framework to an @OsgiRuntimeFactory@, which creates an @OsgiRuntime@, which in turn creates and starts the actual OSGi framework.
+
+h2. Getting around the OSGi runtime
+
+h3. Web Console
+
+The "Felix Web Management Console":http://felix.apache.org/site/apache-felix-web-console.html provides excellent insight into the inner workings. When using @webConsole()@ or @webConsole(<port>)@ in your configuration script, it can be accessed at "http://localhost:8080/system/console/":http://localhost:8080/system/console/ with user "admin" and password "admin".
+(*Note*: the initial release is missing automatic inclusion of dependencies required to run Web Console. See script @src/main/resources/extended.groovy@ for an example with all dependencies)
+
+h3. Shell Console
+
+When using @console()@, the user is dropped into the Equinox or Felix Shell (press @RETURN@ if you don't see the @osgi>@ prompt). Calling @console(<port>)@ opens a console with telnet access on the specified port or on port @8023@, if omitted. Only a single user can use the console at any time.
+
+Typing @help@ shows the available commands:
+
+bc. osgi> help
+---Controlling the OSGi framework---
+	launch - start the OSGi Framework
+	shutdown - shutdown the OSGi Framework
+	close - shutdown and exit
+	exit - exit immediately (System.exit)
+	init - uninstall all bundles
+	setprop <key>=<value> - set the OSGi property
+---Controlling Bundles---
+	install - install and optionally start bundle from the given URL
+	uninstall - uninstall the specified bundle(s)
+	start - start the specified bundle(s)
+	stop - stop the specified bundle(s)
+	refresh - refresh the packages of the specified bundles
+	update - update the specified bundle(s)
+---Displaying Status---
+	status [-s [<comma separated list of bundle states>]  [<segment of bsn>]] - display installed bundles and registered services
+	ss [-s [<comma separated list of bundle states>]  [<segment of bsn>]] - display installed bundles (short status)
+	services [filter] - display registered service details
+	packages [<pkgname>|<id>|<location>] - display imported/exported package details
+	bundles [-s [<comma separated list of bundle states>]  [<segment of bsn>]] - display details for all installed bundles
+	bundle (<id>|<location>) - display details for the specified bundle(s)
+	headers (<id>|<location>) - print bundle headers
+	log (<id>|<location>) - display log entries
+---Extras---
+	exec <command> - execute a command in a separate process and wait
+	fork <command> - execute a command in a separate process
+	gc - perform a garbage collection
+	getprop  [ name ] - displays the system properties with the given name, or all of them.
+---Controlling Start Level---
+	sl [<id>|<location>] - display the start level for the specified bundle, or for the framework if no bundle specified
+	setfwsl <start level> - set the framework start level
+	setbsl <start level> (<id>|<location>) - set the start level for the bundle(s)
+	setibsl <start level> - set the initial bundle start level
+---Controlling the Profiling---
+	profilelog - Display & flush the profile log messages
+---Eclipse Runtime commands---
+	diag - Displays unsatisfied constraints for the specified bundle(s).
+	enableBundle - enable the specified bundle(s)
+	disableBundle - disable the specified bundle(s)
+	disabledBundles - list disabled bundles in the system
+---Controlling the Console---
+	more - More prompt for console output
+
+The command @ss@ (for short status) shows all bundles with their respective state:
+
+bc. osgi> ss
+ 
+Framework is launched.
+ 
+id	State       Bundle
+0	ACTIVE      org.eclipse.osgi_3.6.0.v20100517
+1	ACTIVE      org.eclipse.osgi.util_3.2.100.v20100503
+2	ACTIVE      org.eclipse.osgi.services_3.2.100.v20100503
+3	ACTIVE      org.eclipse.equinox.common_3.6.0.v20100503
+4	ACTIVE      org.apache.felix.configadmin_1.2.4
+5	ACTIVE      org.apache.felix.fileinstall_2.0.8
+6	ACTIVE      com.springsource.org.apache.log4j_1.2.15
+7	ACTIVE      org.ops4j.pax.logging.pax-logging-api_1.4.0
+8	ACTIVE      org.ops4j.pax.logging.pax-logging-service_1.4.0
+9	ACTIVE      com.springsource.javax.annotation_1.0.0
+10	ACTIVE      com.springsource.javax.el_1.0.0
+11	ACTIVE      com.springsource.javax.ejb_3.0.0
+12	ACTIVE      com.springsource.javax.mail_1.4.1
+13	ACTIVE      com.springsource.javax.persistence_1.99.0
+14	ACTIVE      com.springsource.javax.transaction_1.1.0
+15	ACTIVE      com.springsource.javax.servlet_2.5.0
+16	ACTIVE      com.springsource.javax.servlet.jsp_2.1.0
+17	ACTIVE      com.springsource.javax.servlet.jsp.jstl_1.2.0
+18	ACTIVE      com.springsource.javax.jms_1.1.0
+19	ACTIVE      com.springsource.javax.xml.rpc_1.1.0
+20	ACTIVE      com.springsource.org.mortbay.jetty.server_6.1.9
+21	ACTIVE      com.springsource.org.mortbay.util_6.1.9
+22	ACTIVE      org.springframework.osgi.jetty.start.osgi_1.0.0
+23	RESOLVED    org.springframework.osgi.jetty.web.extender.fragment.osgi_1.0.1
+	            Master=85
+24	ACTIVE      org.apache.felix.http.jetty_2.0.4
+25	ACTIVE      com.springsource.org.apache.commons.beanutils_1.8.0
+26	ACTIVE      com.springsource.org.apache.commons.collections_3.2.1
+27	ACTIVE      com.springsource.org.apache.commons.codec_1.3.0
+28	ACTIVE      com.springsource.org.apache.commons.dbcp_1.2.2.osgi
+29	ACTIVE      com.springsource.org.apache.commons.el_1.0.0
+30	ACTIVE      com.springsource.org.apache.commons.digester_1.8.1
+31	ACTIVE      com.springsource.org.apache.commons.fileupload_1.2.1
+32	ACTIVE      com.springsource.org.apache.commons.httpclient_3.1.0
+33	ACTIVE      com.springsource.org.apache.commons.io_1.4.0
+34	ACTIVE      com.springsource.org.apache.commons.lang_2.4.0
+35	ACTIVE      com.springsource.org.apache.commons.pool_1.5.3
+36	ACTIVE      com.springsource.org.apache.commons.validator_1.3.1
+37	ACTIVE      com.springsource.org.apache.oro_2.0.8
+38	ACTIVE      com.springsource.org.apache.ivy_2.1.0
+39	ACTIVE      com.springsource.org.apache.tools.ant_1.7.1
+40	ACTIVE      com.springsource.antlr_2.7.7
+41	ACTIVE      com.springsource.org.dom4j_1.6.1
+42	ACTIVE      com.springsource.org.aspectj.runtime_1.6.8.RELEASE
+43	ACTIVE      com.springsource.org.aspectj.weaver_1.6.8.RELEASE
+44	ACTIVE      com.springsource.com.opensymphony.sitemesh_2.4.1
+45	ACTIVE      com.springsource.javassist_3.9.0.GA
+46	ACTIVE      com.springsource.org.objectweb.asm_1.5.3
+47	ACTIVE      com.springsource.org.jboss.cache_3.2.0.GA
+48	ACTIVE      com.springsource.org.jboss.util_2.2.13.GA
+49	ACTIVE      com.springsource.org.jboss.logging_2.0.5.GA
+50	ACTIVE      com.springsource.org.jgroups_2.5.1
+51	ACTIVE      com.springsource.net.sf.ehcache_1.6.2
+52	ACTIVE      com.springsource.org.hibernate.annotations.common_3.3.0.ga
+53	RESOLVED    com.springsource.org.hibernate.annotations_3.4.0.GA
+	            Master=54
+54	ACTIVE      com.springsource.org.hibernate_3.3.2.GA
+	            Fragments=53
+55	ACTIVE      com.springsource.org.xmlpull_1.1.4.c
+56	RESOLVED    com.springsource.org.apache.xerces_2.9.1
+	            Master=60
+57	ACTIVE      com.springsource.org.apache.xalan_2.7.1
+58	ACTIVE      com.springsource.org.apache.xml.serializer_2.7.1
+59	ACTIVE      com.springsource.org.apache.xml.resolver_1.2.0
+60	ACTIVE      com.springsource.org.apache.xmlcommons_1.3.4
+	            Fragments=56
+61	ACTIVE      com.springsource.org.apache.xml.security_1.4.2
+62	ACTIVE      org.springframework.aop_3.0.3.RELEASE
+63	ACTIVE      org.springframework.asm_3.0.3.RELEASE
+64	ACTIVE      org.springframework.aspects_3.0.3.RELEASE
+65	ACTIVE      org.springframework.beans_3.0.3.RELEASE
+66	ACTIVE      org.springframework.context_3.0.3.RELEASE
+67	ACTIVE      org.springframework.context.support_3.0.3.RELEASE
+68	ACTIVE      org.springframework.core_3.0.3.RELEASE
+69	ACTIVE      org.springframework.expression_3.0.3.RELEASE
+70	ACTIVE      org.springframework.instrument_3.0.3.RELEASE
+71	ACTIVE      org.springframework.jdbc_3.0.3.RELEASE
+72	ACTIVE      org.springframework.jms_3.0.3.RELEASE
+73	ACTIVE      org.springframework.orm_3.0.3.RELEASE
+74	ACTIVE      org.springframework.oxm_3.0.3.RELEASE
+75	ACTIVE      org.springframework.transaction_3.0.3.RELEASE
+76	ACTIVE      org.springframework.web_3.0.3.RELEASE
+77	ACTIVE      org.springframework.web.servlet_3.0.3.RELEASE
+78	ACTIVE      com.springsource.org.aopalliance_1.0.0
+79	ACTIVE      com.springsource.net.sf.cglib_2.2.0
+80	ACTIVE      org.springframework.osgi.core_2.0.0.M1
+81	ACTIVE      org.springframework.osgi.extender_2.0.0.M1
+82	ACTIVE      org.springframework.osgi.io_2.0.0.M1
+83	INSTALLED   org.springframework.osgi.test_2.0.0.M1
+84	ACTIVE      org.springframework.osgi.web_2.0.0.M1
+85	ACTIVE      org.springframework.osgi.web.extender_2.0.0.M1
+	            Fragments=23
+86	INSTALLED   org.grails.osgi_1.3.2
+87	INSTALLED   org.grails.crud_1.3.2
+88	INSTALLED   org.grails.gorm_1.3.2
+89	INSTALLED   org.grails.resources_1.3.2
+90	INSTALLED   org.grails.spring_1.3.2
+91	INSTALLED   org.grails.web_1.3.2
+92	ACTIVE      gant_1.9.1
+93	ACTIVE      groovy-all_1.7.3
+94	ACTIVE      gant_1.9.2
+95	ACTIVE      org.apache.felix.webconsole_2.0.2
+96	ACTIVE      tripper_0.1.0
+osgi>     
+
+
