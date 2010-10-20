@@ -177,7 +177,7 @@ h3. Provision an extisting OSGi runtime, like "Eclipse Virgo":http://eclipse.org
 Configuration of an external OSGi runtime is performed by provisioning bundles into a drop-in 
 directory, which is monitored by the runtime. Bundles, which are dropped into the directory
 are automatically installed and started. The directoy usually resides within the installation
-directory and is called @dropin@ or @load@ or @pickup@.
+directory and is called @dropin@, @load@, or @pickup@.
 
 <pre><code>
 osgi.configure {
@@ -186,7 +186,7 @@ osgi.configure {
 }
 </code></pre>
 
-*Note*: an external runtime csn neither be started nor stopped; the @BundleContext@ is not available.
+*Note*: an external runtime can neither be started nor stopped; the @BundleContext@ is not available.
 
 h3. Installing bundles from files and URLs
 
@@ -196,6 +196,8 @@ osgi.configure {
 	bundle 'http://host.domain.com/path/to/bundle.jar'
 }
 </code></pre>
+
+Bundles from non-local locations are cached by the framework, until deleted with @clean()@ (see below).
 
 h3. Installing bundles from Maven repositories
 
@@ -241,7 +243,7 @@ Please consult the "Grails docs":http://grails.org/doc/latest/guide/3.%20Configu
 
 h3. Clean cached configuration on start
 
-The OSGi runtime caches framework settings and user data. This can be cleaned on startup.
+The OSGi runtime caches bundles, framework settings and user data. This can be cleaned on startup.
 
 <pre><code>
 osgi.configure {
@@ -315,6 +317,44 @@ The following callback methods are provided:
 * afterStop: called after the framework has been stopped.
 
 All callbacks except @beforeStart@ and @afterStop@ are supplied with the @OsgiRuntime@ as argument. The @BundleContext@ can be obtained with @runtime.bundleContext@.
+
+h3. Loading configuration from different sources
+
+@OsgiRuntimeBuilder@'s @configure()@ method supports several source types:
+
+* groovy.lang.Closure
+	The closure can use the OSGi runtime DSL.
+* groovy.lang.Script
+	The script is executed with a binding containing a builder instance
+	as property @builder@ and the builder's @configure()@ method.
+* java.io.Reader 
+	The reader's content is loaded as Groovy Script
+* java.io.InputStream
+	The stream's content is loaded as Groovy Script
+* java.io.File
+	The file's content is loaded as Groovy Script
+* java.net.URL
+	The URL's content is loaded as Groovy Script
+* java.lang.CharSequence (String, GString)
+	If the string is a URL, it is handled as URL (see above)
+	Otherwise, the string's content is loaded as Groovy Script
+* Array or List containing any of the above
+	Each item is handled according to its type (see above)
+
+h3. Groovy script support
+
+@OsgiRuntimeBuilder@ can be called with a script as parameter:
+
+<pre><code>
+groovy -cp groovyx-osgi-runtime-version.jar groovyx.osgi.runtime.OsgiRuntimeBuilder path/to/script.groovy
+</code></pre>
+
+The script is executed with a @Binding@ containing a builder instance as property @builder@ and 
+the builder's @configure()@ method.
+
+@OsgiRuntimeBuilder@ also has a static @run()@ method which creates an instance if @OsgiRuntimeBuilder@,
+configures it with all arguments (which are either handled as URLs or as DSL script), starts the runtime
+and waits for it to shutdown.
 
 h2. Roadmap                                             
 
