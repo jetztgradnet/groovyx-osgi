@@ -22,8 +22,8 @@ import static org.junit.Assert.*
 
 import org.osgi.framework.BundleContext
 
-import org.codehaus.groovy.osgi.runtime.equinox.*
-import org.codehaus.groovy.osgi.runtime.external.*
+import net.jetztgrad.groovy.osgi.runtime.equinox.*
+import net.jetztgrad.groovy.osgi.runtime.external.*
 
 
 public class OsgiRuntimeTest {

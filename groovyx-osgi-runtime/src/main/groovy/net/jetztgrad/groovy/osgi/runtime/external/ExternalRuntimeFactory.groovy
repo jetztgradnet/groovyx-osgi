@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.support;
+package net.jetztgrad.groovy.osgi.runtime.external
 
-import org.osgi.framework.Version;
+import java.util.Properties;
 
-class BundleSpec {
-	String name
-	String group
-	Version minVersion
-	Version maxVersion
-	def source
-	boolean optional
-	def startLevel
+import groovyx.osgi.runtime.OsgiRuntime;
+import groovyx.osgi.runtime.OsgiRuntimeFactory;
+
+class ExternalRuntimeFactory implements OsgiRuntimeFactory {
+
+	public OsgiRuntime createRuntime(Properties runtimeProperties)
+			throws IllegalArgumentException, Exception {
+		return new ExternalRuntime(runtimeProperties);
+	}
+
 }

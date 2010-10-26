@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.groovy.osgi.runtime.resolve
+package net.jetztgrad.groovy.osgi.runtime.resolve
 
 import org.apache.ivy.core.event.EventManager
 import org.apache.ivy.core.module.descriptor.Configuration
@@ -54,9 +54,9 @@ import org.apache.ivy.core.module.id.ArtifactId
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor
 import org.apache.ivy.plugins.repository.TransferListener
 
-import org.codehaus.groovy.osgi.runtime.resolve.AbstractIvyDependencyManager;
-import org.codehaus.groovy.osgi.runtime.resolve.DependencyDefinitionParser;
-import org.codehaus.groovy.osgi.runtime.resolve.DependencyResolver;
+import net.jetztgrad.groovy.osgi.runtime.resolve.AbstractIvyDependencyManager;
+import net.jetztgrad.groovy.osgi.runtime.resolve.DependencyDefinitionParser;
+import net.jetztgrad.groovy.osgi.runtime.resolve.DependencyResolver;
 
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.ivy.plugins.resolver.RepositoryResolver

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.external
+package net.jetztgrad.groovy.osgi.runtime.external
 
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
+import net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -38,7 +38,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#doStart()
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#doStart()
 	 */
 	@Override
 	public BundleContext doStart() {
@@ -46,7 +46,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#canStart()
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#canStart()
 	 */
 	@Override
 	public boolean canStart() {
@@ -54,7 +54,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#doStop()
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#doStop()
 	 */
 	@Override
 	public void doStop() {
@@ -62,7 +62,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#canStop()
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#canStop()
 	 */
 	@Override
 	public boolean canStop() {
@@ -70,7 +70,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#isRunning()
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#isRunning()
 	 */
 	@Override
 	public boolean isRunning() {
@@ -79,7 +79,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.io.File, boolean)
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.io.File, boolean)
 	 */
 	@Override
 	public Bundle install(File bundleFile, boolean autoStart) {
@@ -103,7 +103,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.io.InputStream, boolean)
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.io.InputStream, boolean)
 	 */
 	@Override
 	public Bundle install(InputStream stream, boolean autoStart) {
@@ -122,7 +122,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.lang.String, boolean)
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.lang.String, boolean)
 	 */
 	@Override
 	public Bundle install(String bundleFile, boolean autoStart) {
@@ -135,7 +135,7 @@ class ExternalRuntime extends AbstractOsgiRuntime {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.net.URL, boolean)
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#install(java.net.URL, boolean)
 	 */
 	@Override
 	public Bundle install(URL url, boolean autoStart) {

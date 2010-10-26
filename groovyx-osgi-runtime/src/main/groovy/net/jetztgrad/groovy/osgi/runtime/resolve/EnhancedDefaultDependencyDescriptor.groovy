@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.resolve
+package net.jetztgrad.groovy.osgi.runtime.resolve
 
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor
 import org.apache.ivy.core.module.id.ModuleId

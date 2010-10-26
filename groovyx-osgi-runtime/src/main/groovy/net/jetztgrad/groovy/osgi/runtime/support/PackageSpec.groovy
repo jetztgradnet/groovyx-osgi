@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.support
+package net.jetztgrad.groovy.osgi.runtime.support
 
 import org.osgi.framework.Version
 

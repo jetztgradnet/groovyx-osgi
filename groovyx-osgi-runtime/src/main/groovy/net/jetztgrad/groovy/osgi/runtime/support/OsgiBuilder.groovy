@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.support
+package net.jetztgrad.groovy.osgi.runtime.support
 
 
 import groovy.lang.Closure
-import org.codehaus.groovy.osgi.runtime.support.BundleSpec
+import net.jetztgrad.groovy.osgi.runtime.support.BundleSpec
 
 class OsgiBuilder {
 	List<BundleSpec> bundles = []

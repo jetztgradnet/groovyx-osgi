@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.felix
+package net.jetztgrad.groovy.osgi.runtime.felix
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker
 
-import org.codehaus.groovy.osgi.runtime.AbstractOsgiRuntime
+import net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime
 
 import org.apache.felix.framework.Felix
 
@@ -41,6 +41,9 @@ class FelixRuntime extends AbstractOsgiRuntime {
 		super(runtimeProperties)
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.jetztgrad.groovy.osgi.runtime.AbstractOsgiRuntime#doStart()
+	 */
 	BundleContext doStart() {
 		// initialize framework
 		

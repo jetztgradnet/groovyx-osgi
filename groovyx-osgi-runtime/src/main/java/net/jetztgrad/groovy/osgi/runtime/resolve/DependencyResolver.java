@@ -13,24 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.codehaus.groovy.osgi.runtime.resolve;
+package net.jetztgrad.groovy.osgi.runtime.resolve;
 
-import groovy.lang.Closure;
+import org.apache.ivy.core.module.id.ModuleRevisionId;
+import org.apache.ivy.core.report.ResolveReport;
+
+import java.util.Set;
 
 /**
- * An interface that defines methods for parsing dependency definitions
- * defined in the form of a Groovy DSL
+ * An interface that defines methods to resolve dependencies based
+ * on a supplied dependency definition.
  *
  * @author Graeme Rocher
  * @since 1.2
  */
-public interface DependencyDefinitionParser {
+public interface DependencyResolver {
+
+    ResolveReport resolveDependencies();
 
     /**
-     * Parses DSL code into a dependency definition
+     * Obtains the ModuleRevisionId instances for the given organisation name
      *
-     * @param definition The DSL code
+     * @param organisation The organisation name
+     * @return The ModuleRevisionId
      */
-    void parseDependencies(Closure definition);
-
+    Set<ModuleRevisionId> getModuleRevisionIds(String organisation);
 }

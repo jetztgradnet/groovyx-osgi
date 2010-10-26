@@ -16,10 +16,10 @@
 
 package groovyx.osgi.runtime;
 
-import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
-import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntime;
-import org.codehaus.groovy.osgi.runtime.felix.FelixRuntimeFactory;
-import org.codehaus.groovy.osgi.runtime.felix.FelixRuntime;
+import net.jetztgrad.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
+import net.jetztgrad.groovy.osgi.runtime.equinox.EquinoxRuntime;
+import net.jetztgrad.groovy.osgi.runtime.felix.FelixRuntimeFactory;
+import net.jetztgrad.groovy.osgi.runtime.felix.FelixRuntime;
 
 import org.osgi.framework.BundleContext;
 

@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime.felix
+package net.jetztgrad.groovy.osgi.runtime.equinox
 
-import java.util.Properties
+import java.util.Properties;
 
 import groovyx.osgi.runtime.OsgiRuntime
 import groovyx.osgi.runtime.OsgiRuntimeFactory
 
 /**
-* {@link OsgiRuntimeFactory} for Apache Felix OSGi runtime.
-*
-* @author Wolfgang Schell
-*/
-class FelixRuntimeFactory implements OsgiRuntimeFactory {
+ * {@link OsgiRuntimeFactory} for Eclipse Equinox OSGi runtime.
+ * 
+ * @author Wolfgang Schell
+ */
+class EquinoxRuntimeFactory implements OsgiRuntimeFactory {
 
 	/* (non-Javadoc)
 	 * @see groovyx.osgi.runtime.OsgiRuntimeFactory#createRuntime(java.util.Properties)
 	 */
 	public OsgiRuntime createRuntime(Properties runtimeProperties)
 			throws IllegalArgumentException, Exception {
-		return new FelixRuntime(runtimeProperties)
+		return new EquinoxRuntime(runtimeProperties)
 	}
 }

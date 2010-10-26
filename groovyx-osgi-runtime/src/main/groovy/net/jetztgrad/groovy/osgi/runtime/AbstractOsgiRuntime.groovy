@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.osgi.runtime
+package net.jetztgrad.groovy.osgi.runtime
 
 import java.io.File
 import java.util.List

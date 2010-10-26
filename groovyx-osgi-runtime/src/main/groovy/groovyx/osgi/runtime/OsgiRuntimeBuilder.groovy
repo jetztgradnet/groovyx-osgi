@@ -30,11 +30,11 @@ import java.util.Properties;
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory;
 
-import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
-import org.codehaus.groovy.osgi.runtime.felix.FelixRuntimeFactory;
-import org.codehaus.groovy.osgi.runtime.external.ExternalRuntimeFactory
+import net.jetztgrad.groovy.osgi.runtime.equinox.EquinoxRuntimeFactory;
+import net.jetztgrad.groovy.osgi.runtime.felix.FelixRuntimeFactory;
+import net.jetztgrad.groovy.osgi.runtime.external.ExternalRuntimeFactory
 
-import org.codehaus.groovy.osgi.runtime.resolve.IvyDependencyManager
+import net.jetztgrad.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 
 class OsgiRuntimeBuilder implements GroovyObject {

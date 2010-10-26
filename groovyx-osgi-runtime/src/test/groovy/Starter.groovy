@@ -1,9 +1,9 @@
 import org.osgi.framework.BundleContext
 
 import groovyx.osgi.runtime.*
-import org.codehaus.groovy.osgi.runtime.*
-import org.codehaus.groovy.osgi.runtime.equinox.EquinoxRuntime;
-import org.codehaus.groovy.osgi.runtime.resolve.*
+import net.jetztgrad.groovy.osgi.runtime.*
+import net.jetztgrad.groovy.osgi.runtime.equinox.EquinoxRuntime;
+import net.jetztgrad.groovy.osgi.runtime.resolve.*
 
 
 def osgiDependencies = {
