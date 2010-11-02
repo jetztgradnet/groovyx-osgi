@@ -173,6 +173,7 @@ class OsgiRuntimeBuilder {
 		if (runtimeProperties.containsKey(name)) {
 			return runtimeProperties[name]
 		}
+		null
 	}
 	
 	/**
