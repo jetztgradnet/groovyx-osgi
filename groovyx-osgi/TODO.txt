@@ -2,11 +2,19 @@
 * Service Tracker handling (with closures)
 * Service Reference handling (with closures)
 
+bundleContext.findService(String) { serviceReference ->
+	// filter
+}
+
 bundleContext.findService(Class) { serviceReference ->
 	// filter
 }
 
 bundleContext.findService(Map) { serviceReference ->
+	// filter
+}
+
+bundleContext.findServices(String) { serviceReference ->
 	// filter
 }
 
