@@ -89,6 +89,17 @@ class OsgiRuntimeBuilder {
 	}
 	
 	/**
+	 * Get this builder instance. Can be called e.g. from closures, to call
+	 * methods on or get properties from this builder, e.g. when methods or 
+	 * properties with the same name exist in the closure's owner.
+	 * 
+	 * @return this builder instance
+	 */
+	public OsgiRuntimeBuilder getBuilder() {
+		return this
+	}
+	
+	/**
 	 * Setup aliases for OSGi runtimes. May be overridden
 	 * to add additional aliases.
 	 * 
