@@ -146,14 +146,14 @@ class OsgiRuntimeBuilder {
 	}
 	
 	/**
-	* Get runtime property.
-	*
-	* @param name property name
-	* @param defValue default value
-	*
-	* @return property value or default value, if there 
-	* 			is no property of this name
-	*/
+	 * Get runtime property.
+	 *
+	 * @param name property name
+	 * @param defValue default value
+	 *
+	 * @return property value or default value, if there 
+	 * 			is no property of this name
+	 */
 	def getRuntimeProperty(String name, def defValue) {
 		if (runtimeProperties.containsKey(name)) {
 			return runtimeProperties[name]
