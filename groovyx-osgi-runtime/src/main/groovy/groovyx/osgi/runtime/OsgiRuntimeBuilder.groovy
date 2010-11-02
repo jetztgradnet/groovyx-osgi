@@ -768,9 +768,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 * @return this builder instance
 	 */
 	def configure(Closure closure) {
-		Closure cl = closure.clone()
-		cl.delegate = this
-		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+		Closure cl = configureClosure(closure)
 		cl()
 		
 		this
@@ -964,9 +962,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	* @return this builder instance
 	*/
    def args(Closure closure) {
-	   Closure cl = closure.clone()
-	   cl.delegate = args
-	   cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+	   Closure cl = configureClosure(closure)
 	   cl()
 	   
 	   this
@@ -984,9 +980,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 * @return this builder instance
 	 */
 	def bundles(Closure closure) {
-		Closure cl = closure.clone()
-		cl.delegate = this
-		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+		Closure cl = configureClosure(closure)
 		cl()
 		
 		this
@@ -1043,9 +1037,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 */
 	def bundle(CharSequence specs, Map args, Closure closure) {
 		if (closure) {
-			Closure cl = closure.clone()
-			cl.delegate = this
-			cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+			Closure cl = configureClosure(closure)
 			cl(specs)
 		}
 		
@@ -1057,6 +1049,14 @@ Try passing a valid Maven repository with the --repository argument."""
 		}
 		
 		this
+	}
+	
+	protected Closure configureClosure(Closure closure) {
+		Closure cl = closure.clone()
+		cl.delegate = this
+		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
+		
+		return cl
 	}
 	
 	public static void main(String[] args) {
