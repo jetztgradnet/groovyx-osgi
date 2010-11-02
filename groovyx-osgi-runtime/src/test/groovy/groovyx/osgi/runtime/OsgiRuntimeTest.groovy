@@ -20,6 +20,7 @@ import java.io.File
 import org.junit.*
 import static org.junit.Assert.*
 
+import org.osgi.framework.Bundle
 import org.osgi.framework.BundleContext
 
 import net.jetztgrad.groovy.osgi.runtime.equinox.*
@@ -113,7 +114,7 @@ public class OsgiRuntimeTest {
 	
 	@Test
 	void testGroovyScript() throws Exception {
-		OsgiRuntimeBuilder.run("""
+		OsgiRuntimeBuilder builder = OsgiRuntimeBuilder.start("""
 allBundles = []
 allBundles << 'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4'
 
@@ -127,9 +128,9 @@ configure {
 		resolverLogLevel = "warn"
 	}
 	
-	println "bundles to install: " + allBundles
+	println "bundles to install: " + this.allBundles
         
-	allBundles.each { bdl ->
+	this.allBundles.each { bdl ->
 		println "Installing bundle " + bdl
 		bundle bdl
 	}
@@ -139,5 +140,21 @@ configure {
 	}
 }
 """)
+	
+		try {
+			// assert that bundle Felix FileInstall is loaded
+			OsgiRuntime runtime = builder.runtime
+			
+			assertTrue(runtime.isRunning())
+			
+			def expectedBundle = "org.apache.felix.configadmin"
+			
+			def bundle = runtime.bundleContext.bundles.find { Bundle bundle -> bundle.symbolicName == expectedBundle }
+			assertNotNull bundle
+			assertEquals(bundle.symbolicName, expectedBundle)
+		}
+		finally {
+			OsgiRuntimeBuilder.stop(builder)
+		}
 	}
 }
