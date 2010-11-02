@@ -37,7 +37,7 @@ import net.jetztgrad.groovy.osgi.runtime.external.ExternalRuntimeFactory
 import net.jetztgrad.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 
-class OsgiRuntimeBuilder implements GroovyObject {
+class OsgiRuntimeBuilder {
 	public final static int DEFAULT_HTTP_PORT = 8080
 	
 	private final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
