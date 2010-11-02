@@ -1103,12 +1103,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	 */
 	public static void run(def args) {
 		// create builder and configure using all args
-		OsgiRuntimeBuilder builder = new OsgiRuntimeBuilder()
-		builder.configure(args)
-		
-		// build and start runtime
-		OsgiRuntime runtime = builder.build()
-		builder.doStart()
+		OsgiRuntimeBuilder builder = start(args)
 		
 		// wait for finish
 		builder.waitForFinish()
@@ -1116,4 +1111,106 @@ Try passing a valid Maven repository with the --repository argument."""
 		// stop runtime
 		builder.doStop()
 	}
+	
+	/**
+	* Start OSGi environment.
+	*
+	* <p>Example:
+	* <pre>
+	* @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+	* @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	* @Grapes([
+	* 	@GrabConfig(systemClassLoader=true),
+	* 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	* 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+	* 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+	* ])
+	* import groovyx.osgi.runtime.OsgiRuntimeBuilder
+	*
+	* def builder = OsgiRuntimeBuilder.start {
+	* 		framework 'equinox'
+	*
+	* 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	*
+	* 		afterStart = {
+	* 			println "started OSGi runtime"
+	* 		}
+	*
+	* 		doRun = {
+	* 			// wait one minute
+	* 			Thread.sleep 30000
+	* 		}
+	*
+	* 		afterStop = {
+	* 			println "started OSGi runtime"
+	* 		}
+	* }
+	* // do something with builder
+	* 
+	* OsgiRuntimeBuilder.stop(builder)
+	* </pre>
+	* </p>
+	*
+	* @param args configuration args. See {@link #configure(List)} for supported types
+	* 
+	* @return builder with started runtime
+	*/
+   public static OsgiRuntimeBuilder start(def args) {
+	   // create builder and configure using all args
+	   OsgiRuntimeBuilder builder = new OsgiRuntimeBuilder()
+	   builder.configure(args)
+	   
+	   // build and start runtime
+	   OsgiRuntime runtime = builder.build()
+	   builder.doStart()
+	   
+	   // return builder
+	   builder
+   }
+   
+   /**
+    * Stop runtime.
+    * 
+    * <p>Example:
+	* <pre>
+	* @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+	* @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	* @Grapes([
+	* 	@GrabConfig(systemClassLoader=true),
+	* 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	* 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+	* 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+	* ])
+	* import groovyx.osgi.runtime.OsgiRuntimeBuilder
+	*
+	* def builder = OsgiRuntimeBuilder.start {
+	* 		framework 'equinox'
+	*
+	* 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	*
+	* 		afterStart = {
+	* 			println "started OSGi runtime"
+	* 		}
+	*
+	* 		doRun = {
+	* 			// wait one minute
+	* 			Thread.sleep 30000
+	* 		}
+	*
+	* 		afterStop = {
+	* 			println "started OSGi runtime"
+	* 		}
+	* }
+	* // wait for finish
+	* builder.waitForFinish()
+	* OsgiRuntimeBuilder.stop(builder)
+	* </pre>
+	* </p>
+	* 
+    * @param builder {@link OsgiRuntimeBuilder} hosting the runtime. 
+    */
+   public static void stop(OsgiRuntimeBuilder builder) {
+	   // stop runtime
+	   builder.doStop()
+   }
 }
