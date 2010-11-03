@@ -1,4 +1,4 @@
-* OSGi Filter  DSL (s. filter4osgi: http://code.google.com/p/filter4osgi/)
+* OSGi Filter DSL (s. filter4osgi: http://code.google.com/p/filter4osgi/)
 * Service Tracker handling (with closures)
 * Service Reference handling (with closures)
 
