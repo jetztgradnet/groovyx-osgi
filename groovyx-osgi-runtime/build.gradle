@@ -22,11 +22,11 @@ dependencies {
 }
 
 jar {
+	baseName = 'groovyx.osgi.runtime'
 	manifest {
-		//symbolicName = 'groovyx-osgi'
-		instruction 'Export-Package', 'groovyx.osgi.*'
+		//symbolicName = 'groovyx.osgi.runtime'
+		instruction 'Export-Package', 'groovyx.osgi.runtime.*'
 		instruction 'Import-Package', '*'
 		instruction 'Bundle-Vendor', 'JetztGrad.net'
-		//instruction 'Bundle-Activator', 'org.codehaus.groovy.osgi.TestActivator'
 	}
 }
