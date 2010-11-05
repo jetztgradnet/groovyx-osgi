@@ -5,21 +5,22 @@ apply plugin:'eclipse'
 
 defaultTasks 'build'
 
-repositories {
-	mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/osgi'
-	mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/milestone'
-}
 
 dependencies {
-	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
-	compile group: 'org.osgi', name: 'org.osgi.compendium', version: '4.2.0'
-	compile group: 'org.apache.commons', name: 'com.springsource.org.apache.commons.logging', version: '1.1.1'
-	groovy (group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.5') {
+	compile group: 'org.osgi', name: 'org.osgi.core', version: "$osgiVersion"
+	compile group: 'org.osgi', name: 'org.osgi.compendium', version: "$osgiVersion"
+	//compile group: 'org.eclipse.osgi', name:'org.eclipse.osgi', version:"$equinoxVersion"
+	//compile group: 'org.apache.felix', name:'org.apache.felix.framework', version:"$felixVersion"
+	compile group: 'org.apache.commons', name: 'com.springsource.org.apache.commons.logging', version: "$jclVersion"
+	groovy (group: 'org.codehaus.groovy', name: 'groovy', version: "$groovyVersion") {
 		//transitive = false
 		exclude module: 'jansi'
 	}
-	testCompile group: 'junit', name: 'junit', version: '4.8.1+'
-	testCompile group: 'org.springframework.osgi', name: 'spring-osgi-mock', version: '2.0.0.M1'
+	testCompile group: 'junit', name: 'junit', version: "$junitVersion"
+	//testCompile group: 'org.springframework.osgi', name: 'spring-osgi-mock', version: "$springDMVersion"
+	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam', version: "$paxExamVersion"
+	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam-container-default', version: "$paxExamVersion"
+	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam-junit', version: "$paxExamVersion"
 }
 
 jar {
