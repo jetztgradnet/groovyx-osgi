@@ -3,6 +3,7 @@
 <classpath>
   <classpathentry kind="src" path="src/main/groovy"/>
   <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="src/main/resources"/>
   <classpathentry kind="output" path="build/classes/main"/>
   <classpathentry kind="src" path="src/test/groovy" output="build/classes/test"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -12,12 +13,12 @@
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-tree/jars/asm-tree-3.2.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-util/jars/asm-util-3.2.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm/jars/asm-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.1.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.felix/org.apache.felix.framework/bundles/org.apache.felix.framework-3.0.2.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.ivy/ivy/jars/ivy-2.1.0.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/jars/org.eclipse.osgi-3.6.0.v20100517.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/jars/org.eclipse.osgi-3.6.1.R36x_v20100806.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.2.0.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.2.0.jar"/>
 </classpath>

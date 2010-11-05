@@ -14,11 +14,25 @@ subprojects {
 	//equinoxVersion = '3.6.0.v20100517' // Helios release
 	equinoxVersion = '3.6.1.R36x_v20100806' // Helios SR1
 	felixVersion = "3.0.2"
+	
+	task eclipseClasspath {
+		downloadSources = true
+	}
+	eclipseClasspath {
+		downloadJavadoc = true
+	}
 
 	repositories {
 		mavenCentral()
 		mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
 		mavenRepo urls: 'http://repository.springsource.com/maven/bundles/external'
+		
+		add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+			name = 'github'
+			addArtifactPattern("https://github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]")
+			addIvyPattern("https://github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]")
+		}
+		
 	}                                                                                       
 }
 

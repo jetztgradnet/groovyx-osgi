@@ -5,6 +5,11 @@ apply plugin:'eclipse'
 
 defaultTasks 'build'
 
+repositories {
+	mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/osgi'
+	mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/milestone'
+}
+
 dependencies {
 	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
 	compile group: 'org.osgi', name: 'org.osgi.compendium', version: '4.2.0'
@@ -14,6 +19,7 @@ dependencies {
 		exclude module: 'jansi'
 	}
 	testCompile group: 'junit', name: 'junit', version: '4.8.1+'
+	testCompile group: 'org.springframework.osgi', name: 'spring-osgi-mock', version: '2.0.0.M1'
 }
 
 jar {
