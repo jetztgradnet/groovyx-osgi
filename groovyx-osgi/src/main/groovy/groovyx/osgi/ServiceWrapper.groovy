@@ -88,26 +88,58 @@ class ServiceWrapper {
 	}
 	
 	/**
-	 * Get {@link List} of {@link ServiceReference}s.
+	 * Get wrapped array of {@link ServiceReference}s.
 	 * 
-	 * @return unmodifiable {@link List}  of {@link ServiceReference}. 
-	 * 			The list may be empty, but never <code>null</code>
+	 * @return array of {@link ServiceReference}. 
+	 * 			The array may be empty, but never <code>null</code>
 	 * 
 	 * @return
 	 */
-	List<ServiceReference> getServiceReferences() {
-		serviceReferences
+	ServiceReference[] getServiceReferences() {
+		serviceReferences as ServiceReference[]
+	}
+	
+	/**
+	 * Determine whether this wrapper actually contains services (or rather
+	 * {@link ServiceReference}s).
+	 * 
+	 * @return <code>true</code>, of the wrapper actually contains services, 
+	 * 			<code>false</code> otherwise
+	 */
+	boolean hasServices() {
+		serviceReferences.size() > 0
+	}
+	
+	/**
+	 * Get number of wrapped services (or rather {@link ServiceReference}s).
+	 * 
+	 * @return number of wrapped services
+	 */
+	int size() {
+		serviceReferences.size()
+	}
+	
+	/**
+	 * Get number of wrapped services (or rather {@link ServiceReference}s).
+	 * 
+	 * @return number of wrapped services
+	 */
+	int getServiceCount() {
+		serviceReferences.size()
 	}
 
 	/**
-	 * Perform service action. The provided closure may receive one, 
-	 * two, or three args:
+	 * Perform service action.
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
 	 * 
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
 	 * <li>service properties ({@link Map})</li>
 	 * <li>user options ({@link Map})</li>
 	 * </ol>
+	 * </p>
 	 * 
 	 * <p>Example:
 	 * <pre>
