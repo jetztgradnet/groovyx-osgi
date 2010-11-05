@@ -1,53 +1,7 @@
 * OSGi Filter DSL (s. filter4osgi: http://code.google.com/p/filter4osgi/)
 * Service Tracker handling (with closures)
 * Service Reference handling (with closures)
-
-bundleContext.findService(String) { serviceReference ->
-	// filter
-}
-
-bundleContext.findService(Class) { serviceReference ->
-	// filter
-}
-
-bundleContext.findService(Map) { serviceReference ->
-	// filter
-}
-
-bundleContext.findServices(String) { serviceReference ->
-	// filter
-}
-
-bundleContext.findServices(Class) { serviceReference ->
-	// filter
-}
-
-bundleContext.findServices(Map) { serviceReference ->
-	// filter
-}
-
-bundleContext.withService(Class) { service[, props] ->
-	// do something
-}
-
-bundleContext.withService(Map) { service[, props] ->
-	// do something
-}
-
-bundleContext.withEachService(Class) { service[, props] ->
-	// do something
-}
-
-bundleContext.withEachService(Map) { service[, props] ->
-	// do something
-}
-
-type: Class
-filter: filter string
-<property>: -> filter
-onFailure: closure
-serviceMissing: closure
-
+* Service registration
 also see ScalaModules
 http://github.com/weiglewilczek/scalamodules/wiki
 
