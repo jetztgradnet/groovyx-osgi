@@ -25,8 +25,32 @@ import org.osgi.framework.BundleContext
 import org.osgi.framework.ServiceReference
 import org.osgi.framework.ServiceRegistration
 
-
+/**
+ * The {@link ServiceWrapper} provides convenience methods to
+ * handle obtaining services from the OSGi service registry.
+ * ServiceWrapper is used by {@link OsgiCategory}, when 
+ * handling services with {@link BundleContext}.withEachService()
+ * and variants.
+ * 
+ * <p>Example:
+ * <pre>
+ * def finder = new ServiceFinder(bundleContext)
+ * ServiceWrapper services = finder.find {
+ * 		className MyClass
+ * 		filter "(&(name=groovy)(count=42))"
+ * 		multiple()
+ * }
+ * services.withEachService { service, props -> 
+ * 		println "Service properties: " + props
+ * 		service?.doSomething()
+ * }
+ * </pre>
+ * </p>
+ * 
+ * @author Wolfgang Schell
+ */
 class ServiceWrapper {
+	
 	private final BundleContext bundleContext
 	private final List<ServiceReference> serviceReferences
 	
@@ -50,8 +74,8 @@ class ServiceWrapper {
 	}
 	
 	/**
-	 * Get {@link ServiceReference}. If the wrapper contains more 
-	 * than one reference, the first reference is returned.
+	 * Get wrapped {@link ServiceReference}. If the wrapper contains more 
+	 * than one reference, only the first reference is returned.
 	 * 
 	 * @return {@link ServiceReference} or <code>null</code>, if there are
 	 * 				no service references
@@ -91,7 +115,7 @@ class ServiceWrapper {
 	 * 	bundleContext.findService(MyService.class).withService { service, props ->
 	 * 		println "Service properties: " + props
 	 * 		service?.doSomething()
-	 * 	}
+	 *	}
 	 * }
 	 * </pre>
 	 * </p>
@@ -104,6 +128,36 @@ class ServiceWrapper {
 		return withService(Collections.EMPTY_MAP, closure)
 	}
 	
+	/**
+	 * Perform service action.
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	bundleContext.findService(MyService.class).withService { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param options map of options. See {@link OsgiCategory#withEachService(BundleContext, ServiceReference[], java.util.Map, Closure)} 
+	 * 			for supported values
+	 * @param closure service action closure
+	 * 
+	 * @return result of service action
+	 */
 	Object withService(Map options, Closure closure) {
 		if (!serviceReferences) {
 			return null
@@ -112,20 +166,71 @@ class ServiceWrapper {
 		return OsgiCategory.withService(bundleContext, serviceReference, options ?: Collections.EMPTY_MAP, closure)
 	}
 	
+	/**
+	 * Perform action for each wrapped service.
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	bundleContext.findServices(MyService.class).withEachService { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param options map of options. See {@link OsgiCategory#withEachService(BundleContext, ServiceReference[], java.util.Map, Closure)} 
+	 * 			for supported values
+	 * @param closure service action closure
+	 * 
+	 * @return result of service action
+	 */
 	List withEachService(Closure closure) {
 		return withEachService(Collections.EMPTY_MAP, closure)
 	}
 	
+	/**
+	 * Perform action for each wrapped service. 
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	bundleContext.findServices(MyService.class).withEachService { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param options map of options. See {@link OsgiCategory#withEachService(BundleContext, ServiceReference[], java.util.Map, Closure)} 
+	 * 			for supported values
+	 * @param closure service action closure
+	 * 
+	 * @return result of service action
+	 */
 	List withEachService(Map options, Closure closure) {
-		List results = []
-		
-		serviceReferences.each { ServiceReference serviceReference ->
-			def result = OsgiCategory.withService(bundleContext, serviceReference, options ?: Collections.EMPTY_MAP, closure)
-			if (result) {
-				results << result
-			}
-		}
-		
-		return results
+		return OsgiCategory.withEachService(bundleContext, serviceReferences as ServiceReference[], options ?: Collections.EMPTY_MAP, closure)
 	}
 }
