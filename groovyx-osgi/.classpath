@@ -12,10 +12,26 @@
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-tree/jars/asm-tree-3.2.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-util/jars/asm-util-3.2.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm/jars/asm-3.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/commons-discovery/commons-discovery/jars/commons-discovery-0.4.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/commons-logging/commons-logging/jars/commons-logging-1.1.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.1.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/log4j/log4j/jars/log4j-1.2.12.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-io/bundles/ops4j-base-io-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-lang/bundles/ops4j-base-lang-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-monitors/bundles/ops4j-base-monitors-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-net/bundles/ops4j-base-net-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-store/bundles/ops4j-base-store-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-default/jars/pax-exam-container-default-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-rbc-client/jars/pax-exam-container-rbc-client-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-rbc/bundles/pax-exam-container-rbc-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-junit-extender/bundles/pax-exam-junit-extender-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-junit/jars/pax-exam-junit-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-runtime/jars/pax-exam-runtime-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-spi/jars/pax-exam-spi-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam/bundles/pax-exam-1.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.runner/pax-runner-no-jcl/bundles/pax-runner-no-jcl-1.5.0.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.2.0.jar"/>
   <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.2.0.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework.osgi/spring-osgi-mock/jars/spring-osgi-mock-2.0.0.M1.jar"/>
 </classpath>
