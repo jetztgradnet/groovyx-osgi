@@ -21,29 +21,39 @@ import static org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+
+import org.ops4j.pax.exam.junit.JUnit4TestRunner
+import org.ops4j.pax.exam.junit.Configuration
+import org.ops4j.pax.exam.Option
+import org.ops4j.pax.exam.Inject
+import static org.ops4j.pax.exam.CoreOptions.*
+
 import org.osgi.framework.BundleContext
 import org.osgi.framework.ServiceReference
 import org.osgi.framework.InvalidSyntaxException
-import org.springframework.osgi.mock.MockBundleContext
-import org.springframework.osgi.mock.MockServiceReference;
-import org.springframework.osgi.mock.MockServiceRegistration;
 
+
+@RunWith (JUnit4TestRunner)
 class OsgiCategoryTests {
+	@Inject
 	BundleContext bundleContext
+	
+	@Configuration
+	public Option[] configure() {
+		[
+			equinox(),
+			provision(
+				mavenBundle().groupId('org.codehaus.groovy').artifactId('groovy-all').version('1.7.5'),
+				// TODO automatically determine path and file name, e.g. from system property set in build.gradle 
+				bundle(new File('./build/libs/groovyx.osgi-0.1.jar').toURI().toString())
+			)
+		] as Option[]
+	}
 
 	@Before
 	public void setUp() throws Exception {
-		MockServiceRegistration reg1 = new MockServiceRegistration(props);
-		MockServiceReference ref1 = new MockServiceReference();
-		// TODO set mock BundleContext
-		bundleContext = new MockBundleContext() {
-			public ServiceReference[] getServiceReferences(String className, String filter) throws InvalidSyntaxException {
-			}
-			public Object getService(ServiceReference reference) {
-			}
-			public boolean ungetService(ServiceReference reference) {
-			}
-		}
+		def props = [ name: 'osgitest', numval: 42 ]
 	}
 
 	@After
@@ -51,7 +61,27 @@ class OsgiCategoryTests {
 	}
 	
 	@Test
-	public void testFind() throws Exception {
-		
+	public void testFrameworkLoaded() throws Exception {
+		assertNotNull("BundleContext is not available", bundleContext)
+	}
+	
+	@Test
+	public void testLoadGroovyxOsgi() throws Exception {
+		def found = bundleContext.bundles.find { bundle -> 'groovyx.osgi' == bundle.symbolicName  }
+		assertNotNull('Bundle groovyx-osgi is not loaded', found)
+	}
+	
+	@Test
+	public void testFindService() throws Exception {
+		String service = "ThisIsAService"
+		def reg = bundleContext.registerService(String.class.getName(), service, null)
+		def result
+		use (OsgiCategory) {
+			result = bundleContext.withService(String.class.getName()) { srv ->
+				srv.toUpperCase()
+			}
+		}
+		assertNotNull('Service result should exist', result)
+		assertEquals(service.toUpperCase(), result)
 	}
 }
