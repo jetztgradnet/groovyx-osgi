@@ -7,6 +7,13 @@ defaultTasks 'build'
 
 build.dependsOn 'javadoc'
 
+// workaround for GRADLE-1079 (http://jira.codehaus.org/browse/GRADLE-1079)
+eclipseClasspath.variables = [:]
+eclipseClasspath.doFirst {
+	downloadSources = true
+	downloadJavadoc = true
+}
+
 dependencies {
 	compile group: 'org.osgi', name: 'org.osgi.core', version: "$osgiVersion"
 	compile group: 'org.osgi', name: 'org.osgi.compendium', version: "$osgiVersion"
