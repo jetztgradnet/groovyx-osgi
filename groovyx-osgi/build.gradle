@@ -15,20 +15,79 @@ eclipseClasspath.doFirst {
 }
 
 dependencies {
-	compile group: 'org.osgi', name: 'org.osgi.core', version: "$osgiVersion"
-	compile group: 'org.osgi', name: 'org.osgi.compendium', version: "$osgiVersion"
-	//compile group: 'org.eclipse.osgi', name:'org.eclipse.osgi', version:"$equinoxVersion"
-	//compile group: 'org.apache.felix', name:'org.apache.felix.framework', version:"$felixVersion"
-	compile group: 'org.apache.commons', name: 'com.springsource.org.apache.commons.logging', version: "$jclVersion"
-	groovy (group: 'org.codehaus.groovy', name: 'groovy', version: "$groovyVersion") {
-		//transitive = false
+	[
+		"org.eclipse.osgi:org.eclipse.osgi:$equinoxVersion",
+		//"org.apache.felix:org.apache.felix.framework:$felixVersion",
+		//"org.osgi:org.osgi.core:$osgiVersion", // also part of Equinox and Felix
+		//"org.osgi:org.osgi.compendium:$osgiVersion",
+
+		"org.apache.commons:com.springsource.org.apache.commons.logging:$jclVersion",
+		
+	].each { dep -> 
+		compile ("$dep") {
+			transitive = false
+		}
+	}
+	
+	groovy ("org.codehaus.groovy:groovy-all:$groovyVersion") {
+		transitive = false
 		exclude module: 'jansi'
 	}
-	testCompile group: 'junit', name: 'junit', version: "$junitVersion"
-	//testCompile group: 'org.springframework.osgi', name: 'spring-osgi-mock', version: "$springDMVersion"
-	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam', version: "$paxExamVersion"
-	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam-container-default', version: "$paxExamVersion"
-	testCompile group: 'org.ops4j.pax.exam', name: 'pax-exam-junit', version: "$paxExamVersion"
+	
+	[
+		"junit:junit:$junitVersion",
+		"org.junit:com.springsource.junit:$junit3Version",
+	
+		"org.springframework:org.springframework.aop:$springVersion",
+		"org.springframework:org.springframework.asm:$springVersion",
+//		"org.springframework:org.springframework.aspects:$springVersion",
+		"org.springframework:org.springframework.beans:$springVersion",
+		"org.springframework:org.springframework.context:$springVersion",
+//		"org.springframework:org.springframework.context.support:$springVersion",
+		"org.springframework:org.springframework.core:$springVersion",
+		"org.springframework:org.springframework.expression:$springVersion",
+//		"org.springframework:org.springframework.instrument:$springVersion",
+		"org.springframework:org.springframework.test:$springVersion",
+
+		// Spring dependencies
+		'org.aopalliance:com.springsource.org.aopalliance:1.0.0',
+		'org.objectweb.asm:com.springsource.org.objectweb.asm:2.2.3',
+		'net.sourceforge.cglib:com.springsource.net.sf.cglib:2.2.0',
+		'org.apache.log4j:com.springsource.org.apache.log4j:1.2.15',
+		"org.slf4j:com.springsource.slf4j.api:$slf4jVersion",
+		"org.slf4j:com.springsource.slf4j.log4j:$slf4jVersion",
+		"org.slf4j:com.springsource.slf4j.org.apache.commons.logging:$slf4jVersion",
+	    
+		// Eclipse Gemini Blueprint (formerly SpringDM)
+		//	"org.springframework.osgi:spring-osgi-test:$springDMVersion",
+		//	"org.springframework.osgi:spring-osgi-mock:$springDMVersion",
+		"org.eclipse.gemini.blueprint:gemini-blueprint-core:$geminiBlueprintVersion",
+		"org.eclipse.gemini.blueprint:gemini-blueprint-io:$geminiBlueprintVersion",
+		"org.eclipse.gemini.blueprint:gemini-blueprint-extender:$geminiBlueprintVersion",
+		"org.eclipse.gemini.blueprint:gemini-blueprint-test:$geminiBlueprintVersion",
+		"org.eclipse.gemini.blueprint:gemini-blueprint-mock:$geminiBlueprintVersion",
+
+/*
+		'biz.aQute:bnd:0.0.384',
+		'biz.aQute:bndlib:0.0.357',
+		"org.ops4j.pax.swissbox:pax-swissbox-tinybundles:$paxSwissboxVersion",
+		"org.ops4j.pax.swissbox:pax-swissbox-bnd:$paxSwissboxVersion",
+		"org.ops4j.pax.exam:pax-exam:$paxExamVersion",
+		"org.ops4j.pax.exam:pax-exam-container-default:$paxExamVersion",
+		"org.ops4j.pax.exam:pax-exam-junit:$paxExamVersion",
+*/
+
+		"org.codehaus.groovy:groovy-all:$groovyVersion",
+
+		// OSGi frameworks
+		//"org.eclipse.osgi:org.eclipse.osgi:$equinoxVersion",
+		//"org.apache.felix:org.apache.felix.framework:$felixVersion",
+		//"org.apache.felix:org.apache.felix.main:$felixVersion",
+	].each { dep -> 
+		testCompile ("$dep") {
+			transitive = false
+		}
+	}
 }
 
 jar {

@@ -4,30 +4,29 @@ apply plugin:'eclipse'
 defaultTasks 'build'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-1' //'0.9-preview-3'
+    gradleVersion = '0.9-rc-2' //'0.9-preview-3'
 }
 
 subprojects {
 	//name = 'groovyx-osgi'
 	group = 'groovy'
 	version = '0.1'       
-	
+
+	// dependency versions
 	groovyVersion = '1.7.5'
 	osgiVersion = '4.2.0'
-	equinoxVersion = '3.6.1.R36x_v20100806' // Helios SR1 //'3.6.0.v20100517' // Helios release
-	felixVersion = "3.0.2"
+	equinoxVersion = '3.6.1.R36x_v20100806' // Helios SR1: '3.6.1.R36x_v20100806', Helios release: '3.6.0.v20100517'
+	felixVersion = '3.0.2'
 	jclVersion = '1.1.1'
-	ivyVersion = '2.1.0'
-	junitVersion = '4.8.1+'
+	ivyVersion = '2.1.0'   
+	junit3Version = '3.8.2'
+	junitVersion = '4.8.2'
+	slf4jVersion = '1.5.6'
 	paxExamVersion = '1.2.2'
-	springDMVersion = '2.0.0.M1' 
-	
-	task eclipseClasspath {
-		downloadSources = true
-	}
-	eclipseClasspath {
-		downloadJavadoc = true
-	}
+	paxSwissboxVersion = '1.3.0'
+	springVersion = "3.0.3.RELEASE"
+	springDMVersion = '2.0.0.M1'
+	geminiBlueprintVersion = '1.0.0.M1'
 
 	repositories {
 		mavenCentral()
@@ -39,7 +38,8 @@ subprojects {
 			addArtifactPattern("https://github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]")
 			addIvyPattern("https://github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]")
 		}
-		
+
+		mavenRepo urls: 'http://zodiac.springsource.com/maven/bundles/milestone'
 		//mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/osgi'
 		//mavenRepo urls: 'http://s3.amazonaws.com/maven.springframework.org/milestone'
 		
