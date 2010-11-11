@@ -2,6 +2,7 @@
 * Service Tracker handling (with closures)
 * Service Reference handling (with closures)
 * Service registration
+* Map as Dictionary
+
 also see ScalaModules
 http://github.com/weiglewilczek/scalamodules/wiki
-

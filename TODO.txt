@@ -1,0 +1,2 @@
+Build
+- make versions and settings like downloadSources and downloadJavadoc configurable via properties file
