@@ -1,24 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-  <classpathentry kind="src" path="src/main/groovy"/>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="src" path="src/main/resources"/>
-  <classpathentry kind="output" path="build/classes/main"/>
-  <classpathentry kind="src" path="src/test/groovy" output="build/classes/test"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/antlr/antlr/jars/antlr-2.7.7.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-analysis/jars/asm-analysis-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-commons/jars/asm-commons-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-tree/jars/asm-tree-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-util/jars/asm-util-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm/jars/asm-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.1.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.felix/org.apache.felix.framework/bundles/org.apache.felix.framework-3.0.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.ivy/ivy/jars/ivy-2.1.0.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/jars/org.eclipse.osgi-3.6.1.R36x_v20100806.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.2.0.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.2.0.jar"/>
+  <classpathentry kind="output" path="bin"/>
+  <classpathentry output="build/classes/main" kind="src" path="src/main/resources"/>
+  <classpathentry output="build/classes/main" kind="src" path="src/main/java"/>
+  <classpathentry output="build/classes/main" kind="src" path="src/main/groovy"/>
+  <classpathentry output="build/classes/test" kind="src" path="src/test/groovy"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/sources/org.osgi.compendium-4.2.0-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.2.0.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/javadocs/org.osgi.compendium-4.2.0-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/sources/org.eclipse.osgi-3.6.1.R36x_v20100806-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/jars/org.eclipse.osgi-3.6.1.R36x_v20100806.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/junit/junit/sources/junit-4.8.2-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.2.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/junit/junit/javadocs/junit-4.8.2-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/sources/org.osgi.core-4.2.0-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.2.0.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/javadocs/org.osgi.core-4.2.0-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.apache.felix/org.apache.felix.framework/sources/org.apache.felix.framework-3.0.2-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.felix/org.apache.felix.framework/bundles/org.apache.felix.framework-3.0.2.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.apache.ivy/ivy/sources/ivy-2.1.0-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.ivy/ivy/jars/ivy-2.1.0.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.apache.ivy/ivy/javadocs/ivy-2.1.0-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-util/jars/asm-util-3.2.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/sources/com.springsource.org.apache.commons.logging-1.1.1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar" exported="true"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-commons/jars/asm-commons-3.2.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/sources/groovy-1.7.5-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/javadocs/groovy-1.7.5-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm/jars/asm-3.2.jar" exported="true"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-analysis/jars/asm-analysis-3.2.jar" exported="true"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-tree/jars/asm-tree-3.2.jar" exported="true"/>
+  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/antlr/antlr/jars/antlr-2.7.7.jar" exported="true"/>
 </classpath>

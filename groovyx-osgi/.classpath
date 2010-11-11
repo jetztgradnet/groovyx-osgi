@@ -1,37 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-  <classpathentry kind="src" path="src/main/groovy"/>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="output" path="build/classes/main"/>
-  <classpathentry kind="src" path="src/test/groovy" output="build/classes/test"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/antlr/antlr/jars/antlr-2.7.7.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-analysis/jars/asm-analysis-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-commons/jars/asm-commons-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-tree/jars/asm-tree-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm-util/jars/asm-util-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/asm/asm/jars/asm-3.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/commons-discovery/commons-discovery/jars/commons-discovery-0.4.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/commons-logging/commons-logging/jars/commons-logging-1.1.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.1.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/log4j/log4j/jars/log4j-1.2.12.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy/jars/groovy-1.7.5.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-io/bundles/ops4j-base-io-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-lang/bundles/ops4j-base-lang-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-monitors/bundles/ops4j-base-monitors-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-net/bundles/ops4j-base-net-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.base/ops4j-base-store/bundles/ops4j-base-store-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-default/jars/pax-exam-container-default-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-rbc-client/jars/pax-exam-container-rbc-client-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-container-rbc/bundles/pax-exam-container-rbc-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-junit-extender/bundles/pax-exam-junit-extender-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-junit/jars/pax-exam-junit-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-runtime/jars/pax-exam-runtime-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam-spi/jars/pax-exam-spi-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.exam/pax-exam/bundles/pax-exam-1.2.2.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.ops4j.pax.runner/pax-runner-no-jcl/bundles/pax-runner-no-jcl-1.5.0.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.2.0.jar"/>
-  <classpathentry kind="lib" path="/Users/wolfgang/.gradle/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.2.0.jar"/>
+  <classpathentry kind="output" path="bin"/>
+  <classpathentry output="build/classes/main" kind="src" path="src/main/java"/>
+  <classpathentry output="build/classes/main" kind="src" path="src/main/groovy"/>
+  <classpathentry output="build/classes/test" kind="src" path="src/test/java"/>
+  <classpathentry output="build/classes/test" kind="src" path="src/test/groovy"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/sources/org.eclipse.osgi-3.6.1.R36x_v20100806-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.osgi/org.eclipse.osgi/jars/org.eclipse.osgi-3.6.1.R36x_v20100806.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.test/sources/org.springframework.test-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.test/jars/org.springframework.test-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-test/sources/gemini-blueprint-test-1.0.0.M1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-test/jars/gemini-blueprint-test-1.0.0.M1.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-test/javadocs/gemini-blueprint-test-1.0.0.M1-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.expression/sources/org.springframework.expression-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.expression/jars/org.springframework.expression-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.beans/sources/org.springframework.beans-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.beans/jars/org.springframework.beans-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/sources/com.springsource.org.apache.commons.logging-1.1.1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.commons/com.springsource.org.apache.commons.logging/jars/com.springsource.org.apache.commons.logging-1.1.1.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-extender/sources/gemini-blueprint-extender-1.0.0.M1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-extender/jars/gemini-blueprint-extender-1.0.0.M1.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-extender/javadocs/gemini-blueprint-extender-1.0.0.M1-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.junit/com.springsource.junit/sources/com.springsource.junit-3.8.2-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.junit/com.springsource.junit/jars/com.springsource.junit-3.8.2.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.core/sources/org.springframework.core-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.core/jars/org.springframework.core-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.objectweb.asm/com.springsource.org.objectweb.asm/sources/com.springsource.org.objectweb.asm-2.2.3-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.objectweb.asm/com.springsource.org.objectweb.asm/jars/com.springsource.org.objectweb.asm-2.2.3.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.org.apache.commons.logging/sources/com.springsource.slf4j.org.apache.commons.logging-1.5.6-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.org.apache.commons.logging/jars/com.springsource.slf4j.org.apache.commons.logging-1.5.6.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.context/sources/org.springframework.context-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.context/jars/org.springframework.context-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-mock/sources/gemini-blueprint-mock-1.0.0.M1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-mock/jars/gemini-blueprint-mock-1.0.0.M1.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-mock/javadocs/gemini-blueprint-mock-1.0.0.M1-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/junit/junit/sources/junit-4.8.2-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/junit/junit/jars/junit-4.8.2.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/junit/junit/javadocs/junit-4.8.2-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.asm/sources/org.springframework.asm-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.asm/jars/org.springframework.asm-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.aopalliance/com.springsource.org.aopalliance/sources/com.springsource.org.aopalliance-1.0.0-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.aopalliance/com.springsource.org.aopalliance/jars/com.springsource.org.aopalliance-1.0.0.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy-all/sources/groovy-all-1.7.5-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy-all/jars/groovy-all-1.7.5.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.codehaus.groovy/groovy-all/javadocs/groovy-all-1.7.5-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/net.sourceforge.cglib/com.springsource.net.sf.cglib/sources/com.springsource.net.sf.cglib-2.2.0-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/net.sourceforge.cglib/com.springsource.net.sf.cglib/jars/com.springsource.net.sf.cglib-2.2.0.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-io/sources/gemini-blueprint-io-1.0.0.M1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-io/jars/gemini-blueprint-io-1.0.0.M1.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-io/javadocs/gemini-blueprint-io-1.0.0.M1-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.log4j/sources/com.springsource.slf4j.log4j-1.5.6-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.log4j/jars/com.springsource.slf4j.log4j-1.5.6.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-core/sources/gemini-blueprint-core-1.0.0.M1-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-core/jars/gemini-blueprint-core-1.0.0.M1.jar" exported="true">
+    <attributes>
+      <attribute name="javadoc_location" value="/Users/wolfgang/.gradle/cache/org.eclipse.gemini.blueprint/gemini-blueprint-core/javadocs/gemini-blueprint-core-1.0.0.M1-javadoc.jar"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.api/sources/com.springsource.slf4j.api-1.5.6-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.slf4j/com.springsource.slf4j.api/jars/com.springsource.slf4j.api-1.5.6.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.aop/sources/org.springframework.aop-3.0.3.RELEASE-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.springframework/org.springframework.aop/jars/org.springframework.aop-3.0.3.RELEASE.jar" exported="true"/>
+  <classpathentry sourcepath="/Users/wolfgang/.gradle/cache/org.apache.log4j/com.springsource.org.apache.log4j/sources/com.springsource.org.apache.log4j-1.2.15-sources.jar" kind="lib" path="/Users/wolfgang/.gradle/cache/org.apache.log4j/com.springsource.org.apache.log4j/jars/com.springsource.org.apache.log4j-1.2.15.jar" exported="true"/>
 </classpath>
