@@ -14,28 +14,48 @@
  * limitations under the License.
  */
 
-package groovyx.osgi
+package groovyx.osgi.test
+
 
 import static org.junit.Assert.*
+
+import java.io.File
+import groovy.io.FileType
 
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/*
 import org.ops4j.pax.exam.junit.JUnit4TestRunner
 import org.ops4j.pax.exam.junit.Configuration
 import org.ops4j.pax.exam.Option
 import org.ops4j.pax.exam.Inject
+import org.ops4j.pax.exam.Customizer
+import org.ops4j.pax.swissbox.tinybundles.core.TinyBundle
+import static org.ops4j.pax.swissbox.tinybundles.core.TinyBundles.*
 import static org.ops4j.pax.exam.CoreOptions.*
+*/
 
 import org.osgi.framework.BundleContext
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference
+import org.osgi.framework.ServiceRegistration
 import org.osgi.framework.InvalidSyntaxException
 
+import groovyx.osgi.OsgiCategory
 
-@RunWith (JUnit4TestRunner)
-class OsgiCategoryTests {
+/**
+ * Test case for Pax Exam. This class is currently made abstract and 
+ * all methods commented, as Pax Exam does not (yet) work in this 
+ * project.
+ *  
+ * @author Wolfgang Schell
+ */
+//@RunWith (JUnit4TestRunner)
+abstract class OsgiCategoryTestsWithPaxExam implements Serializable {
+	/*
 	@Inject
 	BundleContext bundleContext
 	
@@ -47,7 +67,26 @@ class OsgiCategoryTests {
 				mavenBundle().groupId('org.codehaus.groovy').artifactId('groovy-all').version('1.7.5'),
 				// TODO automatically determine path and file name, e.g. from system property set in build.gradle 
 				bundle(new File('./build/libs/groovyx.osgi-0.1.jar').toURI().toString())
-			)
+			),
+			new Customizer() {
+				public InputStream customizeTestProbe(InputStream testProbe) throws Exception {
+					String path = "build/classes/test/"
+					File cwd = new File(System.getProperty("user.dir"))
+					File base = new File(path)
+					TinyBundle bundle = modifyBundle(testProbe)
+					bundle.set( Constants.IMPORT_PACKAGE, "groovyx.osgi" )
+					bundle.set( Constants.REQUIRE_BUNDLE, "groovy-all" )
+					
+					base.eachFileRecurse(FileType.FILES) { File file ->
+						String name = file.getPath()
+						if (name.startsWith(path)) {
+							name -= path
+						}
+						bundle.add(name, file.toURL().toURI().toURL())
+					}
+					return bundle.build(withBnd())
+				}
+			}
 		] as Option[]
 	}
 
@@ -74,14 +113,20 @@ class OsgiCategoryTests {
 	@Test
 	public void testFindService() throws Exception {
 		String service = "ThisIsAService"
-		def reg = bundleContext.registerService(String.class.getName(), service, null)
-		def result
-		use (OsgiCategory) {
-			result = bundleContext.withService(String.class.getName()) { srv ->
-				srv.toUpperCase()
+		ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
+		try {
+			def result
+			use(OsgiCategory) {
+				result = bundleContext.findService(String.class.getName()).withService() { String srv ->
+					srv.toUpperCase()
+				}
 			}
+			assertNotNull('Service result should exist', result)
+			assertEquals(service.toUpperCase(), result)
 		}
-		assertNotNull('Service result should exist', result)
-		assertEquals(service.toUpperCase(), result)
+		finally {
+			reg.unregister()
+		}
 	}
+	*/
 }
