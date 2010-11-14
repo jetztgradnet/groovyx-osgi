@@ -149,8 +149,8 @@ class ServiceFinder {
 	 * @return <code>true</code>, if all services are returned, <code>false</code> if
 	 * 		only compatible services are returned
 	 */
-	boolean getAll() {
-		all
+	boolean isAll() {
+		this.all
 	}
 	
 	/**
@@ -255,7 +255,7 @@ class ServiceFinder {
 	 * 			
 	 */
 	boolean isMultiple() {
-		multiple
+		this.multiple
 	}
 	
 	/**
