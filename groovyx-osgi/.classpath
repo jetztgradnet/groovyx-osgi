@@ -2,6 +2,7 @@
   <classpathentry kind="output" path="bin"/>
   <classpathentry output="build/classes/main" kind="src" path="src/main/java"/>
   <classpathentry output="build/classes/main" kind="src" path="src/main/groovy"/>
+  <classpathentry output="build/classes/test" kind="src" path="src/test/resources"/>
   <classpathentry output="build/classes/test" kind="src" path="src/test/java"/>
   <classpathentry output="build/classes/test" kind="src" path="src/test/groovy"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
