@@ -24,6 +24,14 @@ import org.springframework.core.io.Resource
 
 import groovyx.osgi.OsgiCategory
 
+/**
+ * Integration tests for OsgiCategory.
+ *
+ * NOTE: the tests require the main classes to be jar'ed up and
+ * placed at ./build/libs/groovyx.osgi-version.jar!!! See {@link #getTestBundles()}
+ *
+ * @author Wolfgang Schell
+ */
 class OsgiCategoryTest extends AbstractGeminiBlueprintTests {
 	
 	@Override
