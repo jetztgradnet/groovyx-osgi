@@ -23,6 +23,8 @@ import org.springframework.core.io.Resource
 
 
 import groovyx.osgi.OsgiCategory
+import groovyx.osgi.ServiceWrapper
+import groovyx.osgi.ServiceFinder
 
 /**
  * Integration tests for OsgiCategory.
@@ -70,7 +72,37 @@ class OsgiCategoryTest extends AbstractGeminiBlueprintTests {
 		assertNotNull('Bundle groovyx-osgi is not loaded', found)
 	}
 	
-	public void testFindService() throws Exception {
+	public void testFindServiceNoResult() throws Exception {
+		ServiceWrapper wrapper
+		List results
+		use(OsgiCategory) {
+			wrapper = bundleContext.findService(String.class.getName())
+		}
+		assertNotNull('Service wrapper should exist', wrapper)
+		assertNotNull('BundleContext should be available', wrapper.bundleContext)
+		assertEquals(0, wrapper.size())
+		assertEquals(0, wrapper.serviceCount)
+		assertNull(wrapper.serviceReference)
+		assertNotNull(wrapper.serviceReferences)
+		assertEquals(0, wrapper.serviceReferences.length)
+	}
+	
+	public void testFindServicesNoResult() throws Exception {
+		ServiceWrapper wrapper
+		List results
+		use(OsgiCategory) {
+			wrapper = bundleContext.findServices(String.class.getName())
+		}
+		assertNotNull('Service wrapper should exist', wrapper)
+		assertNotNull('BundleContext should be available', wrapper.bundleContext)
+		assertEquals(0, wrapper.size())
+		assertEquals(0, wrapper.serviceCount)
+		assertNull(wrapper.serviceReference)
+		assertNotNull(wrapper.serviceReferences)
+		assertEquals(0, wrapper.serviceReferences.length)
+	}
+	
+	public void testFindSingleService() throws Exception {
 		String service = "ThisIsAService"
 		ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
 		try {
@@ -85,6 +117,60 @@ class OsgiCategoryTest extends AbstractGeminiBlueprintTests {
 		}
 		finally {
 			reg.unregister()
+		}
+	}
+	
+	public void testFindMultipleServices() throws Exception {
+		List services = [ "ServiceA", "ServiceB", "ServiceC" ]
+		List registrations = []
+		
+		services.each { service -> 
+			ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
+			registrations << reg
+		}
+		try {
+			ServiceWrapper wrapper
+			use(OsgiCategory) {
+				wrapper = bundleContext.findServices(String.class.getName())
+			}
+			assertNotNull('Service wrapper should exist', wrapper)
+			assertNotNull('BundleContext should be available', wrapper.bundleContext)
+			assertEquals('wrapper should reference services from abvove', services.size(), wrapper.size())
+			assertEquals('wrapper should reference services from abvove', services.size(), wrapper.serviceCount)
+			assertNotNull('first service reference should exists', wrapper.serviceReference)
+			assertNotNull('service references should be valid', wrapper.serviceReferences)
+			assertEquals('service references should match service from above', services.size(), wrapper.serviceReferences.length)
+		}
+		finally {
+			registrations.each { ServiceRegistration reg ->
+				reg.unregister()
+			}
+		}
+	}
+	
+	public void testFindMultipleServicesWithResult() throws Exception {
+		List services = [ "ServiceA", "ServiceB", "ServiceC" ]
+		List registrations = []
+		
+		services.each { service -> 
+			ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
+			registrations << reg
+		}
+		try {
+			List results
+			use(OsgiCategory) {
+				results = bundleContext.findServices(String.class.getName()).withEachService() { String srv ->
+					srv.toUpperCase()
+				}
+			}
+			assertNotNull('Service results should exist', results)
+			assertFalse('Service results should not be empty', results.empty)
+			assertEquals('There should be one result per service', services.size(), results.size())
+		}
+		finally {
+			registrations.each { ServiceRegistration reg ->
+				reg.unregister()
+			}
 		}
 	}
 }
