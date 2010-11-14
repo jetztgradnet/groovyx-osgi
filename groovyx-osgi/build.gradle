@@ -6,6 +6,7 @@ apply plugin:'eclipse'
 defaultTasks 'build'
 
 build.dependsOn 'javadoc'
+test.dependsOn 'assemble'
 
 // workaround for GRADLE-1079 (http://jira.codehaus.org/browse/GRADLE-1079)
 eclipseClasspath.variables = [:]
