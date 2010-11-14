@@ -458,7 +458,7 @@ class ServiceFinder {
 			return new ServiceWrapper(bundleContext, serviceReference)
 		}
 		else if (isAll()) {
-			// get all (event incompatible) services matching class name and filter
+			// get all (even incompatible) services matching class name and filter
 			ServiceReference[] serviceReferences = bundleContext.getAllServiceReferences(className, filter)
 			return new ServiceWrapper(bundleContext, serviceReferences)
 		}
