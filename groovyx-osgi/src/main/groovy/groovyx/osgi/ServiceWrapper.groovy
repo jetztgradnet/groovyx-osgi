@@ -82,7 +82,7 @@ class ServiceWrapper {
 	 */
 	ServiceReference getServiceReference() {
 		if (serviceReferences.size()) {
-			serviceReferences[0]
+			return serviceReferences[0]
 		}
 		null
 	}
