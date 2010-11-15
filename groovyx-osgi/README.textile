@@ -13,6 +13,8 @@ Features:
 
 h2. Usage
 
+(Almost) all of *groovyx.osgi* is implemented using the classes *groovyx.osgi.ServcieFinder* and *groovyx.osgi.ServiceWrapper*. *groovyx.osgi.OsgiCategory* provides some glue code to allow easy access of the functionality provided by *ServiceFinder* and *ServiceWrapper* from *BundleContext*, *ServiceReference*, and *ServiceReference[]*. 
+
 h3. Simple example
 
 In this example, all services of type MyService are looked up in the OSGi service registry.
@@ -30,12 +32,50 @@ use(OsgiCategory) {
 results.each { result -> println result }
 </code></pre>
 
-The above sample is equivalent to
+The above sample is equivalent to:
+
+<pre><code>
+import grooxy.osgi.ServiceFinder
+import grooxy.osgi.ServiceWrapper
+
+ServiceWrapper services = new ServiceFinder(bundleContext)
+				.setClassName(MyService)
+				.find()
+List results = services.withEachService() { srv -> srv.doSomething() }
+results.each { result -> println result }
+</code></pre>
+
+The equivalent Java code looks like this:
+
+<pre><code>
+import java.util.ArrayList;
+import java.util.List
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
+List<String> results = new ArrayList<String>();
+ServiceReference[] references = context.getServiceReferences(MyService.class.getName(), null);
+for (int r = 0; r < references.length; r++) {
+	ServiceReference reference = references[r];
+	if (reference == null) {
+		continue;
+	}
+	try {
+		MyService service = (MyService) context.getService(reference);
+		if (service != null) {
+			String result = service.doSomething();
+			results.add(result);
+		}
+	}
+	finally {
+		context.ungetService(reference);
+	}
+}
+</code></pre>
 
 
-h3. More examples                                                    
-
-h2. Reference           
+h2. Reference
 
 All examples can be run in a fashion similar to the simple example above. For brevity, 
 only the configuration closure is included in the following snippets.
