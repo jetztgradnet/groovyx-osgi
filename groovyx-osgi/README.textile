@@ -1,12 +1,69 @@
-h1. Groovy OSGi module
+h1. Groovy OSGi modules
 
 h2. About
 
-The Groovy OSGi modules simplifies accessing and handling OSGi services and helps creating an OSGi runtime with a build-in DSL.
+The groovyx.osgi module contains helper classes to make OSGi programming easier. This package is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki.
 
-Additionally it is used by the Grails OSGi plugin.
+Features:
+
+* simplifies working with OSGi service registry 
+* safe access to OSGi services, without fear for OSGi dynamics
+* Service finder DSL
+* OSGi service filter DSL
+
+h2. Usage
+
+h3. Simple example
+
+In this example, all services of type MyService are looked up in the OSGi service registry.
+
+<pre><code>
+import grooxy.osgi.OsgiCategory
+
+List results
+use(OsgiCategory) {
+	results = bundleContext.findServices(MyService.class.getName()).withEachService() { srv ->
+		srv.doSomething()
+	}
+}
+
+results.each { result -> println result }
+</code></pre>
+
+The above sample is equivalent to
 
 
-h2. License
+h3. More examples                                                    
 
-The OSGi plugin is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
+h2. Reference           
+
+All examples can be run in a fashion similar to the simple example above. For brevity, 
+only the configuration closure is included in the following snippets.
+
+h3. Find services by class name
+
+<pre><code>
+import grooxy.osgi.OsgiCategory
+import grooxy.osgi.ServiceWrapper
+
+use(OsgiCategory) {
+	ServiceWrapper services = bundleContext.findServices(MyService.class.getName())
+}
+</code></pre>
+
+<pre><code>
+import grooxy.osgi.ServiceFinder
+import grooxy.osgi.ServiceWrapper
+
+ServiceWrapper services = new ServiceFinder(bundleContext)
+								.single()
+								.setClassName(MyService.class.getName())
+								.find()
+</code></pre>
+
+
+
+h2. Roadmap                                             
+
+* simplified service registration MyObject.registerService (Map, Closure)
+* improve docs
