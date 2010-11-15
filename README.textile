@@ -8,7 +8,7 @@ h3. groovx.osgi
 
 This package contains helper classes to make OSGi programming easier. This package is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki. 
 
-See "groovyx-osgi":groovyx-osgi/README.textile for details.
+See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi/README.textile for details.
 
 *Note*: This is currently work in progress.
 
@@ -16,7 +16,7 @@ h3. groovx.osgi.runtime
 
 This package provides an OSGi builder class, grooxy.osgi.runtime.OsgiRuntimeBuilder, which can be used to assemble and run an OSGi runtime:
 
-See "groovyx-osgi-runtime":groovyx-osgi-runtime/README.textile for details.
+See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi-runtime/README.textile for details.
 
 <pre><code>
 import grooxy.osgi.runtime.OsgiRuntimeBuilder
