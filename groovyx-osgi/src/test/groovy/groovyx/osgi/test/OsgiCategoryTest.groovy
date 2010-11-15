@@ -16,11 +16,7 @@
 
 package groovyx.osgi.test
 
-import org.eclipse.gemini.blueprint.test.platform.Platforms
 import org.osgi.framework.ServiceRegistration
-import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
-
 
 import groovyx.osgi.OsgiCategory
 import groovyx.osgi.ServiceWrapper
@@ -34,40 +30,52 @@ import groovyx.osgi.ServiceFinder
  *
  * @author Wolfgang Schell
  */
-class OsgiCategoryTest extends AbstractGeminiBlueprintTests {
+class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 	
-	@Override
-	protected Resource[] getTestBundles() {
-		def resources = []
+	protected Map<String, Object> registeredServices
+	protected List<ServiceRegistration> serviceRegistrations
+	
+	public void onSetUp() throws Exception {
+		super.onSetUp();
 		
-		Resource[] testBundles = super.getTestBundles()
-		resources.addAll(testBundles)
-
-		// add local test bundle
-		// TODO automatically determine path and file name, e.g. from system property set in build.gradle
-		resources << new FileSystemResource(new File('./build/libs/groovyx.osgi-0.1.jar'))		
+		// create some services
+		registeredServices = [:]
+		serviceRegistrations = []
+		[ 
+			// TODO check year of invention (property 'since')
+			[ "Groovy", 54, [ level: 'easy', jvm: true, since: 2003 ] ],
+			[ "JRuby", 74, [ level: 'easy', jvm: true, since: 2004 ]  ],
+			[ "Scala", 90, [ level: 'advanced', jvm: true, since: 2004 ]  ],
+			[ "Java", 2006, [ level: 'medium', jvm: true, since: 1996 ]  ],
+			[ "C++", 2010, [ level: 'dificult', jvm: false, since: 1969 ]  ],
+		].collect { data ->
+			String name
+			int number
+			Map properties
+			(name, number, properties) = data
+			MyService service = new MyService(name, number)
+			ServiceRegistration registration = bundleContext.registerService(MyService.class.name, 
+																				service, 
+																				properties ? OsgiCategory.dictionaryFromMap(properties) : null)
+			
+			registeredServices[service.name] = service
+			serviceRegistrations << registration
+		}
+	}
+	
+	@Override
+	protected void onTearDown() throws Exception {
+		serviceRegistrations.each { ServiceRegistration registration ->
+			registration.unregister()
+		}
+		serviceRegistrations.clear()
+		registeredServices.clear()
 		
-		return resources as Resource[]
-	}
-	
-	@Override
-	protected String[] getTestBundlesNames() {
-		// bundles will be resolved from Gradle cache
-		return [ 
-				"org.codehaus.groovy, groovy-all, 1.7.5",
-			] as String[]
-	}
-	
-	@Override
-	protected String getPlatformName() {
-		return Platforms.EQUINOX // .FELIX
-	}
-	
-	public void testSpringOsgiTest() throws Exception {
-		assertNotNull(bundleContext)
+		super.onTearDown();
 	}
 	
 	public void testLoadGroovyxOsgi() throws Exception {
+		assertNotNull(bundleContext)
 		def found = bundleContext.bundles.find { bundle -> 'groovyx.osgi' == bundle.symbolicName  }
 		assertNotNull('Bundle groovyx-osgi is not loaded', found)
 	}
@@ -103,74 +111,71 @@ class OsgiCategoryTest extends AbstractGeminiBlueprintTests {
 	}
 	
 	public void testFindSingleService() throws Exception {
-		String service = "ThisIsAService"
-		ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
-		try {
-			def result
-			use(OsgiCategory) {
-				result = bundleContext.findService(String.class.getName()).withService() { String srv ->
-					srv.toUpperCase()
-				}
+		def result
+		use(OsgiCategory) {
+			result = bundleContext.findService(MyService).withService() { MyService srv ->
+				[ srv.name, srv.doSomething() ]
 			}
-			assertNotNull('Service result should exist', result)
-			assertEquals(service.toUpperCase(), result)
 		}
-		finally {
-			reg.unregister()
-		}
+		String name
+		def data
+		(name, data) = result
+		assertNotNull('Service result should exist', result)
+		assertEquals(registeredServices[name]?.number + 42, data)
 	}
 	
 	public void testFindMultipleServices() throws Exception {
-		List services = [ "ServiceA", "ServiceB", "ServiceC" ]
-		List registrations = []
-		
-		services.each { service -> 
-			ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
-			registrations << reg
+		ServiceWrapper wrapper
+		use(OsgiCategory) {
+			wrapper = bundleContext.findServices(MyService)
 		}
-		try {
-			ServiceWrapper wrapper
-			use(OsgiCategory) {
-				wrapper = bundleContext.findServices(String.class.getName())
-			}
-			assertNotNull('Service wrapper should exist', wrapper)
-			assertNotNull('BundleContext should be available', wrapper.bundleContext)
-			assertEquals('wrapper should reference services from abvove', services.size(), wrapper.size())
-			assertEquals('wrapper should reference services from abvove', services.size(), wrapper.serviceCount)
-			assertNotNull('first service reference should exists', wrapper.serviceReference)
-			assertNotNull('service references should be valid', wrapper.serviceReferences)
-			assertEquals('service references should match service from above', services.size(), wrapper.serviceReferences.length)
-		}
-		finally {
-			registrations.each { ServiceRegistration reg ->
-				reg.unregister()
-			}
-		}
+		assertNotNull('Service wrapper should exist', wrapper)
+		assertNotNull('BundleContext should be available', wrapper.bundleContext)
+		assertEquals('wrapper should reference services from abvove', registeredServices.size(), wrapper.serviceCount)
+		assertEquals('wrapper should reference services from abvove', registeredServices.size(), wrapper.size())
+		assertNotNull('first service reference should exists', wrapper.serviceReference)
+		assertNotNull('service references should be valid', wrapper.serviceReferences)
+		assertEquals('service references should match service from above', registeredServices.size(), wrapper.serviceReferences.length)
 	}
 	
 	public void testFindMultipleServicesWithResult() throws Exception {
-		List services = [ "ServiceA", "ServiceB", "ServiceC" ]
-		List registrations = []
-		
-		services.each { service -> 
-			ServiceRegistration reg = bundleContext.registerService(String.class.getName(), service, null)
-			registrations << reg
-		}
-		try {
-			List results
-			use(OsgiCategory) {
-				results = bundleContext.findServices(String.class.getName()).withEachService() { String srv ->
-					srv.toUpperCase()
-				}
-			}
-			assertNotNull('Service results should exist', results)
-			assertFalse('Service results should not be empty', results.empty)
-			assertEquals('There should be one result per service', services.size(), results.size())
-		}
-		finally {
-			registrations.each { ServiceRegistration reg ->
-				reg.unregister()
+		List results
+		use(OsgiCategory) {
+			results = bundleContext.findServices(MyService).withEachService() { MyService srv ->
+				srv.doSomething()
 			}
 		}
+		assertNotNull('Service results should exist', results)
+		assertFalse('Service results should not be empty', results.isEmpty())
+		assertEquals('There should be one result per service', registeredServices.size(), results.size())
 	}
+}
+
+protected class MyService {
+	private final String name
+	private final int number
+	
+	MyService(String name, int number) {
+		this.name = name
+		this.number = number
+	}
+	
+	String getName() {
+		name
+	}
+	
+	int getNumber() {
+		number
+	}
+	
+	String toString() {
+		"$name ($number)" 
+	}
+	
+	int doSomething() {
+		number + 42
+	}
+}
+
+protected class MyOtherService {
 }
