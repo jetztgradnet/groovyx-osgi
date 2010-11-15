@@ -720,12 +720,12 @@ class OsgiCategory {
 	static String getStateAsText(Bundle bundle) {
 		def state = "UNKNOWN"
 		switch (bundle.state) {
-		case BundleContext.UNINSTALLED: return "UNINSTALLED"
-		case BundleContext.INSTALLED:   return "INSTALLED"  
-		case BundleContext.RESOLVED:    return "RESOLVED"   
-		case BundleContext.STARTING:    return "STARTING"   
-		case BundleContext.STOPPING:    return "STOPPING"   
-		case BundleContext.ACTIVE:      return "ACTIVE"     
+		case Bundle.UNINSTALLED: return "UNINSTALLED"
+		case Bundle.INSTALLED:   return "INSTALLED"  
+		case Bundle.RESOLVED:    return "RESOLVED"   
+		case Bundle.STARTING:    return "STARTING"   
+		case Bundle.STOPPING:    return "STOPPING"   
+		case Bundle.ACTIVE:      return "ACTIVE"     
 		}
 	}
 	

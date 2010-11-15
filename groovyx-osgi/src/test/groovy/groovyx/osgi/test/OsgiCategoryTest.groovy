@@ -78,6 +78,9 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 		assertNotNull(bundleContext)
 		def found = bundleContext.bundles.find { bundle -> 'groovyx.osgi' == bundle.symbolicName  }
 		assertNotNull('Bundle groovyx-osgi is not loaded', found)
+		use(OsgiCategory) {
+			assertEquals('Bundle groovyx-osgi is not active', "ACTIVE", found.stateAsText)
+		}
 	}
 	
 	public void testFindServiceNoResult() throws Exception {
