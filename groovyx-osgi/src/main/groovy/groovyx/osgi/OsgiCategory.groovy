@@ -19,6 +19,8 @@ package groovyx.osgi
 import groovy.lang.Closure;
 
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.osgi.framework.Bundle
@@ -742,5 +744,17 @@ class OsgiCategory {
 		}
 		
 		props
+	}
+	
+	/**
+	 * Create a {@link Dictionary} from a {@link Map}. The {@link Dictionary}
+	 * is used for specifying service properties.
+	 * 
+	 * @param properties properties map
+	 * 
+	 * @return {@link Dictionary} containing the map's data
+	 */
+	static Dictionary dictionaryFromMap(Map params) {
+		return new Hashtable(params)
 	}
 }
