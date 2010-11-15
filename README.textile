@@ -10,7 +10,20 @@ This package contains helper classes to make OSGi programming easier. This packa
 
 See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi/README.textile for details.
 
-*Note*: This is currently work in progress.
+
+<pre><code>
+import grooxy.osgi.OsgiCategory
+
+List results
+use(OsgiCategory) {
+	results = bundleContext.findServices(MyService.class.getName()).withEachService() { srv ->
+		srv.doSomething()
+	}
+}
+
+results.each { result -> println result }
+</code></pre>
+
 
 h3. groovx.osgi.runtime
 
