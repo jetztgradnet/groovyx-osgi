@@ -22,7 +22,7 @@ import grooxy.osgi.OsgiCategory
 
 List results
 use(OsgiCategory) {
-	results = bundleContext.findServices(MyService.class.getName()).withEachService() { srv ->
+	results = bundleContext.findServices(MyService).withEachService() { srv ->
 		srv.doSomething()
 	}
 }
@@ -47,7 +47,7 @@ import grooxy.osgi.OsgiCategory
 import grooxy.osgi.ServiceWrapper
 
 use(OsgiCategory) {
-	ServiceWrapper services = bundleContext.findServices(MyService.class.getName())
+	ServiceWrapper services = bundleContext.findServices(MyService)
 }
 </code></pre>
 

@@ -16,7 +16,7 @@ import grooxy.osgi.OsgiCategory
 
 List results
 use(OsgiCategory) {
-	results = bundleContext.findServices(MyService.class.getName()).withEachService() { srv ->
+	results = bundleContext.findServices(MyService).withEachService() { srv ->
 		srv.doSomething()
 	}
 }
