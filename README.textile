@@ -85,7 +85,7 @@ h2. Dependencies
 
 * Eclipse Equinox 3.6.1 and Apache Felix 3.0.2 OSGi frameworks
 * Groovy (tested with 1.7.5)
-* Apache Ivy (part of Groovy)
+* Apache Ivy (part of Groovy all-in-one package)
 * Apache Commons Logging API
 
 h2. Installation
