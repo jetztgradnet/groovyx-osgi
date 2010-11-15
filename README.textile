@@ -8,9 +8,15 @@ h3. groovx.osgi
 
 This package contains helper classes to make OSGi programming easier. This package is inspired by "ScalaModules":http://github.com/weiglewilczek/scalamodules/wiki. 
 
-See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi/README.textile for details.
 
+Features:
 
+* simplifies working with OSGi service registry 
+* safe access to OSGi services, without fear for OSGi dynamics
+* Service finder DSL
+* OSGi service filter DSL
+
+*Example:*
 <pre><code>
 import grooxy.osgi.OsgiCategory
 
@@ -24,13 +30,20 @@ use(OsgiCategory) {
 results.each { result -> println result }
 </code></pre>
 
+See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi/README.textile for details.
 
 h3. groovx.osgi.runtime
 
 This package provides an OSGi builder class, grooxy.osgi.runtime.OsgiRuntimeBuilder, which can be used to assemble and run an OSGi runtime:
 
-See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi-runtime/README.textile for details.
+Features:
 
+* provision bundles from filesystem, web, Maven repositories
+* run Eclipse Equinox or Apache Felix OSGi runtimes
+* flexible Groovy DSL, fully programmable
+* lifecycle callback closures
+
+*Example:*
 <pre><code>
 import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
@@ -54,12 +67,7 @@ OsgiRuntimeBuilder.run {
 }
 </code></pre>
 
-Features:
-
-* provision bundles from filesystem, web, Maven repositories
-* run Eclipse Equinox or Apache Felix OSGi runtimes
-* flexible Groovy DSL, fully programmable
-* lifecycle callback closures
+See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi-runtime/README.textile for details.
 
 
 h2. License
