@@ -31,7 +31,7 @@ use(OsgiCategory) {
 results.each { result -> println result }
 </code></pre>
 
-See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/blob/master/groovyx-osgi/README.textile for details.
+See "groovyx-osgi":groovyx-osgi/README.textile for details.
 
 h3. groovx.osgi.runtime
 
@@ -69,7 +69,7 @@ OsgiRuntimeBuilder.run {
 }
 </code></pre>
 
-See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/blob/master/groovyx-osgi-runtime/README.textile for details.
+See "groovyx-osgi-runtime":groovyx-osgi-runtime/README.textile for details.
 
 
 h2. License
