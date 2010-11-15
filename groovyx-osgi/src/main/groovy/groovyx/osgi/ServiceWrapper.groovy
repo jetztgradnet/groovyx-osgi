@@ -161,7 +161,79 @@ class ServiceWrapper {
 	}
 	
 	/**
-	 * Perform service action.
+	 * Perform service action. This is the same as {@link #withEachService(Closure)}.
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	bundleContext.findService(MyService.class).withService { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param options map of options. See {@link OsgiCategory#withEachService(BundleContext, ServiceReference[], java.util.Map, Closure)} 
+	 * 			for supported values
+	 * @param closure service action closure
+	 * 
+	 * @return result of service action
+	 */
+	Object eachService(Map options, Closure closure) {
+		if (!serviceReferences) {
+			return null
+		}
+		ServiceReference serviceReference = serviceReferences[0]
+		return OsgiCategory.withService(bundleContext, serviceReference, options ?: Collections.EMPTY_MAP, closure)
+	}
+	
+	/**
+	 * Perform action for each wrapped service.
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	bundleContext.findServices(MyService.class).withEachService { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param options map of options. See {@link OsgiCategory#withEachService(BundleContext, ServiceReference[], java.util.Map, Closure)} 
+	 * 			for supported values
+	 * @param closure service action closure
+	 * 
+	 * @return result of service action
+	 */
+	List eachService(Closure closure) {
+		return withEachService(Collections.EMPTY_MAP, closure)
+	}
+	
+	/**
+	 * Perform service action. This is the same as {@link #withEachService(Map, Closure)}.
 	 * 
 	 * <p>
 	 * The provided closure may receive one, two, or three args:

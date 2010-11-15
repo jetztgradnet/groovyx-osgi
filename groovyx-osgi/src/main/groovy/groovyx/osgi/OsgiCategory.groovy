@@ -356,6 +356,176 @@ class OsgiCategory {
 	 * Perform action for each service. If a service is not available, the closure
 	 * will not be called. This behavior can be changed by calling 
 	 * {@link #withEachService(ServiceReference[], BundleContext, Map, Closure)} with 
+	 * option <code>callForNullService</code> set to <code>true</code>.
+	 * 
+	 * <p>This is the same as {@link #withEachService(ServiceReference[], BundleContext, Closure)}.</p>
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	ServiceReference[] serviceReferences = ...
+	 * 	serviceReferences.withEachService(bundleContext) { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param serviceReferences references to services
+	 * @param bundleContext	bundle context
+	 * @param closure service action closure
+	 * 
+	 * @return list of results of service action
+	 */
+	static List eachService(ServiceReference[] serviceReferences, BundleContext bundleContext, Closure closure) {
+		return withEachService(bundleContext, serviceReferences, closure)
+	}
+	
+	/**
+	 * Perform action for each service.
+	 * 
+	 * <p>This is the same as {@link #withEachService(ServiceReference[], BundleContext, Map, Closure)}.</p>
+	 *
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 *
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	ServiceReference[] serviceReferences = ...
+	 * 	serviceReferences.withEachService(bundleContext, callForNullService: true) { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 *
+	 * @param bundleContext	bundle context
+	 * @param serviceReferences references to services
+	 * @param options map of options. See {@link #withEachService(BundleContext, ServiceReference[], Map, Closure)} for supported options
+	 * @param closure service action closure
+	 *
+	 * @return list of results of service action
+	 */
+	static List eachService(ServiceReference[] serviceReferences, BundleContext bundleContext, Map options, Closure closure) {
+		return withEachService(bundleContext, serviceReferences, options, closure)
+	}
+	
+	/**
+	 * Perform action for each service. If a service is not available, the closure
+	 * will not be called. This behavior can be changed by calling 
+	 * {@link #withEachService(BundleContext, ServiceReference[], Map, Closure)} with 
+	 * option <code>callForNullService</code> set to <code>true</code>.
+	 * 
+	 * <p>This is the same as {@link #withEachService(BundleContext, ServiceReference[], Closure)}.</p>
+	 * 
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 * 
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	ServiceReference[] serviceReferences = ...
+	 * 	bundleContext.withEachService(serviceReferences) { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param bundleContext	bundle context
+	 * @param serviceReferences references to services
+	 * @param closure service action closure
+	 * 
+	 * @return list of results of service action
+	 */
+	static List eachService(BundleContext bundleContext, ServiceReference[] serviceReferences, Closure closure) {
+		return withEachService(bundleContext, serviceReferences, Collections.EMPTY_MAP, closure)
+	}
+	
+	/**
+	 * Perform action for each service.
+	 * 
+	 * <p>This is the same as {@link #withEachService(BundleContext, ServiceReference[], Map, Closure)}.</p>
+	 *
+	 * <p>
+	 * The provided closure may receive one, two, or three args:
+	 *
+	 * <ol>
+	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
+	 * <li>service properties ({@link Map})</li>
+	 * <li>user options ({@link Map})</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>
+	 * Supported options: TODO
+	 * <ul>
+	 * <li><b>collectNullResults</b>: if <code>true</code>, <code>null</code> 
+	 * 		values returned by the service action are put into the result list. 
+	 * 		By default, <code>null</code> results are skipped.</li>
+	 * <li><b>callForNullService</b>: if <code>true</code>, the service action
+	 * 		closure will be called, if the service reference returns a <code>null</code>
+	 * 		service, e.g. because the service is no longer available. By default,
+	 * 		the service action closure will not be called, if the service resolves
+	 * 		to <code>null</code>.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * <p>Example:
+	 * <pre>
+	 * use(OsgiCategory) {
+	 * 	ServiceReference[] serviceReferences = ...
+	 * 	bundleContext.withEachService(serviceReferences, callForNullService: true) { service, props ->
+	 * 		println "Service properties: " + props
+	 * 		service?.doSomething()
+	 *	}
+	 * }
+	 * </pre>
+	 * </p>
+	 *
+	 * @param bundleContext	bundle context
+	 * @param serviceReferences references to services
+	 * @param options map of options. See above for supported options
+	 * @param closure service action closure
+	 *
+	 * @return list of results of service action
+	 */
+	static List eachService(BundleContext bundleContext, ServiceReference[] serviceReferences, Map options, Closure closure) {
+		withEachService(bundleContext, serviceReferences, options, closure)
+	}
+	
+	/**
+	 * Perform action for each service. If a service is not available, the closure
+	 * will not be called. This behavior can be changed by calling 
+	 * {@link #withEachService(ServiceReference[], BundleContext, Map, Closure)} with 
 	 * option <code>callForNullService</code> set to <code>true</code>. 
 	 * 
 	 * <p>
