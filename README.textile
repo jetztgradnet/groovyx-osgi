@@ -17,6 +17,7 @@ Features:
 * OSGi service filter DSL
 
 *Example:*
+
 <pre><code>
 import grooxy.osgi.OsgiCategory
 
@@ -44,6 +45,7 @@ Features:
 * lifecycle callback closures
 
 *Example:*
+
 <pre><code>
 import grooxy.osgi.runtime.OsgiRuntimeBuilder
 
