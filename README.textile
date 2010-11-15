@@ -31,7 +31,7 @@ use(OsgiCategory) {
 results.each { result -> println result }
 </code></pre>
 
-See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi/README.textile for details.
+See "groovyx-osgi":http://github.com/jetztgradnet/groovyx-osgi/blob/master/groovyx-osgi/README.textile for details.
 
 h3. groovx.osgi.runtime
 
@@ -69,7 +69,7 @@ OsgiRuntimeBuilder.run {
 }
 </code></pre>
 
-See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/groovyx-osgi-runtime/README.textile for details.
+See "groovyx-osgi-runtime":http://github.com/jetztgradnet/groovyx-osgi/blob/master/groovyx-osgi-runtime/README.textile for details.
 
 
 h2. License
@@ -78,7 +78,7 @@ The Groovy OSGi module is released under the "Apache License 2.0":http://apache.
 
 h2. Building
 
-Simply run @gradle build@. If "Gradle":http://www.gradle.org >= 0.9-rc-1 is not installed, run @./gradlew build@ from the top-level directory, in order to automatically download the correct Gradle version. The resulting jars can be found at the following locations:
+Simply run @gradle build@. If "Gradle":http://www.gradle.org >= 0.9-rc-2 is not installed, run @./gradlew build@ from the top-level directory, in order to automatically download the correct Gradle version. The resulting jars can be found at the following locations:
 
 * @groovyx-osgi/build/libs/groovyx-osgi-0.1.jar@
 * @groovyx-osgi-runtime/build/libs/groovyx-osgi-runtime-0.1.jar@
