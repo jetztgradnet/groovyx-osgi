@@ -93,7 +93,7 @@ public class FilterBuilder {
     public static FilterBuilder eq(String attribute, Object value) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (value == null) throw new RuntimeException("Null: value");
-        return new FilterBuilder("(" + attribute + "=" + value + ")");
+        return new FilterBuilder("(" + attribute + "=" + escape(value) + ")");
     }
 
     /**
@@ -106,7 +106,7 @@ public class FilterBuilder {
     public static FilterBuilder approx(String attribute, Object value) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (value == null) throw new RuntimeException("Null: value");
-        return new FilterBuilder("(" + attribute + "~=" + value + ")");
+        return new FilterBuilder("(" + attribute + "~=" + escape(value) + ")");
     }
 
     /**
@@ -119,7 +119,7 @@ public class FilterBuilder {
     public static FilterBuilder gte(String attribute, Object value) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (value == null) throw new RuntimeException("Null: value");
-        return new FilterBuilder("(" + attribute + ">=" + value + ")");
+        return new FilterBuilder("(" + attribute + ">=" + escape(value) + ")");
     }
 
     /**
@@ -132,7 +132,7 @@ public class FilterBuilder {
     public static FilterBuilder lte(String attribute, Object value) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (value == null) throw new RuntimeException("Null: value");
-        return new FilterBuilder("(" + attribute + "<=" + value + ")");
+        return new FilterBuilder("(" + attribute + "<=" + escape(value) + ")");
     }
 
     /**
@@ -167,7 +167,7 @@ public class FilterBuilder {
     public static FilterBuilder endsWith(String attribute, String substring) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (substring == null) throw new RuntimeException("Null: substring");
-        return new FilterBuilder("(" + attribute + "=*" + substring + ")");
+        return new FilterBuilder("(" + attribute + "=*" + escape(substring) + ")");
     }
 
     /**
@@ -180,7 +180,7 @@ public class FilterBuilder {
     public static FilterBuilder startsWith(String attribute, String substring) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (substring == null) throw new RuntimeException("Null: substring");
-        return new FilterBuilder("(" + attribute + "=" + substring + "*)");
+        return new FilterBuilder("(" + attribute + "=" + escape(substring) + "*)");
     }
 
     /**
@@ -193,10 +193,41 @@ public class FilterBuilder {
     public static FilterBuilder contains(String attribute, String substring) {
         if (attribute == null) throw new RuntimeException("Null: attribute");
         if (substring == null) throw new RuntimeException("Null: substring");
-        return new FilterBuilder("(" + attribute + "=*" + substring + "*)");
+        return new FilterBuilder("(" + attribute + "=*" + escape(substring) + "*)");
     }
 
-    /**
+    private static String escape(Object value) {
+    	if (value == null) {
+    		return null;
+    	}
+    	String text = value.toString();
+    	// check whether text contains any special chars
+    	if ((text.indexOf('\\') < 0)
+    		&& (text.indexOf('*') < 0)
+    		&& (text.indexOf('(') < 0)
+    		&& (text.indexOf(')') < 0)) {
+    		return text;
+    	}
+		// escape text
+    	StringBuilder builder = new StringBuilder();
+    	char[] data = text.toCharArray();
+    	for (int i = 0; i < data.length; i++) {
+			char c = data[i];
+			switch (c) {
+			case '\\':
+			case '*':
+			case '(':
+			case ')':
+				// add escape character
+				builder.append('\\');
+				break;
+			}
+			builder.append(c);
+		}
+		return builder.toString();
+	}
+
+	/**
      * Helper method to join an array.
      *
      * @param array array to join

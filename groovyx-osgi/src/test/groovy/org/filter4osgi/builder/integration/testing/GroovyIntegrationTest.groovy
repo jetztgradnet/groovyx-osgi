@@ -20,4 +20,10 @@ class GroovyIntegrationTest extends TestCase {
 
         assertEquals('Wrong filter', '(&(mailbox=email) (lang=EN_US))', result)
     }
+	
+	public void test_EscapeValues() {
+        def result = eq('filepattern', 'c:\\path\\file.(*)').toString()
+
+        assertEquals('Filter should contain escaped value', '(filepattern=c:\\\\path\\\\file.\\(\\*\\))', result)
+    }
 }

@@ -52,4 +52,12 @@ class Filter4OsgiBuilderTest extends TestCase {
 		}
 		assertEquals('Wrong filter', '(|(mailboxName=welcome) (&(lang=de) (mailboxID=5)) (&(lang=en_CA) (mailboxID=9)))', filter)
 	}
+	
+	public void testFilterDSLUsingEscapedValues() {
+		String filter = builder.build {
+        	eq('filepattern', 'c:\\path\\file.(*)')
+		}
+
+        assertEquals('Filter should contain escaped value', '(filepattern=c:\\\\path\\\\file.\\(\\*\\))', filter)
+    }
 }
