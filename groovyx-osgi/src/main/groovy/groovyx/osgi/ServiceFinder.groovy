@@ -403,8 +403,7 @@ class ServiceFinder {
 	 * @return filter builder
 	 */
 	protected FilterBuilder createFilterBuilder() {
-		// TODO create FilterBuilder, which implements the filter DSL
-		return null //new Filter4OsgiBuilder()
+		return new Filter4OsgiBuilder()
 	} 
 	
 	/**

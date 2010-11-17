@@ -178,6 +178,40 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 		assertFalse('Service results should not be empty', results.isEmpty())
 		assertEquals('There should be one result per service', 2, results.size())
 	}
+	
+	public void testFindMultipleServicesFilterDSL() throws Exception {
+		ServiceWrapper wrapper
+		use(OsgiCategory) {
+			wrapper = bundleContext.findServices(MyService) {
+				filter {
+					lte('since', 2000) 
+				}
+			}
+		}
+		assertNotNull('Service wrapper should exist', wrapper)
+		assertNotNull('BundleContext should be available', wrapper.bundleContext)
+		assertEquals('wrapper should reference filtered services from abvove', 2, wrapper.serviceCount)
+		assertEquals('wrapper should reference filtered services from abvove', 2, wrapper.size())
+		assertNotNull('first service reference should exists', wrapper.serviceReference)
+		assertNotNull('service references should be valid', wrapper.serviceReferences)
+		assertEquals('service references should match service from above', 2, wrapper.serviceReferences.length)
+	}
+	
+	public void testFindMultipleServicesFilterDSLWithResult() throws Exception {
+		List results
+		use(OsgiCategory) {
+			results = bundleContext.findServices(MyService) {
+				filter {
+					lte('since', 2000) 
+				}
+			}.withEachService() { MyService srv ->
+				srv.doSomething()
+			}
+		}
+		assertNotNull('Service results should exist', results)
+		assertFalse('Service results should not be empty', results.isEmpty())
+		assertEquals('There should be one result per service', 2, results.size())
+	}
 }
 
 protected class MyService {
