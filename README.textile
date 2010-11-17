@@ -83,6 +83,8 @@ Simply run @gradle build@. If "Gradle":http://www.gradle.org >= 0.9-rc-2 is not 
 * @groovyx-osgi/build/libs/groovyx-osgi-0.1.jar@
 * @groovyx-osgi-runtime/build/libs/groovyx-osgi-runtime-0.1.jar@
 
+*Note:* when performing test for groovyx.osgi, please re-create the bundle using @gradle assemble@ after changing any code before running the tests, as the tests simply load the jar into the OSGi framework. Changed code is *NOT* picked up automatically!
+
 h2. Dependencies
 
 * Eclipse Equinox 3.6.1 and Apache Felix 3.0.2 OSGi frameworks
