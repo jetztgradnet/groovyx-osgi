@@ -35,19 +35,19 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 	protected Map<String, Object> registeredServices
 	protected List<ServiceRegistration> serviceRegistrations
 	
-	public void onSetUp() throws Exception {
+	protected void onSetUp() throws Exception {
 		super.onSetUp();
 		
 		// create some services
 		registeredServices = [:]
 		serviceRegistrations = []
 		[ 
-			// TODO check year of invention (property 'since')
+			// property 'since': year of invention
 			[ "Groovy", 54, [ level: 'easy', jvm: true, since: 2003 ] ],
-			[ "JRuby", 74, [ level: 'easy', jvm: true, since: 2004 ]  ],
-			[ "Scala", 90, [ level: 'advanced', jvm: true, since: 2004 ]  ],
-			[ "Java", 2006, [ level: 'medium', jvm: true, since: 1996 ]  ],
-			[ "C++", 2010, [ level: 'dificult', jvm: false, since: 1969 ]  ],
+			[ "JRuby", 74, [ level: 'easy', jvm: true, since: 2001 ]  ],
+			[ "Scala", 90, [ level: 'advanced', jvm: true, since: 2003 ]  ],
+			[ "Java", 2006, [ level: 'medium', jvm: true, since: 1995 ]  ],
+			[ "C++", 2010, [ level: 'dificult', jvm: false, since: 1979 ]  ],
 		].collect { data ->
 			String name
 			int number
@@ -87,7 +87,7 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 		ServiceWrapper wrapper
 		List results
 		use(OsgiCategory) {
-			wrapper = bundleContext.findService(String.class.getName())
+			wrapper = bundleContext.findService(MyOtherService)
 		}
 		assertNotNull('Service wrapper should exist', wrapper)
 		assertNotNull('BundleContext should be available', wrapper.bundleContext)
@@ -102,7 +102,7 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 		ServiceWrapper wrapper
 		List results
 		use(OsgiCategory) {
-			wrapper = bundleContext.findServices(String.class.getName())
+			wrapper = bundleContext.findServices(MyOtherService)
 		}
 		assertNotNull('Service wrapper should exist', wrapper)
 		assertNotNull('BundleContext should be available', wrapper.bundleContext)
@@ -151,6 +151,32 @@ class OsgiCategoryTest extends AbstractGroovyxOsgiTests {
 		assertNotNull('Service results should exist', results)
 		assertFalse('Service results should not be empty', results.isEmpty())
 		assertEquals('There should be one result per service', registeredServices.size(), results.size())
+	}
+	
+	public void testFindMultipleServicesFiltered() throws Exception {
+		ServiceWrapper wrapper
+		use(OsgiCategory) {
+			wrapper = bundleContext.findServices(MyService, "(since <= 2000)")
+		}
+		assertNotNull('Service wrapper should exist', wrapper)
+		assertNotNull('BundleContext should be available', wrapper.bundleContext)
+		assertEquals('wrapper should reference filtered services from abvove', 2, wrapper.serviceCount)
+		assertEquals('wrapper should reference filtered services from abvove', 2, wrapper.size())
+		assertNotNull('first service reference should exists', wrapper.serviceReference)
+		assertNotNull('service references should be valid', wrapper.serviceReferences)
+		assertEquals('service references should match service from above', 2, wrapper.serviceReferences.length)
+	}
+	
+	public void testFindMultipleServicesFilteredWithResult() throws Exception {
+		List results
+		use(OsgiCategory) {
+			results = bundleContext.findServices(MyService, "(since <= 2000)").withEachService() { MyService srv ->
+				srv.doSomething()
+			}
+		}
+		assertNotNull('Service results should exist', results)
+		assertFalse('Service results should not be empty', results.isEmpty())
+		assertEquals('There should be one result per service', 2, results.size())
 	}
 }
 
