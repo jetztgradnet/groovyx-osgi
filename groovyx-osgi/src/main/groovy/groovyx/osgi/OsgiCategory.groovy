@@ -64,7 +64,15 @@ import org.osgi.framework.ServiceRegistration
  * @author Wolfgang Schell
  */
 class OsgiCategory {
-	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 *  
+	 * @param bundleContext bundle context
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -72,6 +80,16 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param className name of service class or interface
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, String className, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -80,6 +98,16 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Class clazz, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -88,6 +116,16 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param options find options. See {@link ServiceFinder#configure(Map)} for possible values.
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Map options, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -95,6 +133,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param className name of service class or interface
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, String className) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -102,6 +149,16 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param className name of service class or interface
+	 * @param filter service filter in LDAP filter notation
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, String className, String filter) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -110,6 +167,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Class clazz) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -117,6 +183,16 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * @param filter service filter in LDAP filter notation
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Class clazz, String filter) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -125,6 +201,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find service according to specified criteria. If there are multiple matching service, a 
+	 * single service is selected according to the rules described in the OSGi specification.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param options find options. See {@link ServiceFinder#configure(Map)} for possible values.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findService(BundleContext bundleContext, Map options) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -132,13 +217,30 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.multiple()
 				.configure(closure)
 				.find()
 	}
-	
+
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param className name of service class or interface
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, String className, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -147,6 +249,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Class clazz, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -155,6 +266,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param options find options. See {@link ServiceFinder#configure(Map)} for possible values.
+	 * @param closure configuration closure. See {@link ServiceFinder#configure(Closure)} for details.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Map options, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -162,13 +282,30 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz name of service class or interface
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, String className) {
 		new ServiceFinder(bundleContext)
 				.multiple()
 				.setClassName(className)
 				.find()
 	}
-	
+
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz name of service class or interface
+	 * @param filter service filter in LDAP filter notation
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, String className, String filter) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -177,6 +314,14 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Class clazz) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -184,6 +329,15 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param clazz service class or interface
+	 * @param filter service filter in LDAP filter notation
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Class clazz, String filter) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -192,6 +346,14 @@ class OsgiCategory {
 				.find()
 	}
 	
+	/**
+	 * Find services according to specified criteria.
+	 * 
+	 * @param bundleContext bundle context
+	 * @param options find options. See {@link ServiceFinder#configure(Map)} for possible values.
+	 * 
+	 * @return {@link ServiceWrapper} for easy service access
+	 */
 	static ServiceWrapper findServices(BundleContext bundleContext, Map options) {
 		new ServiceFinder(bundleContext)
 				.multiple()
@@ -206,7 +368,7 @@ class OsgiCategory {
 	 * option <code>callForNullService</code> set to <code>true</code>.
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance</li>
@@ -241,7 +403,7 @@ class OsgiCategory {
 	 * Perform action for a service.
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -280,7 +442,7 @@ class OsgiCategory {
 	 * option <code>callForNullService</code> set to <code>true</code>.
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance</li>
@@ -315,7 +477,7 @@ class OsgiCategory {
 	 * Perform action for a service.
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -395,7 +557,7 @@ class OsgiCategory {
 	 * <p>This is the same as {@link #withEachService(ServiceReference[], BundleContext, Closure)}.</p>
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance</li>
@@ -432,7 +594,7 @@ class OsgiCategory {
 	 * <p>This is the same as {@link #withEachService(ServiceReference[], BundleContext, Map, Closure)}.</p>
 	 *
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 *
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -473,7 +635,7 @@ class OsgiCategory {
 	 * <p>This is the same as {@link #withEachService(BundleContext, ServiceReference[], Closure)}.</p>
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -510,7 +672,7 @@ class OsgiCategory {
 	 * <p>This is the same as {@link #withEachService(BundleContext, ServiceReference[], Map, Closure)}.</p>
 	 *
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 *
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -563,7 +725,7 @@ class OsgiCategory {
 	 * option <code>callForNullService</code> set to <code>true</code>. 
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance</li>
@@ -598,7 +760,7 @@ class OsgiCategory {
 	 * Perform action for each service.
 	 *
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 *
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -637,7 +799,7 @@ class OsgiCategory {
 	 * option <code>callForNullService</code> set to <code>true</code>.
 	 * 
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 * 
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -672,7 +834,7 @@ class OsgiCategory {
 	 * Perform action for each service.
 	 *
 	 * <p>
-	 * The provided closure may receive one, two, or three args:
+	 * The provided closure may receive one, two, or three arguments:
 	 *
 	 * <ol>
 	 * <li>service instance. May be <code>null</code>, if the service is (no longer) available</li>
@@ -682,7 +844,7 @@ class OsgiCategory {
 	 * </p>
 	 * 
 	 * <p>
-	 * Supported options: TODO
+	 * Supported options:
 	 * <ul>
 	 * <li><b>collectNullResults</b>: if <code>true</code>, <code>null</code> 
 	 * 		values returned by the service action are put into the result list. 
@@ -692,6 +854,7 @@ class OsgiCategory {
 	 * 		service, e.g. because the service is no longer available. By default,
 	 * 		the service action closure will not be called, if the service resolves
 	 * 		to <code>null</code>.</li>
+	 * <li>the options map is also passed through to the closure, if it accepts three arguments</li>
 	 * </ul>
 	 * </p>
 	 *

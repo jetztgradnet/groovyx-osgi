@@ -92,6 +92,22 @@ class ServiceFinder {
 	/**
 	 * Configure {@link ServiceFinder} using options from a {@link Map}.
 	 * 
+	 * <p>
+	 * Supported options:
+	 * <ul>
+	 * <li><b>single</b>: Specify, whether to look for a single or multiple services. 
+	 * 				See {@link #setSingle(boolean)}. for details</li>
+	 * <li><b>multiple</b>: Specify, whether to look for a single or multiple services.
+	 * 				See {@link #setMultiple(boolean)} for details</li>
+	 * <li><b>all</b>: Specify, whether all service instance are returned, even those 
+	 * 				incompatible with a {@link Bundle}. See {@link #setAll(boolean)} for details.</li>
+	 * <li><b>className</b>: Set service class name.
+	 * 				See {@link #setClassName(Class)} of {@link #setClassName(String)} for details.</li>
+	 * <li><b>filter</b>: Set service filter as filter string or using the filter DSL.
+	 * 				See {@link #setFilter(Closure)} or {@link #setFilter(String)} for details.</li>
+	 * </ul>
+	 * </p>
+	 * 
 	 * @param options map of options
 	 * 
 	 * @return the service finder
