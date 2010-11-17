@@ -553,7 +553,7 @@ class OsgiCategory {
 	 * @return list of results of service action
 	 */
 	static List eachService(BundleContext bundleContext, ServiceReference[] serviceReferences, Map options, Closure closure) {
-		withEachService(bundleContext, serviceReferences, options, closure)
+		return withEachService(bundleContext, serviceReferences, options, closure)
 	}
 	
 	/**
