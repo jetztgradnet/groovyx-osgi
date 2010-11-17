@@ -391,7 +391,7 @@ class ServiceFinder {
 	ServiceFinder setFilter(Closure filter) {
 		// provide filter DSL
 		FilterBuilder builder = createFilterBuilder()
-		setFilter(builder.build(filter))
+		setFilter(builder?.build(filter))
 		
 		return this
 	}
