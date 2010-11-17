@@ -72,6 +72,22 @@ class OsgiCategory {
 				.find()
 	}
 	
+	static ServiceWrapper findService(BundleContext bundleContext, String className, Closure closure) {
+		new ServiceFinder(bundleContext)
+				.single()
+				.setClassName(className)
+				.configure(closure)
+				.find()
+	}
+	
+	static ServiceWrapper findService(BundleContext bundleContext, Class clazz, Closure closure) {
+		new ServiceFinder(bundleContext)
+				.single()
+				.setClassName(clazz)
+				.configure(closure)
+				.find()
+	}
+	
 	static ServiceWrapper findService(BundleContext bundleContext, Map options, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.single()
@@ -119,6 +135,22 @@ class OsgiCategory {
 	static ServiceWrapper findServices(BundleContext bundleContext, Closure closure) {
 		new ServiceFinder(bundleContext)
 				.multiple()
+				.configure(closure)
+				.find()
+	}
+	
+	static ServiceWrapper findServices(BundleContext bundleContext, String className, Closure closure) {
+		new ServiceFinder(bundleContext)
+				.multiple()
+				.setClassName(className)
+				.configure(closure)
+				.find()
+	}
+	
+	static ServiceWrapper findServices(BundleContext bundleContext, Class clazz, Closure closure) {
+		new ServiceFinder(bundleContext)
+				.multiple()
+				.setClassName(clazz)
 				.configure(closure)
 				.find()
 	}
