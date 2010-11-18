@@ -4,7 +4,7 @@ apply plugin:'eclipse'
 defaultTasks 'build'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-2' //'0.9-preview-3'
+    gradleVersion = '0.9-rc-3'
 }
 
 subprojects {
