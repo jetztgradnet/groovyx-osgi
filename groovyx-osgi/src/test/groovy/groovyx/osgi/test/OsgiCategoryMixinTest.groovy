@@ -35,7 +35,7 @@ import groovyx.osgi.ServiceFinder
  *
  * @author Wolfgang Schell
  */
-abstract class OsgiCategoryMixinTest extends AbstractGroovyxOsgiTests {
+class OsgiCategoryMixinTest extends AbstractGroovyxOsgiTests {
 	
 	protected Map<String, Object> registeredServices
 	protected List<ServiceRegistration> serviceRegistrations
@@ -66,18 +66,10 @@ abstract class OsgiCategoryMixinTest extends AbstractGroovyxOsgiTests {
 			registeredServices[service.name] = service
 			serviceRegistrations << registration
 		}
-		
-		// TODO mixing in this does not currently work
-		BundleContext.metaClass.mixin OsgiCategory
-		Bundle.metaClass.mixin OsgiCategory
 	}
 	
 	@Override
 	protected void onTearDown() throws Exception {
-		// TODO mix out OsgiCategory!
-		//BundleContext.metaClass.mixin OsgiCategory
-		//Bundle.metaClass.mixin OsgiCategory
-		
 		serviceRegistrations.each { ServiceRegistration registration ->
 			registration.unregister()
 		}

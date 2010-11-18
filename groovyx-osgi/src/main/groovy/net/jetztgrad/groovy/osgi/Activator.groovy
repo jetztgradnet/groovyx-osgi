@@ -16,17 +16,57 @@
 
 package net.jetztgrad.groovy.osgi
 
+import groovy.lang.MissingPropertyException;
+import groovyx.osgi.OsgiCategory;
+
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 class Activator implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
-		// TODO install methods on Bundle, BundleContext, ServiceReference
-		
+		// install methods on Bundle, BundleContext, ServiceReference, and ServiceReference[]
+		installCategoryHandler([ Bundle, BundleContext, ServiceReference, ServiceReference[] ] as Class[])
 	}
 	
 	public void stop(BundleContext context) throws Exception {
-		// TODO uninstall methods from Bundle, BundleContext, ServiceReference
-		
+		// uninstall methods from Bundle, BundleContext, ServiceReference
+		uninstallCategoryHandler([ Bundle, BundleContext, ServiceReference, ServiceReference[] ] as Class[])
+	}
+	
+	@SuppressWarnings("rawtypes") 
+	static void installCategoryHandler(Class[] targetClasses) {
+		targetClasses.each { installCategoryHandler(it) }
+	}
+	
+	static void installCategoryHandler(final Class targetClass) {
+		// NOTE: this might lead to unexpected results, if invokeMissing or
+		//		 propertyMissing was or will be set by some other code as well...
+		targetClass.metaClass.methodMissing = { String name, args ->
+			Object[] params = args.inject([delegate]) { list, arg -> list << arg } as Object[]
+			OsgiCategory.metaClass.invokeStaticMethod(OsgiCategory, name, params)
+		}
+		targetClass.metaClass.propertyMissing = { String name ->
+			// hard-coded property access, as we would otherwise have to translate the
+			// property into its corresponding getter name, which might be getXxxx or isXxxx.
+			Object[] params = [delegate] as Object[]
+			if ("stateAsText".equals(name)) {
+				return OsgiCategory.getStateAsText(delegate)
+			}
+			throw MissingPropertyException(name, delegate.getClass())
+		}
+	}
+	
+	@SuppressWarnings("rawtypes") 
+	static void uninstallCategoryHandler(Class[] targetClasses) {
+		targetClasses.each { uninstallCategoryHandler(it) }
+	}
+	
+	static void uninstallCategoryHandler(Class targetClass) {
+		// NOTE: this might lead to unexpected results, if invokeMissing
+		//		 or propertyMissing was set by some other code as well...
+		targetClass.metaClass.methodMissing = null
+		targetClass.metaClass.propertyMissing = null
 	}
 }
