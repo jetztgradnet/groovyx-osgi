@@ -6,6 +6,7 @@
 	bundle('file:/...')
 	bundle('mvn:group:name:version[:opt]') or bundle('mvn:group/name/version[/opt]')
   }
+* Default repo: gradleLocal()
 
 * Provisioning
 - framework dir

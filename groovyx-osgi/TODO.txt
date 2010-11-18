@@ -1,8 +1,13 @@
-* OSGi Filter DSL (s. filter4osgi: http://code.google.com/p/filter4osgi/)
 * Service Tracker handling (with closures)
-* Service Reference handling (with closures)
-* Service registration
-* Map as Dictionary
+* Service registration; support attribute pid -> service.pid
+* Service factory registration using closures
 
 also see ScalaModules
 http://github.com/weiglewilczek/scalamodules/wiki
+
+DONE:
+* Service Reference handling (with closures)
+* OSGi Filter DSL (s. filter4osgi: http://code.google.com/p/filter4osgi/)
+* Map as Dictionary
+* BundleActivator, which (un)installs methodMissing on Bundle, 
+  BundleContext, ServiceReference, ServiceReference[]
