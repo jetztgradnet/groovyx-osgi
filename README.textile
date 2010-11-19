@@ -92,6 +92,8 @@ h2. Dependencies
 * Apache Ivy (part of Groovy all-in-one package)
 * Apache Commons Logging API
 
+The filter support is derived from the "filter4osgi":http://code.google.com/p/filter4osgi/ project and was contributed by "Hamlet D'Arcy":http://hamletdarcy.blogspot.com/. The code is also under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
+
 h2. Installation
 
 Simply drop groovyx-osgi-version.jar and/or groovyx-osgi-runtime-version.jar into your classpath. When using "Grape":http://groovy.codehaus.org/Grape, installation can be omitted altogether. See example below.

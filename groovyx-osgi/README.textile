@@ -9,7 +9,9 @@ Features:
 * simplifies working with OSGi service registry 
 * safe access to OSGi services, without fear for OSGi dynamics
 * Service finder DSL
-* OSGi service filter DSL
+* OSGi service filter DSL. The filter support is derived from the "filter4osgi":http://code.google.com/p/filter4osgi/ project and was contributed by "Hamlet D'Arcy":http://hamletdarcy.blogspot.com/.
+
+
 
 h2. Usage
 
