@@ -809,7 +809,11 @@ class IvyDomainSpecificLanguageEvaluator {
                        boolean isExcluded = isExcluded(name)
                        if(!isExcluded) {
 
-                           def attrs = ["m:classifier":dependency.classifier ?: 'jar']
+                           // don't use classifier, if not specified
+						   def attrs = [:] //["classifier":dependency.classifier ?: 'jar']
+						   if (dependency?.classifier) {
+							   attrs["classifier"] = dependency.classifier
+						   }
                            def mrid
                            if(dependency.branch) {
                                mrid = ModuleRevisionId.newInstance(dependency.group, name, dependency.branch, dependency.version, attrs)
