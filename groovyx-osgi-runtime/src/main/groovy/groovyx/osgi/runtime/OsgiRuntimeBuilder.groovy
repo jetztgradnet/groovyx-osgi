@@ -583,10 +583,12 @@ class OsgiRuntimeBuilder {
 		String equinoxRepository = null
 		if (args.equinoxDrop && args.equinoxMirror) {
 			def equinoxDrop = args.equinoxDrop
-			def equinoxMirror = args.equinoxMirror
-			equinoxRepository = "$equinoxMirror/$equinoxDrop".toString()
+			String equinoxMirror = args?.equinoxMirror?.toString()
 			// make sure we have only single '/', if the eclipse mirror ended with '/'
-			equinoxRepository = equinoxRepository.replace("//", "/")
+			if (equinoxMirror.endsWith("/")) {
+				equinoxMirror = equinoxMirror.substring(0, equinoxMirror.length() - 1)
+			}
+			equinoxRepository = "$equinoxMirror/$equinoxDrop".toString()
 		}
 		
 		def dependencies = {
