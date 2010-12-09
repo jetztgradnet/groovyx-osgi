@@ -645,7 +645,7 @@ class OsgiRuntimeBuilder {
 		manager.parseDependencies(dependencies)
 		
 		// resolve bundles
-		def report = manager.resolveDependencies()
+		def report = manager.resolveDependencies("runtime")
 		if(report.hasError()) {
 			log.error """
 There was an error resolving the dependencies.
