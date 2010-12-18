@@ -132,7 +132,7 @@ class OsgiRuntimeBuilder {
 	 * @param value property value
 	 */
 	def setRuntimeProperty(String name, def value) { 
-		runtimeProperties[name] = value
+		runtimeProperties[name] = value?.toString()
 		
 		this 
 	}
@@ -394,7 +394,7 @@ class OsgiRuntimeBuilder {
 	*/
    void clean(boolean purge) {
 	   clean()
-	   runtimeProperties.setProperty("purge", purge)
+	   runtimeProperties.setProperty("purge", purge?.toString())
    }
 	
 	/**
@@ -410,7 +410,7 @@ class OsgiRuntimeBuilder {
 	 * @param port port on which to run console
 	 */
 	void console(def port) {
-		runtimeProperties.setProperty("osgi.console", port)
+		runtimeProperties.setProperty("osgi.console", port?.toString())
 	}
 	
 	/**
@@ -431,7 +431,7 @@ class OsgiRuntimeBuilder {
 		configure(webConsoleConfiguration)
 		
 		if (port) {
-			runtimeProperties.setProperty("org.osgi.service.http.port", port)
+			runtimeProperties.setProperty("org.osgi.service.http.port", port?.toString())
 		}
 	}
 	
