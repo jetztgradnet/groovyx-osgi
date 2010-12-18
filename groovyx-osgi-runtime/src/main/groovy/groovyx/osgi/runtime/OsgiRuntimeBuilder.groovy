@@ -595,6 +595,9 @@ class OsgiRuntimeBuilder {
 	 */
 	List<String> resolveBundles(List bundles) throws Exception {
 		List<URL> artifactURLs = new ArrayList<URL>()
+		if (!bundles) {
+			return artifactURLs
+		}
 		
 		// application name and version are dummy values
 		IvyDependencyManager manager = new IvyDependencyManager("groovyx.osgi", "1.0")
@@ -667,13 +670,15 @@ class OsgiRuntimeBuilder {
 		// parse bundles/dependencies from above
 		manager.parseDependencies(dependencies)
 		
+		log.info "resolving ${bundles.size()} bundles"
+		long startTimestamp = System.currentTimeMillis()
+		
 		// resolve bundles
 		def report = manager.resolveDependencies("runtime")
 		if(report.hasError()) {
 			log.error """
 There was an error resolving the dependencies.
-This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories.
-Try passing a valid Maven repository with the --repository argument."""
+This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories."""
 			report.allProblemMessages.each { problem -> log.error ": $problem" }
 			throw new RuntimeException("failed to resolve some modules")
 		}
@@ -687,11 +692,16 @@ Try passing a valid Maven repository with the --repository argument."""
 			}
 			*/
 			artifactURLs = report.allArtifactsReports*.localFile*.toURL()*.toString()
+			
+			long endTimestamp = System.currentTimeMillis()
+			long duration = endTimestamp - startTimestamp
+			duration /= 1000
+			
+			log.info "resolving ${bundles.size()} bundles took $duration seconds"
 			//artifactURLs.each { url ->
 			//	println url
 			//}
 		}
-		
 		
 		artifactURLs
 	}
