@@ -64,16 +64,12 @@ class OsgiRuntimeBuilder {
 	
 	
 	Closure webConsoleConfiguration = {
-		setRuntimeProperty("org.osgi.service.http.port", DEFAULT_HTTP_PORT)
-		
 		// TODO add required bundles
 		def webBundles = [
 			
 		]
 		
-		webBundles.each { bdl ->
-			bundle bdl
-		}
+		bundles webBundles
 	}
 	
 	public OsgiRuntimeBuilder() {
@@ -1030,7 +1026,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @return this builder instance
 	 */
 	def bundles(List bundles) {
-		bundles.each { bdl ->
+		bundles?.each { bdl ->
 			bundle(bdl)
 		}
 		
