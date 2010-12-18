@@ -186,7 +186,7 @@ commonBundles = [
 allBundles << commonBundles
 
 allBundles << springBundles
-allBundles << springDMBundles
+//allBundles << springDMBundles
 
 auxBundles = [
 	'mvn:org.apache.felix:org.apache.felix.configadmin:1.2.4',
