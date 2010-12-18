@@ -125,22 +125,68 @@ class OsgiRuntimeBuilder {
 	}
 	
 	/**
-	* Set runtime property.
-	*
-	* @param name property name
-	* @param value property value
-	*/
+	 * Set runtime property.
+	 *
+	 * @param name property name
+	 * @param value property value
+	 */
 	def setRuntimeProperty(String name, def value) { 
-		runtimeProperties[name] = value 
+		runtimeProperties[name] = value
+		
+		this 
 	}
 	
 	/**
-	* Get runtime property.
-	*
-	* @param name property name
-	*
-	* @return property value
-	*/
+	 * Set runtime properties.
+	 *
+	 * @param props map of runtime properties to set
+	 * 
+	 * @return this builder instance
+	 */
+	def setRuntimeProperties(Map props) {
+		if (props) { 
+			runtimeProperties.putAll(props)
+		}
+		
+		this
+	}
+	
+	/**
+	 * Set runtime properties.
+	 *
+	 * @param props map of runtime properties to set
+	 * 
+	 * @return this builder instance
+	 */
+	def runtimeProperties(Map props) {
+		setRuntimeProperties(props)
+
+		this
+	}
+	
+	/**
+	 * Set runtime properties. All variables being
+	 * set within the provided closure are set as 
+	 * runtime properties.
+	 *
+	 * @param closure configuration closure
+	 *
+	 * @return this builder instance
+	 */
+	def runtimeProperties(Closure closure) {
+		Closure cl = configureClosure(closure, runtimeProperties)
+		cl()
+
+		this
+	}
+	
+	/**
+	 * Get runtime property.
+	 *
+	 * @param name property name
+	 *
+	 * @return property value
+	 */
 	def getRuntimeProperty(String name) {
 		runtimeProperties[name]
 	}
@@ -160,30 +206,6 @@ class OsgiRuntimeBuilder {
 		}
 		
 		return defValue
-	}
-	
-	/**
-	 * Delegate to runtime properties.
-	 * 
-	 * @param name property name
-	 * 
-	 * @return property value
-	 */
-	def propertyMissing(String name) {
-		if (runtimeProperties.containsKey(name)) {
-			return runtimeProperties[name]
-		}
-		null
-	}
-	
-	/**
-	 * Delegate to runtime properties.
-	 * 
-	 * @param name property name
-	 * @param value property value
-	 */
-	def propertyMissing(String name, def value) { 
-		setRuntimeProperty(name, value)
 	}
 	
 	/**
@@ -957,18 +979,19 @@ Try passing a valid Maven repository with the --repository argument."""
 	}
 	
 	/**
-	* Set runtime args.
-	*
-	* @param closure configuration closure
-	*
-	* @return this builder instance
-	*/
-   def args(Closure closure) {
-	   Closure cl = configureClosure(closure)
+	 * Set runtime args. All variables being set 
+	 * within the provided closure are set as args.
+	 *
+	 * @param closure configuration closure
+	 *
+	 * @return this builder instance
+	 */
+	def args(Closure closure) {
+	   Closure cl = configureClosure(closure, args)
 	   cl()
 	   
 	   this
-   }
+	}
 	
 	def repositories(Closure closure) {
 		repositoriesConfig = closure
@@ -1054,8 +1077,12 @@ Try passing a valid Maven repository with the --repository argument."""
 	}
 	
 	protected Closure configureClosure(Closure closure) {
+		return configureClosure(closure, this)
+	}
+	
+	protected Closure configureClosure(Closure closure, def delegate) {
 		Closure cl = closure.clone()
-		cl.delegate = this
+		cl.delegate = delegate
 		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
 		
 		return cl

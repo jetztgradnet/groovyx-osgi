@@ -46,6 +46,42 @@ public class OsgiRuntimeBuilderTest {
 		assertEquals(1, bundles.size())
 		assertEquals("org.springframework:org.springframework.aop:$springVersion".toString(), bundles[0])
 	}
+	
+	@Test
+	void testArgs() throws Exception {
+		builder.configure {
+			args {
+				resolverLogLevel = "warn"
+				someInt = 42
+			}
+		}
+		def args = builder.args
+		
+		assertNotNull(args)
+		assertEquals("warn", args?.resolverLogLevel)
+		assertEquals(42, args?.someInt)
+	}
+	
+	@Test
+	void testRuntimeProperties() throws Exception {
+		builder.configure {
+			runtimeProperties {
+				someText = "text"
+				someInt = 42
+			}
+			runtimeProperties text1: "val1", num1: 21
+			
+			setRuntimeProperty("text2", "val2")
+		}
+		def runtimeProperties = builder.runtimeProperties
+		
+		assertNotNull(runtimeProperties)
+		assertEquals("text", runtimeProperties?.someText)
+		assertEquals(42, runtimeProperties?.someInt)
+		assertEquals(21, runtimeProperties?.num1)
+		assertEquals("val1", runtimeProperties?.text1)
+		assertEquals("val2", runtimeProperties?.text2)
+	}
 		
 	@Test
 	void testEquinoxFactoryAlias() throws Exception {
