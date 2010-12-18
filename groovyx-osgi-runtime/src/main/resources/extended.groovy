@@ -207,6 +207,8 @@ OsgiRuntimeBuilder.run {
 
 	runtimeDir 'system'
 
+	webConsole()
+
 	args {
 		resolverLogLevel = "warn"
 	}
