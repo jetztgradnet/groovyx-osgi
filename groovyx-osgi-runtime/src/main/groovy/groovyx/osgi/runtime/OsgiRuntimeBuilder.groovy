@@ -39,6 +39,7 @@ import net.jetztgrad.groovy.osgi.runtime.resolve.IvyDependencyManager
 
 class OsgiRuntimeBuilder {
 	public final static int DEFAULT_HTTP_PORT = 8080
+	public final static int DEFAULT_WEB_CONSOLE_PORT = 8081
 	
 	private final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
 	
@@ -417,7 +418,7 @@ class OsgiRuntimeBuilder {
 	 * Required dependencies are automatically added.
 	 */
 	def webConsole() {
-		webConsole(DEFAULT_HTTP_PORT)
+		webConsole(DEFAULT_WEB_CONSOLE_PORT)
 	}
 
 	/**
