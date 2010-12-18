@@ -33,7 +33,7 @@ loggingBundles = [
 ]
 allBundles << loggingBundles
 
-springVersion = '3.0.4.RELEASE'
+springVersion = '3.0.5.RELEASE'
 springBundles = [
 	"mvn:org.springframework:org.springframework.aop:$springVersion",
 	"mvn:org.springframework:org.springframework.asm:$springVersion",
