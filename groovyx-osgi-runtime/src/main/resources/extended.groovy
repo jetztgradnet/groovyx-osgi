@@ -212,7 +212,5 @@ OsgiRuntimeBuilder.run {
 	}
 	
 	// install all bundles in list
-	allBundles.each { bdl ->
-		bundle bdl
-	}
+	bundles allBundles
 }

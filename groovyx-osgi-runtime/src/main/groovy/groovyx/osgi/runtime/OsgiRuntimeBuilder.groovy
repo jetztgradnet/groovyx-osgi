@@ -1013,6 +1013,21 @@ Try passing a valid Maven repository with the --repository argument."""
 	}
 	
 	/**
+	 * Add bundles to be installed.
+	 *  
+	 * @param closure bundle configuration closure
+	 * 
+	 * @return this builder instance
+	 */
+	def bundles(List bundles) {
+		bundles.each { bdl ->
+			bundle(bdl)
+		}
+		
+		this
+	}
+	
+	/**
 	 * Add bundle to be installed.
 	 *  
 	 * @param args bundle details
