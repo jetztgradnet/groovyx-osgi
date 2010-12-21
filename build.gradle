@@ -10,7 +10,7 @@ task wrapper(type: Wrapper) {
 
 subprojects {
 	//name = 'groovyx-osgi'
-	group = 'groovy'
+	group = 'groovyx.osgi'
 	version = '0.1'
 	
 	// TODO make configurable
