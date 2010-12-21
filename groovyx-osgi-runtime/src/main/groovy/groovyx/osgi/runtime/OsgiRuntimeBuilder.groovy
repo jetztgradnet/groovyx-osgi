@@ -1108,7 +1108,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
-	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime', version='0.1'),
 	 * 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
 	 * 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
 	 * ])
@@ -1158,7 +1158,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
-	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime', version='0.1'),
 	 * 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
 	 * 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
 	 * ])
@@ -1215,7 +1215,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
-	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime', version='0.1'),
 	 * 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
 	 * 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
 	 * ])
