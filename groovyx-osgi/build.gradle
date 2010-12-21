@@ -3,6 +3,7 @@ apply plugin:'java'
 apply plugin:'groovy'
 apply plugin:'osgi'
 apply plugin:'eclipse'
+apply plugin:'maven'
 
 defaultTasks 'build'
 
@@ -14,6 +15,39 @@ eclipseClasspath.variables = [:]
 eclipseClasspath.doFirst {
 	downloadSources = true
 	downloadJavadoc = true
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar, dependsOn: compileJava) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+artifacts {
+	archives javadocJar
+	archives sourcesJar
+}
+
+uploadArchives.doFirst {
+	repositoryDir.mkdirs()
+}
+uploadArchives {
+	repositories.mavenDeployer {
+		repository(url: repositoryDir.toURL().toString())
+		pom.project {
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+		}
+	}
 }
 
 dependencies {

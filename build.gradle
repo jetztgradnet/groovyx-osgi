@@ -11,7 +11,10 @@ task wrapper(type: Wrapper) {
 subprojects {
 	//name = 'groovyx-osgi'
 	group = 'groovy'
-	version = '0.1'       
+	version = '0.1'
+	
+	// TODO make configurable
+	repositoryDir = parent.file('../repository')
 
 	// dependency versions
 	groovyVersion = '1.7.5'
