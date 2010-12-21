@@ -1,3 +1,4 @@
+apply plugin:'project-report'
 apply plugin:'java-base'
 apply plugin:'eclipse'
 
