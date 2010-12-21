@@ -1,7 +1,7 @@
 // these are necessary for current version (3.6.1) of Equinox
 @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
 @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-@GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+@GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 @Grapes([
 	@GrabConfig(systemClassLoader=true),
 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime', version='0.1'),

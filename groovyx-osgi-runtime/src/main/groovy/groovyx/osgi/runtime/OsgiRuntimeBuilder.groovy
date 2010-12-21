@@ -1105,7 +1105,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * <pre>
 	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
 	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
 	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
@@ -1155,7 +1155,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * <pre>
 	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
 	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
 	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
@@ -1212,7 +1212,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * <pre>
 	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
 	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/jetztgradnet/repository/raw/master')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
 	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
