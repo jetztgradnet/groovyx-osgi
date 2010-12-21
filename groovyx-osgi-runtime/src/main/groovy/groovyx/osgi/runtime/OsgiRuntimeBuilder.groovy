@@ -40,9 +40,9 @@ import net.jetztgrad.groovy.osgi.runtime.resolve.IvyDependencyManager
 class OsgiRuntimeBuilder {
 	public final static int DEFAULT_HTTP_PORT = 8080
 	public final static int DEFAULT_WEB_CONSOLE_PORT = 8081
-	
+
 	private final static Log log = LogFactory.getLog(OsgiRuntimeBuilder.class)
-	
+
 	Map args = [:]
 	Map<String, Object> runtimeTypes = [:]
 	def framework = 'equinox'
@@ -52,7 +52,7 @@ class OsgiRuntimeBuilder {
 	Closure repositoriesConfig = null
 	Properties runtimeProperties
 	OsgiRuntime runtime
-	
+
 	// callbacks
 	Closure beforeStart
 	Closure afterStart
@@ -61,30 +61,28 @@ class OsgiRuntimeBuilder {
 	Closure doRun
 	Closure beforeStop
 	Closure afterStop
-	
-	
+
+
 	Closure webConsoleConfiguration = {
 		// TODO add required bundles
-		def webBundles = [
-			
-		]
-		
+		def webBundles = []
+
 		bundles webBundles
 	}
-	
+
 	public OsgiRuntimeBuilder() {
 		runtimeProperties = new Properties()
-		
+
 		// default runtime type
 		args.framework = 'equinox'
 		// set default equinox version drop
 		args.equinoxDrop = 'R-3.6-201006080911' // Helios release
 		// set default Eclipse mirror
 		args.equinoxMirror = "http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/equinox/drops/"
-		
+
 		initRuntimeTypes(runtimeTypes)
 	}
-	
+
 	/**
 	 * Get this builder instance. Can be called e.g. from closures, to call
 	 * methods on or get properties from this builder, e.g. when methods or 
@@ -95,7 +93,7 @@ class OsgiRuntimeBuilder {
 	public OsgiRuntimeBuilder getBuilder() {
 		return this
 	}
-	
+
 	/**
 	 * Setup aliases for OSGi runtimes. May be overridden
 	 * to add additional aliases.
@@ -107,7 +105,7 @@ class OsgiRuntimeBuilder {
 		runtimeTypes['felix'] = FelixRuntimeFactory.class
 		runtimeTypes['external'] = ExternalRuntimeFactory.class
 	}
-	
+
 	/**
 	 * Setup binding for configuration scripts. May 
 	 * be overridden to add more bindings 
@@ -116,23 +114,21 @@ class OsgiRuntimeBuilder {
 	 */
 	protected void setupBinding(Binding binding) {
 		binding.builder = this
-		binding.configure = { 
-			configure it
-		}
+		binding.configure = {  configure it }
 	}
-	
+
 	/**
 	 * Set runtime property.
 	 *
 	 * @param name property name
 	 * @param value property value
 	 */
-	def setRuntimeProperty(String name, def value) { 
+	def setRuntimeProperty(String name, def value) {
 		runtimeProperties[name] = value?.toString()
-		
-		this 
+
+		this
 	}
-	
+
 	/**
 	 * Set runtime properties.
 	 *
@@ -141,13 +137,13 @@ class OsgiRuntimeBuilder {
 	 * @return this builder instance
 	 */
 	def setRuntimeProperties(Map props) {
-		if (props) { 
+		if (props) {
 			runtimeProperties.putAll(props)
 		}
-		
+
 		this
 	}
-	
+
 	/**
 	 * Set runtime properties.
 	 *
@@ -160,7 +156,7 @@ class OsgiRuntimeBuilder {
 
 		this
 	}
-	
+
 	/**
 	 * Set runtime properties. All variables being
 	 * set within the provided closure are set as 
@@ -176,7 +172,7 @@ class OsgiRuntimeBuilder {
 
 		this
 	}
-	
+
 	/**
 	 * Get runtime property.
 	 *
@@ -187,7 +183,7 @@ class OsgiRuntimeBuilder {
 	def getRuntimeProperty(String name) {
 		runtimeProperties[name]
 	}
-	
+
 	/**
 	 * Get runtime property.
 	 *
@@ -201,21 +197,21 @@ class OsgiRuntimeBuilder {
 		if (runtimeProperties.containsKey(name)) {
 			return runtimeProperties[name]
 		}
-		
+
 		return defValue
 	}
-	
+
 	/**
-	* Get {@link OsgiRuntimeFactory} from framework type.
-	*
-	* @param framework OsgiRuntimeFactory instance, class, class name or class name alias
-	*
-	* @return {@link OsgiRuntimeFactory} or <code>null</code>, if not available
-	*/
-   protected OsgiRuntimeFactory getOsgiRuntimeFactory() throws Exception {
-	   getOsgiRuntimeFactory(this.framework)
-   }
-	
+	 * Get {@link OsgiRuntimeFactory} from framework type.
+	 *
+	 * @param framework OsgiRuntimeFactory instance, class, class name or class name alias
+	 *
+	 * @return {@link OsgiRuntimeFactory} or <code>null</code>, if not available
+	 */
+	protected OsgiRuntimeFactory getOsgiRuntimeFactory() throws Exception {
+		getOsgiRuntimeFactory(this.framework)
+	}
+
 	/**
 	 * Get {@link OsgiRuntimeFactory} from framework type.
 	 * 
@@ -226,7 +222,7 @@ class OsgiRuntimeBuilder {
 	protected OsgiRuntimeFactory getOsgiRuntimeFactory(def framework) throws Exception {
 		Class factoryClass = null
 		OsgiRuntimeFactory factory = null
-		
+
 		if (framework instanceof OsgiRuntimeFactory ) {
 			return framework
 		}
@@ -235,7 +231,7 @@ class OsgiRuntimeBuilder {
 		}
 		else {
 			// interpret as name of a OsgiRuntimeFactory class
-			
+
 			// lookup alias
 			def aliasedFramework = runtimeTypes.get(framework.toString().toLowerCase())
 			if (!aliasedFramework) {
@@ -244,9 +240,9 @@ class OsgiRuntimeBuilder {
 			if (aliasedFramework instanceof Class) {
 				factoryClass = aliasedFramework
 			}
-			else if (aliasedFramework) { 
+			else if (aliasedFramework) {
 				String className = aliasedFramework?.toString()
-			
+
 				try {
 					factoryClass = Class.forName(className)
 				}
@@ -255,12 +251,12 @@ class OsgiRuntimeBuilder {
 				}
 			}
 		}
-		
+
 		factory = (OsgiRuntimeFactory) factoryClass?.newInstance();
-		
+
 		factory
 	}
-	
+
 	/**
 	 * Create configured {@link OsgiRuntime}
 	 * 
@@ -272,12 +268,12 @@ class OsgiRuntimeBuilder {
 	protected OsgiRuntime createRuntime(def framework, Properties runtimeProperties) throws IllegalArgumentException {
 		OsgiRuntime runtime = null
 		OsgiRuntimeFactory factory = getOsgiRuntimeFactory(framework);
-	
+
 		runtime = factory?.createRuntime(runtimeProperties);
-		
+
 		runtime
 	}
-	
+
 	/**
 	 * Get runtime properties.
 	 * 
@@ -286,7 +282,7 @@ class OsgiRuntimeBuilder {
 	public Properties getRuntimeProperties() {
 		return runtimeProperties;
 	}
-	
+
 	/**
 	 * Set framework runtime type or name of {@link OsgiRuntimeFactory} class
 	 * 
@@ -295,7 +291,7 @@ class OsgiRuntimeBuilder {
 	void setFramework(String framework) {
 		this.framework = framework
 	}
-	
+
 	/**
 	 * Set framework {@link OsgiRuntimeFactory} class.
 	 * 
@@ -304,7 +300,7 @@ class OsgiRuntimeBuilder {
 	void setFramework(Class frameworkFactoryClass) {
 		this.framework = frameworkFactoryClass
 	}
-	
+
 	/**
 	 * Set framework {@link OsgiRuntimeFactory} factory.
 	 *
@@ -313,7 +309,7 @@ class OsgiRuntimeBuilder {
 	void setFramework(OsgiRuntimeFactory frameworkFactory) {
 		this.framework = frameworkFactory
 	}
-	
+
 	/**
 	 * Get framework to use.
 	 * 
@@ -322,7 +318,7 @@ class OsgiRuntimeBuilder {
 	def getFramework() {
 		framework
 	}
-	
+
 	/**
 	 * Set framework runtime type or name of {@link OsgiRuntimeFactory} class
 	 *
@@ -331,7 +327,7 @@ class OsgiRuntimeBuilder {
 	void framework(String framework) {
 		this.framework = framework
 	}
-   
+
 	/**
 	 * Set framework {@link OsgiRuntimeFactory} class.
 	 *
@@ -349,16 +345,16 @@ class OsgiRuntimeBuilder {
 	void framework(OsgiRuntimeFactory frameworkFactory) {
 		this.framework = frameworkFactory
 	}
-	
+
 	/**
-	* Set directory, into which to installed bundles
-	*
-	* @param dir dropins directory
-	*/
+	 * Set directory, into which to installed bundles
+	 *
+	 * @param dir dropins directory
+	 */
 	void dropinsDir(File dir) {
 		dropinsDir = dir
 	}
-	
+
 	/**
 	 * Set directory, into which the runtime will be installed
 	 *  
@@ -367,39 +363,39 @@ class OsgiRuntimeBuilder {
 	void runtimeDir(File dir) {
 		args.runtimeDir = dir
 	}
-	
+
 	/**
-	* Set directory, into which the runtime will be installed
-	*
-	* @param dir runtime directory, either absolute or relative
-	* 			to the current directory
-	*/
+	 * Set directory, into which the runtime will be installed
+	 *
+	 * @param dir runtime directory, either absolute or relative
+	 * 			to the current directory
+	 */
 	void runtimeDir(String dir) {
 		args.runtimeDir = dir
 	}
-   
+
 	/**
 	 * Perform cleanup of caches (sets property osgi.clean)
 	 */
 	void clean() {
 		runtimeProperties.setProperty("osgi.clean", "true")
 	}
-	
+
 	/**
-	* Perform cleanup of caches (sets property osgi.clean)
-	*/
-   void clean(boolean purge) {
-	   clean()
-	   runtimeProperties.setProperty("purge", purge?.toString())
-   }
-	
+	 * Perform cleanup of caches (sets property osgi.clean)
+	 */
+	void clean(boolean purge) {
+		clean()
+		runtimeProperties.setProperty("purge", purge?.toString())
+	}
+
 	/**
 	 * Open OSGi console.
 	 */
 	void console() {
 		runtimeProperties.setProperty("osgi.console", "true")
 	}
-	
+
 	/**
 	 * Open OSGi console on specified port.
 	 * 
@@ -408,7 +404,7 @@ class OsgiRuntimeBuilder {
 	void console(def port) {
 		runtimeProperties.setProperty("osgi.console", port?.toString())
 	}
-	
+
 	/**
 	 * Open web console on port 8080.
 	 * Required dependencies are automatically added.
@@ -425,12 +421,12 @@ class OsgiRuntimeBuilder {
 	 */
 	def webConsole(def port) {
 		configure(webConsoleConfiguration)
-		
+
 		if (port) {
 			runtimeProperties.setProperty("org.osgi.service.http.port", port?.toString())
 		}
 	}
-	
+
 	/**
 	 * Configure runtime. This includes resolving and installing
 	 * bundles.
@@ -442,21 +438,21 @@ class OsgiRuntimeBuilder {
 	protected def configureRuntime(OsgiRuntime runtime) {
 		installBundles(runtime, bundles)
 	}
-	
+
 	protected void doStart() {
 		if (!runtime.isRunning()) {
 			if (beforeStart) {
 				beforeStart(runtime)
 			}
-			
+
 			runtime.start()
-			
+
 			if (afterStart) {
 				afterStart(runtime)
 			}
 		}
 	}
-	
+
 	protected void waitForFinish() {
 		if (runtime.isRunning()) {
 			if (doRun) {
@@ -464,7 +460,7 @@ class OsgiRuntimeBuilder {
 			}
 			else {
 				long timeout = 0
-				
+
 				// wait for timeout or user to press CTRL-C
 				def locker = new Object()
 				synchronized(locker) {
@@ -479,21 +475,21 @@ class OsgiRuntimeBuilder {
 			}
 		}
 	}
-	
+
 	protected void doStop() {
 		if (runtime.isRunning()) {
 			if (beforeStop) {
 				beforeStop(runtime)
 			}
-			
+
 			runtime.stop()
-			
+
 			if (afterStop) {
 				afterStop(runtime)
 			}
 		}
 	}
-	
+
 	/**
 	 * Install bundles in runtime.
 	 * 
@@ -510,23 +506,23 @@ class OsgiRuntimeBuilder {
 			if (!runtime.isRunning()) {
 				doStart()
 			}
-			
+
 			// resolve bundles
 			def bundlesToResolve = []
 			def artifactsToResolve = []
 			bundles?.each { bundle ->
 				if (bundle instanceof Map) {
 					bundlesToResolve << bundle
-					
+
 					artifactsToResolve << bundle
 				}
 				else if (bundle.toString().startsWith('mvn:')) {
 					bundlesToResolve << bundle
-					
+
 					def spec = bundle.toString()
 					// remove URL scheme
 					spec -= 'mvn:'
-					
+
 					artifactsToResolve << spec
 				}
 			}
@@ -535,31 +531,31 @@ class OsgiRuntimeBuilder {
 				bundles -= bundlesToResolve
 				def artifactURLs = []
 
-				// resolve bundles				
+				// resolve bundles
 				artifactURLs = resolveBundles(artifactsToResolve)
 				// add all resolved file URLs
 				bundles.addAll(artifactURLs)
 			}
-			
+
 			if (beforeInstallBundles) {
 				beforeInstallBundles(runtime)
 			}
-			
+
 			// install bundles
 			bundles?.each { bundle ->
 				log.info "installing bundle $bundle"
 				boolean autoStart = getRuntimeProperty("autoStart", true)
-				
+
 				if ((bundle instanceof Map)
 					&& bundle?.url) {
 					bundle = bundle.url
 				}
-				
+
 				if ((bundle instanceof Map)
 					|| (bundle.toString().startsWith('mvn:'))) {
 					log.error("unresolved bundle: " + bundle);
 				}
-				
+
 				try {
 					runtime.install(bundle, autoStart)
 				}
@@ -568,15 +564,15 @@ class OsgiRuntimeBuilder {
 					log.debug("details: ", e)
 				}
 			}
-			
+
 			if (afterInstallBundles) {
 				afterInstallBundles(runtime)
 			}
 		}
-		
+
 		runtime
 	}
-	
+
 	/**
 	 * Resolve bundles and return list of local URLs.
 	 * 
@@ -594,14 +590,14 @@ class OsgiRuntimeBuilder {
 		if (!bundles) {
 			return artifactURLs
 		}
-		
+
 		// application name and version are dummy values
 		IvyDependencyManager manager = new IvyDependencyManager("groovyx.osgi", "1.0")
-		
+
 		def ivySettings = manager.ivySettings
-		
+
 		String logLevel = args.resolverLogLevel ?: "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-		
+
 		String equinoxRepository = null
 		if (args.equinoxDrop && args.equinoxMirror) {
 			def equinoxDrop = args.equinoxDrop
@@ -612,15 +608,15 @@ class OsgiRuntimeBuilder {
 			}
 			equinoxRepository = "$equinoxMirror/$equinoxDrop".toString()
 		}
-		
+
 		def dependencies = {
 			log logLevel
-			
+
 			// add user repositories
 			if (repositoriesConfig) {
-				repositories repositoriesConfig 
+				repositories repositoriesConfig
 			}
-			
+
 			// check whether to add default repositories
 			def defaultRepositories = true
 			if (args.containsKey('defaultRepositories')) {
@@ -632,13 +628,13 @@ class OsgiRuntimeBuilder {
 					mavenLocal()
 					ebr()
 					mavenCentral()
-					
+
 					mavenRepo "http://maven.springframework.org/milestone"
 					mavenRepo 'http://repository.ops4j.org/maven2/'
-					
+
 					mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/osgi'
 					mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
-					
+
 					if (equinoxRepository) {
 						// configure resolver for Eclipse Equinox OSGi framework
 						def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
@@ -651,24 +647,22 @@ class OsgiRuntimeBuilder {
 					}
 				}
 			}
-			
+
 			if (bundles) {
 				dependencies {
 					bundles.each{ dep ->
-						runtime (dep) {
-							transitive = false
-						}
+						runtime (dep) { transitive = false }
 					}
 				}
 			}
 		}
-		
+
 		// parse bundles/dependencies from above
 		manager.parseDependencies(dependencies)
-		
+
 		log.info "resolving ${bundles.size()} bundles"
 		long startTimestamp = System.currentTimeMillis()
-		
+
 		// resolve bundles
 		def report = manager.resolveDependencies("runtime")
 		if(report.hasError()) {
@@ -679,29 +673,21 @@ This could be because you have passed an invalid dependency name or because the 
 			throw new RuntimeException("failed to resolve some modules")
 		}
 		else {
-			/*
-			for (def artifactDownloadReport in report.getAllArtifactsReports()) {
-				def artifact = artifactDownloadReport.getArtifact()
-				if (artifactDownloadReport.localFile) {
-					artifactURLs << artifactDownloadReport.localFile.toURL().toString()
-				}
-			}
-			*/
 			artifactURLs = report.allArtifactsReports*.localFile*.toURL()*.toString()
-			
+
 			long endTimestamp = System.currentTimeMillis()
 			long duration = endTimestamp - startTimestamp
 			duration /= 1000
-			
+
 			log.info "resolving ${bundles.size()} bundles took $duration seconds"
 			//artifactURLs.each { url ->
 			//	println url
 			//}
 		}
-		
+
 		artifactURLs
 	}
-	
+
 	/**
 	 * Get {@link OsgiRuntime}.
 	 * 
@@ -710,7 +696,7 @@ This could be because you have passed an invalid dependency name or because the 
 	OsgiRuntime getRuntime() {
 		this.runtime
 	}
-	
+
 	/**
 	 * Configure and build OSGi runtime.
 	 * 
@@ -721,21 +707,21 @@ This could be because you have passed an invalid dependency name or because the 
 			// runtime already exists
 			return this.runtime
 		}
-		
+
 		File cwd = new File(System.getProperty('user.dir'))
 		File runtimeDir = args?.runtimeDir ? new File(args?.runtimeDir.toString()) :  new File(cwd, 'system')
 		File dropinsDir = (this.dropinsDir instanceof File ? this.dropinsDir : new File(runtimeDir, this.dropinsDir?.toString() ?: 'dropins'))
-		
+
 		if (!runtimeDir.exists()) {
 			runtimeDir.mkdirs()
 		}
 		if (!dropinsDir.exists()) {
 			dropinsDir.mkdirs()
 		}
-		
-		
+
+
 		def osgiRuntimePath = runtimeDir.absolutePath
-		
+
 		// prepare runtime properties
 		//runtimeProperties.setProperty("osgi.clean", "true")
 		//runtimeProperties.setProperty("osgi.console", "true")
@@ -746,30 +732,30 @@ This could be because you have passed an invalid dependency name or because the 
 		runtimeProperties.setProperty("osgi.compatibility.bootdelegation", "true")
 		runtimeProperties.setProperty("osgi.frameworkParentClassloader", "boot")
 		runtimeProperties.setProperty("osgi.contextClassLoaderParent", "boot")
-		
+
 		if (runtimeProperties.systemPackages) {
 			runtimeProperties.setProperty("org.osgi.framework.system.packages.extra", runtimeProperties.systemPackages.join(','))
 		}
-		
+
 		//frameworkProperties.setProperty("log4j.configuration", logConfig.absolutePath)
-		
+
 		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath)	// PAX ConfMan
 		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
 		System.setProperty("felix.fileinstall.debug", "1")
 		// TODO try to avoid setting system property for OSGi HttpService
 		System.setProperty("org.osgi.service.http.port", getRuntimeProperty("org.osgi.service.http.port", DEFAULT_HTTP_PORT)?.toString())
-		
+
 		this.runtime = createRuntime(framework, runtimeProperties)
-		
+
 		this.runtime.osgiRuntimePath = osgiRuntimePath
 		this.runtime.dropinsDir = dropinsDir
-		
+
 		// configure runtime
 		configureRuntime(this.runtime)
-		
+
 		this.runtime
 	}
-	
+
 	/**
 	 * Configure and build OSGi runtime.
 	 * 
@@ -782,14 +768,14 @@ This could be because you have passed an invalid dependency name or because the 
 			// runtime already exists
 			return this.runtime
 		}
-		
+
 		configure(closure)
-		
+
 		this.runtime = build()
-		
+
 		this.runtime
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The closure has access
 	 * to all methods provided by this builder.
@@ -801,10 +787,10 @@ This could be because you have passed an invalid dependency name or because the 
 	def configure(Closure closure) {
 		Closure cl = configureClosure(closure)
 		cl()
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The file is loaded as
 	 * Groovy {@link Script} and can access the predefined
@@ -819,13 +805,13 @@ This could be because you have passed an invalid dependency name or because the 
 		// parse file as Groovy script using GroovyShell
 		Binding binding = new Binding()
 		setupBinding(binding)
-		
+
 		GroovyShell shell = new GroovyShell(binding)
 		shell.evaluate(file)
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The {@link Script} can access 
 	 * the predefined method {@link #configure(Closure)} 
@@ -839,13 +825,13 @@ This could be because you have passed an invalid dependency name or because the 
 		// evaluate script
 		Binding binding = new Binding()
 		setupBinding(binding)
-		
+
 		script.setBinding(binding)
 		script.run()
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The stream is loaded as
 	 * Groovy {@link Script} and can access the predefined
@@ -859,10 +845,10 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def configure(InputStream input) {
 		configure(new InputStreamReader(input))
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The content is loaded as
 	 * Groovy {@link Script} and can access the predefined
@@ -878,14 +864,14 @@ This could be because you have passed an invalid dependency name or because the 
 		// parse stream as Groovy script using GroovyShell
 		Binding binding = new Binding()
 		setupBinding(binding)
-		
+
 		GroovyShell shell = new GroovyShell(binding)
 		shell.evaluate(input)
-		
+
 		this
 	}
-	
-	
+
+
 	/**
 	 * Configure OSGi runtime. The resource is loaded as
 	 * Groovy {@link Script} and can access the predefined
@@ -898,10 +884,10 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def configure(URL url) {
 		configure(url.openStream())
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure OSGi runtime. The content is loaded as
 	 * Groovy {@link Script} and can access the predefined
@@ -915,7 +901,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def configure(CharSequence input) {
 		String text = input.toString()
-		
+
 		// if first 20 chars contain a ':', we try to parse text as URL
 		if (text.substring(0, 20).contains(":")) {
 			try {
@@ -932,10 +918,10 @@ This could be because you have passed an invalid dependency name or because the 
 			// interpret as script
 			configure(new StringReader(text))
 		}
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure using an array of configuration elements.
 	 * 
@@ -946,10 +932,10 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def configure(Object[] args) {
 		configure(args as List)
-		
+
 		this
 	}
-	
+
 	/**
 	 * Configure using an array of configuration elements. 
 	 * 
@@ -981,10 +967,10 @@ This could be because you have passed an invalid dependency name or because the 
 				default: throw new IllegalArgumentException("invalid configuration item");
 			}
 		}
-		
+
 		this
 	}
-	
+
 	/**
 	 * Set runtime args. All variables being set 
 	 * within the provided closure are set as args.
@@ -994,16 +980,16 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @return this builder instance
 	 */
 	def args(Closure closure) {
-	   Closure cl = configureClosure(closure, args)
-	   cl()
-	   
-	   this
+		Closure cl = configureClosure(closure, args)
+		cl()
+
+		this
 	}
-	
+
 	def repositories(Closure closure) {
 		repositoriesConfig = closure
 	}
-	
+
 	/**
 	 * Add bundles to be installed.
 	 *  
@@ -1014,10 +1000,10 @@ This could be because you have passed an invalid dependency name or because the 
 	def bundles(Closure closure) {
 		Closure cl = configureClosure(closure)
 		cl()
-		
+
 		this
 	}
-	
+
 	/**
 	 * Add bundles to be installed.
 	 *  
@@ -1026,13 +1012,11 @@ This could be because you have passed an invalid dependency name or because the 
 	 * @return this builder instance
 	 */
 	def bundles(List bundles) {
-		bundles?.each { bdl ->
-			bundle(bdl)
-		}
-		
+		bundles?.each { bdl -> bundle(bdl) }
+
 		this
 	}
-	
+
 	/**
 	 * Add bundle to be installed.
 	 *  
@@ -1042,10 +1026,10 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def bundle(Map args) {
 		bundle(null, args, null)
-		
+
 		this
 	}
-	
+
 	/**
 	 * Add bundle to be installed.
 	 *  
@@ -1055,24 +1039,24 @@ This could be because you have passed an invalid dependency name or because the 
 	 */
 	def bundle(CharSequence specs) {
 		bundle(specs, null)
-		
+
 		this
 	}
-	
+
 	/**
-	* Add bundle to be installed.
-	* 
-	* @param specs bundle specs in format 'group:name:version'
-	* @param closure bundle configuration closure
-	*/
+	 * Add bundle to be installed.
+	 * 
+	 * @param specs bundle specs in format 'group:name:version'
+	 * @param closure bundle configuration closure
+	 */
 	def bundle(CharSequence specs, Closure closure) {
 		def args = [:]
-		
+
 		bundle(specs, args, closure)
-		
+
 		this
 	}
-	
+
 	/**
 	 * Add bundle to be installed.
 	 *  
@@ -1087,33 +1071,33 @@ This could be because you have passed an invalid dependency name or because the 
 			Closure cl = configureClosure(closure)
 			cl(specs)
 		}
-		
+
 		if (args) {
 			bundles << args
 		}
 		else if (specs) {
 			bundles << specs.toString()
 		}
-		
+
 		this
 	}
-	
+
 	protected Closure configureClosure(Closure closure) {
 		return configureClosure(closure, this)
 	}
-	
+
 	protected Closure configureClosure(Closure closure, def delegate) {
 		Closure cl = closure.clone()
 		cl.delegate = delegate
 		cl.setResolveStrategy(Closure.DELEGATE_FIRST)
-		
+
 		return cl
 	}
-	
+
 	public static void main(String[] args) {
 		run(args)
 	}
-	
+
 	/**
 	 * Run OSGi environment.
 	 * 
@@ -1121,6 +1105,7 @@ This could be because you have passed an invalid dependency name or because the 
 	 * <pre>
 	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
 	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
 	 * @Grapes([
 	 * 	@GrabConfig(systemClassLoader=true),
 	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
@@ -1155,113 +1140,115 @@ This could be because you have passed an invalid dependency name or because the 
 	public static void run(def args) {
 		// create builder and configure using all args
 		OsgiRuntimeBuilder builder = start(args)
-		
+
 		// wait for finish
 		builder.waitForFinish()
-		
+
 		// stop runtime
 		builder.doStop()
 	}
-	
+
 	/**
-	* Start OSGi environment.
-	*
-	* <p>Example:
-	* <pre>
-	* @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
-	* @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	* @Grapes([
-	* 	@GrabConfig(systemClassLoader=true),
-	* 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
-	* 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
-	* 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
-	* ])
-	* import groovyx.osgi.runtime.OsgiRuntimeBuilder
-	*
-	* def builder = OsgiRuntimeBuilder.start {
-	* 		framework 'equinox'
-	*
-	* 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
-	*
-	* 		afterStart = {
-	* 			println "started OSGi runtime"
-	* 		}
-	*
-	* 		doRun = {
-	* 			// wait one minute
-	* 			Thread.sleep 30000
-	* 		}
-	*
-	* 		afterStop = {
-	* 			println "started OSGi runtime"
-	* 		}
-	* }
-	* // do something with builder
-	* 
-	* OsgiRuntimeBuilder.stop(builder)
-	* </pre>
-	* </p>
-	*
-	* @param args configuration args. See {@link #configure(List)} for supported types
-	* 
-	* @return builder with started runtime
-	*/
-   public static OsgiRuntimeBuilder start(def args) {
-	   // create builder and configure using all args
-	   OsgiRuntimeBuilder builder = new OsgiRuntimeBuilder()
-	   builder.configure(args)
-	   
-	   // build and start runtime
-	   OsgiRuntime runtime = builder.build()
-	   builder.doStart()
-	   
-	   // return builder
-	   builder
-   }
-   
-   /**
-    * Stop runtime.
-    * 
-    * <p>Example:
-	* <pre>
-	* @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
-	* @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
-	* @Grapes([
-	* 	@GrabConfig(systemClassLoader=true),
-	* 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
-	* 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
-	* 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
-	* ])
-	* import groovyx.osgi.runtime.OsgiRuntimeBuilder
-	*
-	* def builder = OsgiRuntimeBuilder.start {
-	* 		framework 'equinox'
-	*
-	* 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
-	*
-	* 		afterStart = {
-	* 			println "started OSGi runtime"
-	* 		}
-	*
-	* 		doRun = {
-	* 			// wait one minute
-	* 			Thread.sleep 30000
-	* 		}
-	*
-	* 		afterStop = {
-	* 			println "started OSGi runtime"
-	* 		}
-	* }
-	* // wait for finish
-	* builder.waitForFinish()
-	* OsgiRuntimeBuilder.stop(builder)
-	* </pre>
-	* </p>
-	* 
-    * @param builder {@link OsgiRuntimeBuilder} hosting the runtime. 
-    */
-   public static void stop(OsgiRuntimeBuilder builder) {
-	   // stop runtime
-	   builder.doStop()
-   }
+	 * Start OSGi environment.
+	 *
+	 * <p>Example:
+	 * <pre>
+	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+	 * @Grapes([
+	 * 	@GrabConfig(systemClassLoader=true),
+	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	 * 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+	 * 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+	 * ])
+	 * import groovyx.osgi.runtime.OsgiRuntimeBuilder
+	 *
+	 * def builder = OsgiRuntimeBuilder.start {
+	 * 		framework 'equinox'
+	 *
+	 * 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	 *
+	 * 		afterStart = {
+	 * 			println "started OSGi runtime"
+	 * 		}
+	 *
+	 * 		doRun = {
+	 * 			// wait one minute
+	 * 			Thread.sleep 30000
+	 * 		}
+	 *
+	 * 		afterStop = {
+	 * 			println "started OSGi runtime"
+	 * 		}
+	 * }
+	 * // do something with builder
+	 * 
+	 * OsgiRuntimeBuilder.stop(builder)
+	 * </pre>
+	 * </p>
+	 *
+	 * @param args configuration args. See {@link #configure(List)} for supported types
+	 * 
+	 * @return builder with started runtime
+	 */
+	public static OsgiRuntimeBuilder start(def args) {
+		// create builder and configure using all args
+		OsgiRuntimeBuilder builder = new OsgiRuntimeBuilder()
+		builder.configure(args)
+
+		// build and start runtime
+		OsgiRuntime runtime = builder.build()
+		builder.doStart()
+
+		// return builder
+		builder
+	}
+
+	/**
+	 * Stop runtime.
+	 * 
+	 * <p>Example:
+	 * <pre>
+	 * @GrabResolver(name='ebrRelease', root='http://repository.springsource.com/maven/bundles/release')
+	 * @GrabResolver(name='ebrExternal', root='http://repository.springsource.com/maven/bundles/external')
+	 * @GrabResolver(name='githubJetztgradNet', root='https://github.com/downloads/jetztgradnet/repository/')
+	 * @Grapes([
+	 * 	@GrabConfig(systemClassLoader=true),
+	 * 	@Grab(group='groovyx.osgi', module='groovyx.osgi.runtime'),
+	 * 	@Grab(group='org.eclipse.osgi', module='org.eclipse.osgi', version='3.6.1.R36x_v20100806'),
+	 * 	@Grab(group='org.apache.commons', module='com.springsource.org.apache.commons.logging', version='1.1.1')
+	 * ])
+	 * import groovyx.osgi.runtime.OsgiRuntimeBuilder
+	 *
+	 * def builder = OsgiRuntimeBuilder.start {
+	 * 		framework 'equinox'
+	 *
+	 * 		bundle 'mvn:org.apache.felix:org.apache.felix.fileinstall:3.0.2'
+	 *
+	 * 		afterStart = {
+	 * 			println "started OSGi runtime"
+	 * 		}
+	 *
+	 * 		doRun = {
+	 * 			// wait one minute
+	 * 			Thread.sleep 30000
+	 * 		}
+	 *
+	 * 		afterStop = {
+	 * 			println "started OSGi runtime"
+	 * 		}
+	 * }
+	 * // wait for finish
+	 * builder.waitForFinish()
+	 * OsgiRuntimeBuilder.stop(builder)
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param builder {@link OsgiRuntimeBuilder} hosting the runtime. 
+	 */
+	public static void stop(OsgiRuntimeBuilder builder) {
+		// stop runtime
+		builder.doStop()
+	}
 }
