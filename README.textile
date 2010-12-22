@@ -432,7 +432,7 @@ h3. groovyx.osgi.runtime
 
 h2. History
 
-h3. 0.1 (2010-10-20)
+h3. 0.1 (2010-12-22)
 
 * initial version
 
