@@ -108,5 +108,5 @@ ServiceWrapper services = new ServiceFinder(bundleContext)
 h2. Roadmap                                             
 
 * simplified service registration MyObject.registerService (Map, Closure)
-* simplified use of ServiceTracker
+* simplified use of ServiceTracker, ManagedService, and ManagedServiceFactory
 * improve docs
