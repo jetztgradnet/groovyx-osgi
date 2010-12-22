@@ -274,11 +274,21 @@ The "Felix Web Console":http://felix.apache.org/site/apache-felix-web-console.ht
 
 <pre><code>
 osgi.configure {
-	webConsole(8080)
+	webConsole()
 }
 </code></pre>
 
-The application can be accessed at "http://localhost:8080/system/console":http://localhost:8080/system/console/ with user "admin" and password "admin".
+or with custom port number:
+
+<pre><code>
+osgi.configure {
+	webConsole(8081)
+}
+</code></pre>
+
+The application can be accessed at "http://localhost:8081/system/console":http://localhost:8081/system/console/ with user "admin" and password "admin".
+
+*NOTE:* currently the required dependencies to run the web console need to be added manually (see @examples/extended.groovy@ for an example). Future releases will add all required bundles automatically.
 
 h3. Use Callback methods
 
